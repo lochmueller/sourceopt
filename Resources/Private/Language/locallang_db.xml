@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for constants (extension 'sourceopt')</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="sourceopt.enabled">Enabled: Shall the optimization of the source be enabled for this template</label>
+
+			<label index="sourceopt.enable_utf-8_support">Enable UTF-8 support: Disable if your website doesn't use UTF-8 and you have a problem with empty strings</label>
+			<label index="sourceopt.removeGenerator">Remove generator: Remove &lt;meta name="generator" content="Typo 6.2 CMS"&gt;</label>
+			<label index="sourceopt.removeBlurScript">Remove blur-script: Removes the script in the head that defines the blur-function and also removes the "onFocus="blurLink(this);"" of tags; May cause problems if you work with JS</label>
+			<label index="sourceopt.removeComments">Remove HTML-Comments</label>
+			<label index="sourceopt.removeComments_keep_10">Spare this comments from remove: Regular expressions that match comments that should not be removed. Very useful e.g. to keep the TYPO3SEARCH-Comments so indexed_search can work properly</label>
+
+			<label index="sourceopt.formatHtml">Format HTML: Formats the code beautiful and easy readable. New lines and tabs are used in the usual way of illustrating the structure of an XML code. This is a great help for developing and checking the code (Option 4 or 5) as well as compressing the code that it is faster transferred to the user agent (Option 1 or 2).</label>
+			<label index="sourceopt.formatHtml0">Off</label>
+			<label index="sourceopt.formatHtml1">No line break at all (code in one line)</label>
+			<label index="sourceopt.formatHtml2">Minimalistic line breaks (structure defining box-elements)</label>
+			<label index="sourceopt.formatHtml3">Aesthetic line breaks (important box-elements)</label>
+			<label index="sourceopt.formatHtml4">Logic line breaks (all box-elements)</label>
+			<label index="sourceopt.formatHtml_tabSize">Formatting Tab-Size: Spezify number of blank-space for formatting. If empty a tab will be used.</label>
+			<label index="sourceopt.formatHtml_debugComment">Show debugging comment: A comment at the end of the html code that points out the number of open html tags.</label>
+		</languageKey>
+	</data>
+</T3locallang>

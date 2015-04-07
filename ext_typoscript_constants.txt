@@ -1,0 +1,29 @@
+# cat=plugin.sourceopt/enable/01; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.enabled
+sourceopt.enabled = 1
+
+# cat=plugin.sourceopt/enable/10; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.enable_utf-8_support
+sourceopt.enable_utf-8_support = 1
+
+# cat=plugin.sourceopt/enable/20; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.removeGenerator
+sourceopt.removeGenerator = 1
+
+# cat=plugin.sourceopt/enable/45; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.removeBlurScript
+sourceopt.removeBlurScript = 1
+
+# cat=plugin.sourceopt/enable/50; type=boolean;  label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.removeComments
+sourceopt.removeComments = 1
+
+# cat=plugin.sourceopt/typo/55; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.removeComments_keep_10
+sourceopt.removeComments.keep.10 = /^TYPO3SEARCH_/usi
+
+# cat=plugin.sourceopt/typo/70; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.headerComment
+sourceopt.headerComment =
+
+# cat=plugin.sourceopt/dims/75; type=options [LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml0=0,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml1=1,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml2=2,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml3=3,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml4=4,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml5=5]; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml
+sourceopt.formatHtml = 2
+
+# cat=plugin.sourceopt/dims/76; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml_tabSize
+sourceopt.formatHtml.tabSize =
+
+# cat=plugin.sourceopt/dims/77; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml_debugComment
+sourceopt.formatHtml.debugComment = 0
