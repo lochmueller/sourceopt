@@ -1,27 +1,23 @@
-﻿.. include:: Images.txt
-
-.. ==================================================
+﻿.. ==================================================
 .. FOR YOUR INFORMATION
 .. --------------------------------------------------
 .. -*- coding: utf-8 -*- with BOM.
 
-.. ==================================================
-.. DEFINE SOME TEXTROLES
-.. --------------------------------------------------
-.. role::   underline
-.. role::   typoscript(code)
-.. role::   ts(typoscript)
-:class:  typoscript
-.. role::   php(code)
-
+.. include:: ../Includes.txt
+.. index:: Changelog
 
 Changelog
 ---------
 
-**1.0.0 – 6.11.2014**
+**0.8.6 – 9.4.2015**
 
-Rewrite: Rewritten the extension. PageRenderer hook is now being
-used instead of the TypoScriptFrontend controller.
+Reinstated the TypoScriptFrontend controller hook for correct rendering of both cached and non-cached variables.
+
+All deprecated features like headerComment were reinstated too.
+
+**0.8.0 – 6.11.2014**
+
+Rewrite: Rewritten the extension. PageRenderer hook is now being used instead of the TypoScriptFrontend controller.
 
 **0.5.12 – 21.7.2009**
 
@@ -193,10 +189,3 @@ New option: Remove attributes from the <body>
 
 Bugfix: It's now also possible to remove the blur-script under typo
 3.6.0 RC1
-
-
-|img-1|
-
-EXT:sourceopt
-
-
