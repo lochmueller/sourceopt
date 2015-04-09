@@ -1,29 +1,29 @@
-# cat=plugin.sourceopt/enable/01; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.enabled
+# cat=plugin.sourceopt/enable/01; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.enabled
 sourceopt.enabled = 1
 
-# cat=plugin.sourceopt/enable/10; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.enable_utf-8_support
+# cat=plugin.sourceopt/enable/10; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.enableUtf8Support
 sourceopt.enable_utf-8_support = 1
 
-# cat=plugin.sourceopt/enable/20; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.removeGenerator
+# cat=plugin.sourceopt/enable/20; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeGenerator
 sourceopt.removeGenerator = 1
 
-# cat=plugin.sourceopt/enable/45; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.removeBlurScript
+# cat=plugin.sourceopt/enable/45; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeBlurScript
 sourceopt.removeBlurScript = 1
 
-# cat=plugin.sourceopt/enable/50; type=boolean;  label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.removeComments
+# cat=plugin.sourceopt/enable/50; type=boolean;  label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeComments
 sourceopt.removeComments = 1
 
-# cat=plugin.sourceopt/typo/55; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.removeComments_keep_10
+# cat=plugin.sourceopt/typo/55; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeCommentsKeep10
 sourceopt.removeComments.keep.10 = /^TYPO3SEARCH_/usi
 
-# cat=plugin.sourceopt/typo/70; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.headerComment
+# cat=plugin.sourceopt/typo/70; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.headerComment
 sourceopt.headerComment =
 
-# cat=plugin.sourceopt/dims/75; type=options [LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml0=0,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml1=1,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml2=2,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml3=3,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml4=4,LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml5=5]; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml
-sourceopt.formatHtml = 2
+# cat=plugin.sourceopt/typo/75; type=options [LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml0=0,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml1=1,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml2=2,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml3=3,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml4=4,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml5=5]; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml
+sourceopt.formatHtml = 4
 
-# cat=plugin.sourceopt/dims/76; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml_tabSize
+# cat=plugin.sourceopt/typo/76; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlTabSize
 sourceopt.formatHtml.tabSize =
 
-# cat=plugin.sourceopt/dims/77; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang_db.xml:sourceopt.formatHtml_debugComment
+# cat=plugin.sourceopt/enable/77; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlDebugComment
 sourceopt.formatHtml.debugComment = 0
