@@ -544,7 +544,7 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @return void
 	 */
 	public function removeGenerator(&$html) {
-		preg_replace('/<meta name=\"?generator\"?.+?>/is', '', $html);
+		$html = preg_replace('/<meta name=\"?generator\"?.+?>/is', '', $html);
 	}
 
 	/**
