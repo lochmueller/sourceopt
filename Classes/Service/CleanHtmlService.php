@@ -95,10 +95,6 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface {
 		}
 
 		if (!empty($config)) {
-			if ((bool) $config['enabled'] === FALSE) {
-				return;
-			}
-
 			if ($config['formatHtml'] && is_numeric($config['formatHtml'])) {
 				$this->formatType = (int) $config['formatHtml'];
 			}
@@ -147,6 +143,10 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface {
 	 */
 	public function clean(&$html, $config = array()) {
 		if (!empty($config)) {
+			if ((bool) $config['enabled'] === FALSE) {
+				return;
+			}
+			
 			$this->setVariables($config);
 		}
 
