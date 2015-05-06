@@ -108,7 +108,7 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface {
 			}
 
 			if (isset($config['formatHtml.']['debugComment'])) {
-				$this->debugComment = (bool) $config['debugComment'];
+				$this->debugComment = (bool) $config['formatHtml.']['debugComment'];
 			}
 
 			if (isset($config['headerComment'])) {
@@ -146,7 +146,7 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface {
 			if ((bool) $config['enabled'] === FALSE) {
 				return;
 			}
-			
+
 			$this->setVariables($config);
 		}
 
