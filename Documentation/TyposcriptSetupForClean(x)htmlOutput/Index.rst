@@ -17,6 +17,7 @@ Here some examples:
 
 config:
 ::
+
     config {
         # switch the doctype to XHTML Strict:
         #"xhtml_trans", "xhtml_frames", "xhtml_strict", "xhtml_basic", "xhtml_11", "xhtml_2", "none"
@@ -49,6 +50,7 @@ config:
 
 plugin:
 ::
+
     plugin {
         # deletes the default css from some the css_styled_content (be aware what you lose)
         tx_cssstyledcontent._CSS_DEFAULT_STYLE >
@@ -56,6 +58,7 @@ plugin:
 
 tt_content:
 ::
+
     tt_content {
         # removes a-tag anchors
         # stdWrap.dataWrap >
