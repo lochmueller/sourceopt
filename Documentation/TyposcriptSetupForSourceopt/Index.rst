@@ -20,6 +20,7 @@ Here is an example of a TypoScript configuration:
 
 via constants:
 ::
+
     sourceopt {
         enabled = 1
         enable_utf-8_support = 1
@@ -28,6 +29,7 @@ via constants:
 
 via setup:
 ::
+
     config.sourceopt {
         enabled = 1
         enable_utf-8_support = 1
