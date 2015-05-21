@@ -555,11 +555,12 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface {
 	public function includeHeaderComment(&$html) {
 		if (!empty($this->headerComment)) {
 			$html = preg_replace_callback(
-				'/<base (.*)>/Usi',
+				'/<meta http-equiv(.*)>/Usi',
 				function ($matches) {
 					return trim($matches[0] . $this->newline . $this->tab . $this->tab . '<!-- ' . $this->headerComment . '-->');
 				},
-				$html
+				$html,
+				1
 			);
 		}
 	}
