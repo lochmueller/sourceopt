@@ -14,7 +14,7 @@ $EM_CONF[$_EXTKEY] = array (
 	'title' => 'Source Optimization',
 	'description' => 'Optimization of the final page: reformatting the (x)html output, removal of new lines, and quotes. Move development repository to https://github.com/lochmueller/sourceopt',
 	'category' => 'fe',
-	'version' => '0.8.7',
+	'version' => '0.9.0',
 	'state' => 'beta',
 	'author' => 'Dr. Ronald P. Steiner, Boris Nicolai, Tim Lochmueller',
 	'author_email' => 'ronald.steiner@googlemail.com, boris.nicolai@andavida.com, tim@fruit-lab.de',
@@ -23,7 +23,7 @@ $EM_CONF[$_EXTKEY] = array (
 	array (
 		'depends' =>
 		array (
-			'typo3' => '6.2.0-7.0.99',
+			'typo3' => '6.2.0-7.99.99',
 		),
 	),
 );
