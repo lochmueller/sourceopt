@@ -285,7 +285,12 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface {
 				}
 			}
 		}
-
+		
+		// Remove empty lines
+		if ($this->formatType > 1) {
+			$this->removeEmptyLines($html);
+		}
+		
 		// Restore saved comments, styles and java-scripts
 		for ($i = 0; $i < count($no_format); $i++) {
 			$no_format[$i] = $this->rTrimLines($no_format[$i]); // remove white space after line ending
