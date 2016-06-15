@@ -9,6 +9,12 @@
       "HTML\\Sourceopt\\": "Classes/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "HTML\\Sourceopt\\Tests\\": "Tests",
+      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+    }
+  },
   "require": {
     "php": ">=5.5.0",
     "typo3/cms-core": "~6.2.0||~7.6.0||~8.1.0||dev-master",
