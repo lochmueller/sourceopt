@@ -22,8 +22,8 @@ class CleanHtmlServiceTest extends UnitTestCase
     public function testRemoveGenerator()
     {
         $html = '<head> 
-<meta name="Regisseur" content="Peter Jackson"> 
-<meta name="generator" content="Tester"> 
+<meta name="Regisseur" content="Peter Jackson">
+<meta name="generator" content="Tester">
 </head>';
         $cleanService = new CleanHtmlService();
         $cleanService->removeGenerator($html);
