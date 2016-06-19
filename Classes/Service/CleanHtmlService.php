@@ -135,7 +135,6 @@ class CleanHtmlService implements SingletonInterface
             /** @var ManipulationInterface $manipulation */
             $configuration = isset($config[$key . '.']) && is_array($config[$key . '.']) ? $config[$key . '.'] : [];
             $html = $manipulation->manipulate($html, $configuration);
-
         }
 
         if ($this->formatType) {
@@ -163,8 +162,11 @@ class CleanHtmlService implements SingletonInterface
     protected function formatHtml(&$html)
     {
         // Save original formated comments, pre, textarea, styles and java-scripts & replace them with markers
-        preg_match_all('/(?s)((<!--.*?-->)|(<[ \n\r]*pre[^>]*>.*?<[ \n\r]*\/pre[^>]*>)|(<[ \n\r]*textarea[^>]*>.*?<[ \n\r]*\/textarea[^>]*>)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im',
-            $html, $matches);
+        preg_match_all(
+            '/(?s)((<!--.*?-->)|(<[ \n\r]*pre[^>]*>.*?<[ \n\r]*\/pre[^>]*>)|(<[ \n\r]*textarea[^>]*>.*?<[ \n\r]*\/textarea[^>]*>)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im',
+            $html,
+            $matches
+        );
         $no_format = $matches[0]; // do not format these block elements
         for ($i = 0; $i < count($no_format); $i++) {
             $html = str_replace($no_format[$i], "\n<!-- ELEMENT $i -->", $html);
@@ -180,8 +182,12 @@ class CleanHtmlService implements SingletonInterface
         $structureBoxLikeElements = '(?>html|head|body|div|!--)';
 
         // split html into it's elements
-        $html_array_temp = preg_split('/(<(?:[^<>]+(?:"[^"]*"|\'[^\']*\')?)+>)/', $html, -1,
-            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $html_array_temp = preg_split(
+            '/(<(?:[^<>]+(?:"[^"]*"|\'[^\']*\')?)+>)/',
+            $html,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+        );
         // remove empty lines
         $html_array = [''];
         $z = 1;
@@ -208,30 +214,53 @@ class CleanHtmlService implements SingletonInterface
                 $newline = true;
             } elseif ($this->formatType == 2 && ( // minimalistic line break
                     # this element has a line break before itself
-                    preg_match('/<' . $structureBoxLikeElements . '(.*)>/Usi',
-                        $html_array[$x]) || preg_match('/<' . $structureBoxLikeElements . '(.*) \/>/Usi',
-                        $html_array[$x]) || # one element before is a element that has a line break after
-                    preg_match('/<\/' . $structureBoxLikeElements . '(.*)>/Usi',
-                        $html_array[$x - 1]) || substr($html_array[$x - 1], 0,
-                        4) == '<!--' || preg_match('/<' . $structureBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
+                    preg_match(
+                        '/<' . $structureBoxLikeElements . '(.*)>/Usi',
+                        $html_array[$x]
+                    ) || preg_match(
+                        '/<' . $structureBoxLikeElements . '(.*) \/>/Usi',
+                        $html_array[$x]
+                    ) || # one element before is a element that has a line break after
+                    preg_match(
+                        '/<\/' . $structureBoxLikeElements . '(.*)>/Usi',
+                        $html_array[$x - 1]
+                    ) || substr(
+                        $html_array[$x - 1],
+                        0,
+                        4
+                    ) == '<!--' || preg_match('/<' . $structureBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
             ) {
                 $newline = true;
             } elseif ($this->formatType == 3 && ( // aestetic line break
                     # this element has a line break before itself
-                    preg_match('/<' . $esteticBoxLikeElements . '(.*)>/Usi',
-                        $html_array[$x]) || preg_match('/<' . $esteticBoxLikeElements . '(.*) \/>/Usi',
-                        $html_array[$x]) || # one element before is a element that has a line break after
-                    preg_match('/<\/' . $esteticBoxLikeElements . '(.*)>/Usi', $html_array[$x - 1]) || substr($html_array[$x - 1],
-                        0, 4) == '<!--' || preg_match('/<' . $esteticBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
+                    preg_match(
+                        '/<' . $esteticBoxLikeElements . '(.*)>/Usi',
+                        $html_array[$x]
+                    ) || preg_match(
+                        '/<' . $esteticBoxLikeElements . '(.*) \/>/Usi',
+                        $html_array[$x]
+                    ) || # one element before is a element that has a line break after
+                    preg_match('/<\/' . $esteticBoxLikeElements . '(.*)>/Usi', $html_array[$x - 1]) || substr(
+                        $html_array[$x - 1],
+                        0,
+                        4
+                    ) == '<!--' || preg_match('/<' . $esteticBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
             ) {
                 $newline = true;
             } elseif ($this->formatType >= 4 && ( // logical line break
                     # this element has a line break before itself
-                    preg_match('/<' . $allBoxLikeElements . '(.*)>/Usi',
-                        $html_array[$x]) || preg_match('/<' . $allBoxLikeElements . '(.*) \/>/Usi',
-                        $html_array[$x]) || # one element before is a element that has a line break after
-                    preg_match('/<\/' . $allBoxLikeElements . '(.*)>/Usi', $html_array[$x - 1]) || substr($html_array[$x - 1], 0,
-                        4) == '<!--' || preg_match('/<' . $allBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
+                    preg_match(
+                        '/<' . $allBoxLikeElements . '(.*)>/Usi',
+                        $html_array[$x]
+                    ) || preg_match(
+                        '/<' . $allBoxLikeElements . '(.*) \/>/Usi',
+                        $html_array[$x]
+                    ) || # one element before is a element that has a line break after
+                    preg_match('/<\/' . $allBoxLikeElements . '(.*)>/Usi', $html_array[$x - 1]) || substr(
+                        $html_array[$x - 1],
+                        0,
+                        4
+                    ) == '<!--' || preg_match('/<' . $allBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
             ) {
                 $newline = true;
             }
@@ -264,13 +293,31 @@ class CleanHtmlService implements SingletonInterface
 
             // count up a tab
             if (substr($html_array[$x], 0, 1) == '<' && substr($html_array[$x], 1, 1) != '/') {
-                if (substr($html_array[$x], 1, 1) != ' ' && substr($html_array[$x], 1, 3) != 'img' && substr($html_array[$x], 1,
-                        2) != 'br' && substr($html_array[$x], 1, 2) != 'hr' && substr($html_array[$x], 1,
-                        5) != 'input' && substr($html_array[$x], 1, 4) != 'link' && substr($html_array[$x], 1,
-                        4) != 'meta' && substr($html_array[$x], 1, 4) != 'col ' && substr($html_array[$x], 1,
-                        5) != 'frame' && substr($html_array[$x], 1, 7) != 'isindex' && substr($html_array[$x], 1,
-                        5) != 'param' && substr($html_array[$x], 1, 4) != 'area' && substr($html_array[$x], 1,
-                        4) != 'base' && substr($html_array[$x], 0, 2) != '<!' && substr($html_array[$x], 0, 5) != '<?xml'
+                if (substr($html_array[$x], 1, 1) != ' ' && substr($html_array[$x], 1, 3) != 'img' && substr(
+                    $html_array[$x],
+                    1,
+                    2
+                ) != 'br' && substr($html_array[$x], 1, 2) != 'hr' && substr(
+                    $html_array[$x],
+                    1,
+                    5
+                ) != 'input' && substr($html_array[$x], 1, 4) != 'link' && substr(
+                    $html_array[$x],
+                    1,
+                    4
+                ) != 'meta' && substr($html_array[$x], 1, 4) != 'col ' && substr(
+                    $html_array[$x],
+                    1,
+                    5
+                ) != 'frame' && substr($html_array[$x], 1, 7) != 'isindex' && substr(
+                    $html_array[$x],
+                    1,
+                    5
+                ) != 'param' && substr($html_array[$x], 1, 4) != 'area' && substr(
+                    $html_array[$x],
+                    1,
+                    4
+                ) != 'base' && substr($html_array[$x], 0, 2) != '<!' && substr($html_array[$x], 0, 5) != '<?xml'
                 ) {
                     $tabs++;
                 }

@@ -34,8 +34,11 @@ class RemoveComments implements ManipulationInterface
 
         // match all styles, scripts and comments
         $matches = [];
-        preg_match_all('/(?s)((<!--.*?-->)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im',
-            $html, $matches);
+        preg_match_all(
+            '/(?s)((<!--.*?-->)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im',
+            $html,
+            $matches
+        );
         foreach ($matches[0] as $tag) {
             if ($this->keepComment($tag) === false) {
                 $html = str_replace($tag, '', $html);

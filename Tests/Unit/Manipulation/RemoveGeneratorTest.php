@@ -1,19 +1,19 @@
 <?php
 /**
- * CleanHtmlServiceTest
+ * RemoveGeneratorTest
  *
  * @author  Tim Lochmüller
  */
 
 namespace HTML\Sourceopt\Tests\Unit\Service;
 
-use HTML\Sourceopt\Service\CleanHtmlService;
+use HTML\Sourceopt\Manipulation\RemoveGenerator;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /**
- * CleanHtmlServiceTest
+ * RemoveGeneratorTest
  */
-class CleanHtmlServiceTest extends UnitTestCase
+class RemoveGeneratorTest extends UnitTestCase
 {
 
     /**
@@ -25,13 +25,13 @@ class CleanHtmlServiceTest extends UnitTestCase
 <meta name="Regisseur" content="Peter Jackson">
 <meta name="generator" content="Tester">
 </head>';
-        $cleanService = new CleanHtmlService();
-        $cleanService->removeGenerator($html);
+        $cleanService = new RemoveGenerator();
+        $result = $cleanService->manipulate($html);
 
         $expected = '<head>
 <meta name="Regisseur" content="Peter Jackson">
 
 </head>';
-        $this->assertEquals($expected, $html);
+        $this->assertEquals($expected, $result);
     }
 }
