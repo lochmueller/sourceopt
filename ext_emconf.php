@@ -10,7 +10,7 @@
  * writing. "version" and "dependencies" must not be touched!
  ***************************************************************/
 
-$EM_CONF[$_EXTKEY] = array (
+$EM_CONF[$_EXTKEY] = [
     'title' => 'Source Optimization',
     'description' => 'Optimization of the final page: reformatting the (x)html output, removal of new lines, and quotes. Move development repository to https://github.com/lochmueller/sourceopt',
     'category' => 'fe',
@@ -20,10 +20,10 @@ $EM_CONF[$_EXTKEY] = array (
     'author_email' => 'ronald.steiner@googlemail.com, boris.nicolai@andavida.com, tim@fruit-lab.de',
     'author_company' => null,
     'constraints' =>
-    array (
+    [
         'depends' =>
-        array (
+        [
             'typo3' => '6.2.0-7.99.99',
-        ),
-    ),
-);
+        ],
+    ],
+];

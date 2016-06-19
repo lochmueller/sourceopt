@@ -2,13 +2,18 @@
 namespace HTML\Sourceopt\User;
 
 use HTML\Sourceopt\Service\CleanHtmlService;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Exception;
 
 /**
  * Hook: Front end rendering
  *
  * @package HTML\Sourceopt\User
  */
-class FrontendHook implements \TYPO3\CMS\Core\SingletonInterface
+class FrontendHook implements SingletonInterface
 {
 
     /**
@@ -28,11 +33,11 @@ class FrontendHook implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Hook for adjusting the HTML <body> output
      *
-     * @param \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $typoScriptFrontend
+     * @param TypoScriptFrontendController $typoScriptFrontend
      *
      * @return void
      */
-    public function clean(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController &$typoScriptFrontend)
+    public function clean(TypoScriptFrontendController &$typoScriptFrontend)
     {
         if ($this->cleanHtmlService instanceof CleanHtmlService) {
             $configuration = $typoScriptFrontend->config['config']['sourceopt.'];
@@ -52,7 +57,7 @@ class FrontendHook implements \TYPO3\CMS\Core\SingletonInterface
     public function cleanUncachedContent(&$parameters)
     {
         $tsfe = &$parameters['pObj'];
-        if ($tsfe instanceof \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController) {
+        if ($tsfe instanceof TypoScriptFrontendController) {
             if ($tsfe->isINTincScript() === true) {
                 $this->clean($tsfe);
             }
@@ -71,7 +76,7 @@ class FrontendHook implements \TYPO3\CMS\Core\SingletonInterface
     public function cleanCachedContent(&$parameters)
     {
         $tsfe = &$parameters['pObj'];
-        if ($tsfe instanceof \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController) {
+        if ($tsfe instanceof TypoScriptFrontendController) {
             if ($tsfe->isINTincScript() === false) {
                 $this->clean($tsfe);
             }
@@ -83,12 +88,12 @@ class FrontendHook implements \TYPO3\CMS\Core\SingletonInterface
      *
      * @return void
      *
-     * @throws \TYPO3\CMS\Frontend\Exception
+     * @throws Exception
      */
     protected function initialize()
     {
-        if (!($GLOBALS['TSFE'] instanceof \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController)) {
-            throw new \TYPO3\CMS\Frontend\Exception('No frontend class rendered!');
+        if (!($GLOBALS['TSFE'] instanceof TypoScriptFrontendController)) {
+            throw new Exception('No frontend class rendered!');
         }
         if ($this->cleanHtmlService === null) {
             /** @var CleanHtmlService $cleanHtmlService */
@@ -106,11 +111,11 @@ class FrontendHook implements \TYPO3\CMS\Core\SingletonInterface
     protected function getInstance($class)
     {
         static $objectManager;
-        if (!($objectManager instanceof \TYPO3\CMS\Extbase\Object\ObjectManager)) {
-            $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+        if (!($objectManager instanceof ObjectManager)) {
+            $objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
         }
 
-        if ($objectManager instanceof \TYPO3\CMS\Extbase\Object\ObjectManager) {
+        if ($objectManager instanceof ObjectManager) {
             return $objectManager->get($class);
         }
         return null;

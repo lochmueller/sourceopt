@@ -1,12 +1,16 @@
 <?php
 namespace HTML\Sourceopt\Service;
 
+use HDNET\Hdnet\Exception\GeneralException;
+use HTML\Sourceopt\Manipulation\ManipulationInterface;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Service: Clean parsed HTML functionality
  * Based on the extension 'sourceopt'
-
  */
-class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
+class CleanHtmlService implements SingletonInterface
 {
 
     /**
@@ -52,34 +56,6 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
     protected $headerComment = '';
 
     /**
-     * Enable/disable removal of generator tag
-     *
-     * @var boolean
-     */
-    protected $removeGenerator = true;
-
-    /**
-     * Enable/disable removal of comments
-     *
-     * @var boolean
-     */
-    protected $removeComments = true;
-
-    /**
-     * Enable/disable removal of blur scripts
-     *
-     * @var boolean
-     */
-    protected $removeBlurScript = true;
-
-    /**
-     * Patterns for white-listing comments inside content
-     *
-     * @var array
-     */
-    protected $whiteListCommentsPatterns = array();
-
-    /**
      * Set variables based on given config
      *
      * @param array $config
@@ -98,7 +74,7 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
 
         if (!empty($config)) {
             if ($config['formatHtml'] && is_numeric($config['formatHtml'])) {
-                $this->formatType = (int) $config['formatHtml'];
+                $this->formatType = (int)$config['formatHtml'];
             }
 
             if ($config['formatHtml.']['tabSize'] && is_numeric($config['formatHtml.']['tabSize'])) {
@@ -106,31 +82,15 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
             }
 
             if (isset($config['enable_utf'])) {
-                $this->utf8 = (bool) $config['enable_utf-8_support'];
+                $this->utf8 = (bool)$config['enable_utf-8_support'];
             }
 
             if (isset($config['formatHtml.']['debugComment'])) {
-                $this->debugComment = (bool) $config['formatHtml.']['debugComment'];
+                $this->debugComment = (bool)$config['formatHtml.']['debugComment'];
             }
 
             if (isset($config['headerComment'])) {
                 $this->headerComment = $config['headerComment'];
-            }
-
-            if (isset($config['removeGenerator'])) {
-                $this->removeGenerator = (bool) $config['removeGenerator'];
-            }
-
-            if (isset($config['removeComments'])) {
-                $this->removeComments = (bool) $config['removeComments'];
-
-                if (isset($config['removeComments.'])) {
-                    $this->whiteListCommentsPatterns = $config['removeComments.']['keep.'];
-                }
-            }
-
-            if (isset($config['removeBlurScript'])) {
-                $this->removeBlurScript = (bool) $config['removeBlurScript'];
             }
         }
     }
@@ -139,34 +99,43 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
      * Clean given HTML with formatter
      *
      * @param string $html
-     * @param array $config
+     * @param array  $config
      *
      * @return void
      */
-    public function clean(&$html, $config = array())
+    public function clean(&$html, $config = [])
     {
         if (!empty($config)) {
-            if ((bool) $config['enabled'] === false) {
+            if ((bool)$config['enabled'] === false) {
                 return;
             }
 
             $this->setVariables($config);
         }
 
-        if (true === $this->removeGenerator) {
-            $this->removeGenerator($html);
+        $manipulations = [];
+
+        if (isset($config['removeGenerator']) && (bool)$config['removeGenerator']) {
+            $manipulations['removeGenerator'] = GeneralUtility::makeInstance('HTML\\Sourceopt\\Manipulation\\RemoveGenerator');
         }
 
-        if (true === $this->removeComments) {
-            $this->removeComments($html);
+        if (isset($config['removeComments']) && (bool)$config['removeComments']) {
+            $manipulations['removeComments'] = GeneralUtility::makeInstance('HTML\\Sourceopt\\Manipulation\\RemoveComments');
         }
 
-        if (true === $this->removeBlurScript) {
-            $this->removeBlurScript($html);
+        if (isset($config['removeBlurScript']) && (bool)$config['removeBlurScript']) {
+            $manipulations['removeBlurScript'] = GeneralUtility::makeInstance('HTML\\Sourceopt\\Manipulation\\RemoveBlurScript');
         }
 
         if (!empty($this->headerComment)) {
             $this->includeHeaderComment($html);
+        }
+
+        foreach ($manipulations as $key => $manipulation) {
+            /** @var ManipulationInterface $manipulation */
+            $configuration = isset($config[$key . '.']) && is_array($config[$key . '.']) ? $config[$key . '.'] : [];
+            $html = $manipulation->manipulate($html, $configuration);
+
         }
 
         if ($this->formatType) {
@@ -194,7 +163,8 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
     protected function formatHtml(&$html)
     {
         // Save original formated comments, pre, textarea, styles and java-scripts & replace them with markers
-        preg_match_all('/(?s)((<!--.*?-->)|(<[ \n\r]*pre[^>]*>.*?<[ \n\r]*\/pre[^>]*>)|(<[ \n\r]*textarea[^>]*>.*?<[ \n\r]*\/textarea[^>]*>)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im', $html, $matches);
+        preg_match_all('/(?s)((<!--.*?-->)|(<[ \n\r]*pre[^>]*>.*?<[ \n\r]*\/pre[^>]*>)|(<[ \n\r]*textarea[^>]*>.*?<[ \n\r]*\/textarea[^>]*>)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im',
+            $html, $matches);
         $no_format = $matches[0]; // do not format these block elements
         for ($i = 0; $i < count($no_format); $i++) {
             $html = str_replace($no_format[$i], "\n<!-- ELEMENT $i -->", $html);
@@ -210,9 +180,10 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
         $structureBoxLikeElements = '(?>html|head|body|div|!--)';
 
         // split html into it's elements
-        $html_array_temp = preg_split('/(<(?:[^<>]+(?:"[^"]*"|\'[^\']*\')?)+>)/', $html, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $html_array_temp = preg_split('/(<(?:[^<>]+(?:"[^"]*"|\'[^\']*\')?)+>)/', $html, -1,
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         // remove empty lines
-        $html_array = array('');
+        $html_array = [''];
         $z = 1;
         for ($x = 0; $x < count($html_array_temp); $x++) {
             $t = trim($html_array_temp[$x]);
@@ -237,20 +208,30 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
                 $newline = true;
             } elseif ($this->formatType == 2 && ( // minimalistic line break
                     # this element has a line break before itself
-                    preg_match('/<' . $structureBoxLikeElements . '(.*)>/Usi', $html_array[$x]) || preg_match('/<' . $structureBoxLikeElements . '(.*) \/>/Usi', $html_array[$x]) || # one element before is a element that has a line break after
-                    preg_match('/<\/' . $structureBoxLikeElements . '(.*)>/Usi', $html_array[$x - 1]) || substr($html_array[$x - 1], 0, 4) == '<!--' || preg_match('/<' . $structureBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
+                    preg_match('/<' . $structureBoxLikeElements . '(.*)>/Usi',
+                        $html_array[$x]) || preg_match('/<' . $structureBoxLikeElements . '(.*) \/>/Usi',
+                        $html_array[$x]) || # one element before is a element that has a line break after
+                    preg_match('/<\/' . $structureBoxLikeElements . '(.*)>/Usi',
+                        $html_array[$x - 1]) || substr($html_array[$x - 1], 0,
+                        4) == '<!--' || preg_match('/<' . $structureBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
             ) {
                 $newline = true;
             } elseif ($this->formatType == 3 && ( // aestetic line break
                     # this element has a line break before itself
-                    preg_match('/<' . $esteticBoxLikeElements . '(.*)>/Usi', $html_array[$x]) || preg_match('/<' . $esteticBoxLikeElements . '(.*) \/>/Usi', $html_array[$x]) || # one element before is a element that has a line break after
-                    preg_match('/<\/' . $esteticBoxLikeElements . '(.*)>/Usi', $html_array[$x - 1]) || substr($html_array[$x - 1], 0, 4) == '<!--' || preg_match('/<' . $esteticBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
+                    preg_match('/<' . $esteticBoxLikeElements . '(.*)>/Usi',
+                        $html_array[$x]) || preg_match('/<' . $esteticBoxLikeElements . '(.*) \/>/Usi',
+                        $html_array[$x]) || # one element before is a element that has a line break after
+                    preg_match('/<\/' . $esteticBoxLikeElements . '(.*)>/Usi', $html_array[$x - 1]) || substr($html_array[$x - 1],
+                        0, 4) == '<!--' || preg_match('/<' . $esteticBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
             ) {
                 $newline = true;
             } elseif ($this->formatType >= 4 && ( // logical line break
                     # this element has a line break before itself
-                    preg_match('/<' . $allBoxLikeElements . '(.*)>/Usi', $html_array[$x]) || preg_match('/<' . $allBoxLikeElements . '(.*) \/>/Usi', $html_array[$x]) || # one element before is a element that has a line break after
-                    preg_match('/<\/' . $allBoxLikeElements . '(.*)>/Usi', $html_array[$x - 1]) || substr($html_array[$x - 1], 0, 4) == '<!--' || preg_match('/<' . $allBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
+                    preg_match('/<' . $allBoxLikeElements . '(.*)>/Usi',
+                        $html_array[$x]) || preg_match('/<' . $allBoxLikeElements . '(.*) \/>/Usi',
+                        $html_array[$x]) || # one element before is a element that has a line break after
+                    preg_match('/<\/' . $allBoxLikeElements . '(.*)>/Usi', $html_array[$x - 1]) || substr($html_array[$x - 1], 0,
+                        4) == '<!--' || preg_match('/<' . $allBoxLikeElements . '(.*) \/>/Usi', $html_array[$x - 1]))
             ) {
                 $newline = true;
             }
@@ -283,7 +264,13 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
 
             // count up a tab
             if (substr($html_array[$x], 0, 1) == '<' && substr($html_array[$x], 1, 1) != '/') {
-                if (substr($html_array[$x], 1, 1) != ' ' && substr($html_array[$x], 1, 3) != 'img' && substr($html_array[$x], 1, 2) != 'br' && substr($html_array[$x], 1, 2) != 'hr' && substr($html_array[$x], 1, 5) != 'input' && substr($html_array[$x], 1, 4) != 'link' && substr($html_array[$x], 1, 4) != 'meta' && substr($html_array[$x], 1, 4) != 'col ' && substr($html_array[$x], 1, 5) != 'frame' && substr($html_array[$x], 1, 7) != 'isindex' && substr($html_array[$x], 1, 5) != 'param' && substr($html_array[$x], 1, 4) != 'area' && substr($html_array[$x], 1, 4) != 'base' && substr($html_array[$x], 0, 2) != '<!' && substr($html_array[$x], 0, 5) != '<?xml'
+                if (substr($html_array[$x], 1, 1) != ' ' && substr($html_array[$x], 1, 3) != 'img' && substr($html_array[$x], 1,
+                        2) != 'br' && substr($html_array[$x], 1, 2) != 'hr' && substr($html_array[$x], 1,
+                        5) != 'input' && substr($html_array[$x], 1, 4) != 'link' && substr($html_array[$x], 1,
+                        4) != 'meta' && substr($html_array[$x], 1, 4) != 'col ' && substr($html_array[$x], 1,
+                        5) != 'frame' && substr($html_array[$x], 1, 7) != 'isindex' && substr($html_array[$x], 1,
+                        5) != 'param' && substr($html_array[$x], 1, 4) != 'area' && substr($html_array[$x], 1,
+                        4) != 'base' && substr($html_array[$x], 0, 2) != '<!' && substr($html_array[$x], 0, 5) != '<?xml'
                 ) {
                     $tabs++;
                 }
@@ -413,7 +400,7 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
     protected function removeEmptyLines(&$html)
     {
         $temp = explode($this->newline, $html);
-        $result = array();
+        $result = [];
         for ($i = 0; $i < count($temp); ++$i) {
             if ("" == trim($temp[$i])) {
                 continue;
@@ -433,10 +420,10 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function removeNewLines(&$html)
     {
-        $splitArray = array(
+        $splitArray = [
             'textarea',
             'pre'
-        ); // eventuell auch: span, script, style
+        ]; // eventuell auch: span, script, style
         $peaces = preg_split('#(<(' . implode('|', $splitArray) . ').*>.*</\2>)#Uis', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
         $html = "";
         for ($i = 0; $i < count($peaces); $i++) {
@@ -484,93 +471,6 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
     }
 
     /**
-     * Remove all comments except the whitelisted comments
-     *
-     * @param string $html
-     *
-     * @return void
-     */
-    protected function removeComments(&$html)
-    {
-        // match all styles, scripts and comments
-        $matches = array();
-        preg_match_all('/(?s)((<!--.*?-->)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im', $html, $matches);
-        foreach ($matches[0] as $tag) {
-            if ($this->keepComment($tag) === false) {
-                $html = str_replace($tag, '', $html);
-            }
-        }
-    }
-
-    /**
-     * Check if a comment is defined to be kept in a pattern whiteListOfComments
-     *
-     * @param string $commentHtml
-     *
-     * @return boolean
-     */
-    protected function keepComment($commentHtml)
-    {
-        // if not even a comment, skip this
-        if (!preg_match('/^\<\!\-\-(.*?)\-\-\>$/usi', $commentHtml)) {
-            return true;
-        }
-
-        // if not defined in white list
-        if (!empty($this->whiteListCommentsPatterns)) {
-            $commentHtml = str_replace("<!--", "", $commentHtml);
-            $commentHtml = str_replace("-->", "", $commentHtml);
-            $commentHtml = trim($commentHtml);
-            foreach ($this->whiteListCommentsPatterns as $pattern) {
-                if (preg_match($pattern, $commentHtml)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * TYPO3 adds to each page a small script:
-     *                <script language="javascript">
-     *                <!--
-     *                browserName = navigator.appName;
-     *                browserVer = parseInt(navigator.appVersion);
-     *                var msie4 = (browserName == "Microsoft Internet Explorer" && browserVer >= 4);
-     *                if ((browserName == "Netscape" && browserVer >= 3) || msie4 || browserName=="Konqueror") {version = "n3";} else {version = "n2";}
-     *                function blurLink(theObject){
-     *                if (msie4){theObject.blur();}
-     *                }
-     *                // -->
-     *                </script>
-     * Obviously used for client-side browserdetection - but thats not necessary if your page doesn't use JS
-     *
-     * @param string $html
-     *
-     * @return void
-     */
-    public function removeBlurScript(&$html)
-    {
-        if (strlen($html) < 100000) {
-            $pattern = '/<script (type="text\/javascript"|language="javascript")>.+?Konqueror.+function blurLink.+theObject.blur.+?<\/script>/is';
-            $html = preg_replace($pattern, '', $html); // in head
-        }
-        $html = str_replace(' onfocus="blurLink(this);"', '', $html); // in body
-    }
-
-    /**
-     * Remove the generator Tag
-     *
-     * @param string $html
-     *
-     * @return void
-     */
-    public function removeGenerator(&$html)
-    {
-        $html = preg_replace('/<meta name=\"?generator\"?.+?>/is', '', $html);
-    }
-
-    /**
      * Include configured header comment in HTML content block
      *
      * @param $html
@@ -578,14 +478,9 @@ class CleanHtmlService implements \TYPO3\CMS\Core\SingletonInterface
     public function includeHeaderComment(&$html)
     {
         if (!empty($this->headerComment)) {
-            $html = preg_replace_callback(
-                '/<meta http-equiv(.*)>/Usi',
-                function ($matches) {
-                    return trim($matches[0] . $this->newline . $this->tab . $this->tab . '<!-- ' . $this->headerComment . '-->');
-                },
-                $html,
-                1
-            );
+            $html = preg_replace_callback('/<meta http-equiv(.*)>/Usi', function ($matches) {
+                return trim($matches[0] . $this->newline . $this->tab . $this->tab . '<!-- ' . $this->headerComment . '-->');
+            }, $html, 1);
         }
     }
 }
