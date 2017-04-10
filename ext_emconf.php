@@ -3,8 +3,6 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "sourceopt".
  *
- * Auto generated 05-02-2015 17:26
- *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
  * writing. "version" and "dependencies" must not be touched!
