@@ -96,28 +96,9 @@ class FrontendHook implements SingletonInterface
             throw new Exception('No frontend class rendered!');
         }
         if ($this->cleanHtmlService === null) {
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
             /** @var CleanHtmlService $cleanHtmlService */
-            $this->cleanHtmlService = $this->getInstance('HTML\\Sourceopt\\Service\\CleanHtmlService');
+            $this->cleanHtmlService = $objectManager->get(CleanHtmlService::class);
         }
-    }
-
-    /**
-     * Create instance when no object manager initiated
-     *
-     * @param string $class
-     *
-     * @return object given class
-     */
-    protected function getInstance($class)
-    {
-        static $objectManager;
-        if (!($objectManager instanceof ObjectManager)) {
-            $objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-        }
-
-        if ($objectManager instanceof ObjectManager) {
-            return $objectManager->get($class);
-        }
-        return null;
     }
 }
