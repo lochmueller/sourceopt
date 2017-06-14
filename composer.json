@@ -17,14 +17,14 @@
   },
   "require": {
     "php": ">=5.5.0",
-    "typo3/cms-core": "~6.2.0||~7.6.0||~8.4.0||~8.6.0||~8.7.0||dev-master"
+    "typo3/cms-core": "~7.6.0||~8.7.0||dev-master"
   },
   "replace": {
     "sourceopt": "self.version",
     "typo3-ter/sourceopt": "self.version"
   },
   "require-dev": {
-    "namelesscoder/typo3-repository-client": "1.1.x-dev",
+    "namelesscoder/typo3-repository-client": "1.2.0",
     "phpunit/phpunit": "~4.8.0",
     "squizlabs/php_codesniffer": "^2.6",
     "phpmd/phpmd": "^2.4",
