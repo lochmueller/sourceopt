@@ -45,13 +45,6 @@ class CleanHtmlService implements SingletonInterface
     protected $newline = "\n";
 
     /**
-     * Enable/disable UTF8 support
-     *
-     * @var boolean
-     */
-    protected $utf8 = true;
-
-    /**
      * Configured extra header comment
      *
      * @var string
@@ -82,10 +75,6 @@ class CleanHtmlService implements SingletonInterface
 
             if ($config['formatHtml.']['tabSize'] && is_numeric($config['formatHtml.']['tabSize'])) {
                 $this->tab = str_pad('', $config['formatHtml.']['tabSize'], ' ');
-            }
-
-            if (isset($config['enable_utf'])) {
-                $this->utf8 = (bool)$config['enable_utf-8_support'];
             }
 
             if (isset($config['formatHtml.']['debugComment'])) {
@@ -353,12 +342,7 @@ class CleanHtmlService implements SingletonInterface
     {
         $html = $this->convNlOs($html);
         $html = str_replace($this->newline, "", $html);
-        // remove double empty spaces
-        if ($this->utf8 == true) {
-            $html = preg_replace('/\s\s+/u', ' ', $html);
-        } else {
-            $html = preg_replace('/\s\s+/', ' ', $html);
-        }
+        $html = preg_replace('/\s\s+/u', ' ', $html);
         return $html;
     }
 

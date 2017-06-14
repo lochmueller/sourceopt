@@ -1,7 +1,5 @@
 config.sourceopt {
 	enabled = {$sourceopt.enabled}
-	enable_utf-8_support = {$sourceopt.enable_utf-8_support}
-
 	headerComment = {$sourceopt.headerComment}
 
 	formatHtml = {$sourceopt.formatHtml}

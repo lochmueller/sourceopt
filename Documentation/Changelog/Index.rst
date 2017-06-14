@@ -9,6 +9,10 @@
 Changelog
 ---------
 
+** newer versions **
+
+Check the github history: https://github.com/lochmueller/sourceopt
+
 **0.8.6 – 9.4.2015**
 
 Reinstated the TypoScriptFrontend controller hook for correct rendering of both cached and non-cached variables.

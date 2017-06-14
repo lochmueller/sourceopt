@@ -23,7 +23,6 @@ via constants:
 
     sourceopt {
         enabled = 1
-        enable_utf-8_support = 1
         formatHtml = 2
     }
 
@@ -32,6 +31,5 @@ via setup:
 
     config.sourceopt {
         enabled = 1
-        enable_utf-8_support = 1
         formatHtml = 2
     }

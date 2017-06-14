@@ -1,9 +1,6 @@
 # cat=plugin.sourceopt/enable/01; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.enabled
 sourceopt.enabled = 1
 
-# cat=plugin.sourceopt/enable/10; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.enableUtf8Support
-sourceopt.enable_utf-8_support = 1
-
 # cat=plugin.sourceopt/enable/20; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeGenerator
 sourceopt.removeGenerator = 1
 

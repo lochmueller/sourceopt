@@ -23,10 +23,6 @@ Constant Editor:
 +===================================+=============+==================================================================+====================+
 | sourceopt.enabled                 | boolean     | Is the optimization enabled for this template                    | 1                  |
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
-| sourceopt.enable_utf-8_support    | boolean     | Enable UTF-8 support: Disable if your website                    | 1                  |
-|                                   |             | doesn't use UTF-8 and you have a problem with                    |                    |
-|                                   |             | empty strings                                                    |                    |
-+-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 | sourceopt.removeGenerator         | boolean     | Remove <meta name="generator" content="TYPO3 x.x CMS">           | 1                  |
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 | sourceopt.removeBlurScript        | boolean     | Removes the script in the head that defines the blur-function    | 1                  |

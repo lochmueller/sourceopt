@@ -7,9 +7,6 @@
 			<trans-unit id="sourceopt.enabled" xml:space="preserve">
 				<source>Enabled: Shall the optimization of the source be enabled for this template</source>
 			</trans-unit>
-			<trans-unit id="sourceopt.enableUtf8Support" xml:space="preserve">
-				<source>Enable UTF-8 support: Disable if your website doesn't use UTF-8 and you have a problem with empty strings</source>
-			</trans-unit>
 			<trans-unit id="sourceopt.removeGenerator" xml:space="preserve">
 				<source><![CDATA[Remove generator: Remove <meta name="generator" content="TYPO3 x.x CMS">]]></source>
 			</trans-unit>
