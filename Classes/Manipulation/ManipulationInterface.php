@@ -14,8 +14,8 @@ interface ManipulationInterface
 {
 
     /**
-     * @param string $html          The original HTML
-     * @param array  $configuration Configuration
+     * @param string $html The original HTML
+     * @param array $configuration Configuration
      *
      * @return string the manipulated HTML
      */

@@ -1,8 +1,11 @@
 <?php
+
 namespace HTML\Sourceopt\Service;
 
-use HDNET\Hdnet\Exception\GeneralException;
 use HTML\Sourceopt\Manipulation\ManipulationInterface;
+use HTML\Sourceopt\Manipulation\RemoveBlurScript;
+use HTML\Sourceopt\Manipulation\RemoveComments;
+use HTML\Sourceopt\Manipulation\RemoveGenerator;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -99,7 +102,7 @@ class CleanHtmlService implements SingletonInterface
      * Clean given HTML with formatter
      *
      * @param string $html
-     * @param array  $config
+     * @param array $config
      *
      * @return void
      */
@@ -116,15 +119,15 @@ class CleanHtmlService implements SingletonInterface
         $manipulations = [];
 
         if (isset($config['removeGenerator']) && (bool)$config['removeGenerator']) {
-            $manipulations['removeGenerator'] = GeneralUtility::makeInstance('HTML\\Sourceopt\\Manipulation\\RemoveGenerator');
+            $manipulations['removeGenerator'] = GeneralUtility::makeInstance(RemoveGenerator::class);
         }
 
         if (isset($config['removeComments']) && (bool)$config['removeComments']) {
-            $manipulations['removeComments'] = GeneralUtility::makeInstance('HTML\\Sourceopt\\Manipulation\\RemoveComments');
+            $manipulations['removeComments'] = GeneralUtility::makeInstance(RemoveComments::class);
         }
 
         if (isset($config['removeBlurScript']) && (bool)$config['removeBlurScript']) {
-            $manipulations['removeBlurScript'] = GeneralUtility::makeInstance('HTML\\Sourceopt\\Manipulation\\RemoveBlurScript');
+            $manipulations['removeBlurScript'] = GeneralUtility::makeInstance(RemoveBlurScript::class);
         }
 
         if (!empty($this->headerComment)) {
@@ -292,30 +295,30 @@ class CleanHtmlService implements SingletonInterface
             // count up a tab
             if (substr($htmlArray[$x], 0, 1) == '<' && substr($htmlArray[$x], 1, 1) != '/') {
                 if (substr($htmlArray[$x], 1, 1) != ' ' && substr($htmlArray[$x], 1, 3) != 'img' && substr(
-                    $htmlArray[$x],
-                    1,
-                    2
-                ) != 'br' && substr($htmlArray[$x], 1, 2) != 'hr' && substr(
-                    $htmlArray[$x],
-                    1,
-                    5
-                ) != 'input' && substr($htmlArray[$x], 1, 4) != 'link' && substr(
-                    $htmlArray[$x],
-                    1,
-                    4
-                ) != 'meta' && substr($htmlArray[$x], 1, 4) != 'col ' && substr(
-                    $htmlArray[$x],
-                    1,
-                    5
-                ) != 'frame' && substr($htmlArray[$x], 1, 7) != 'isindex' && substr(
-                    $htmlArray[$x],
-                    1,
-                    5
-                ) != 'param' && substr($htmlArray[$x], 1, 4) != 'area' && substr(
-                    $htmlArray[$x],
-                    1,
-                    4
-                ) != 'base' && substr($htmlArray[$x], 0, 2) != '<!' && substr($htmlArray[$x], 0, 5) != '<?xml'
+                        $htmlArray[$x],
+                        1,
+                        2
+                    ) != 'br' && substr($htmlArray[$x], 1, 2) != 'hr' && substr(
+                        $htmlArray[$x],
+                        1,
+                        5
+                    ) != 'input' && substr($htmlArray[$x], 1, 4) != 'link' && substr(
+                        $htmlArray[$x],
+                        1,
+                        4
+                    ) != 'meta' && substr($htmlArray[$x], 1, 4) != 'col ' && substr(
+                        $htmlArray[$x],
+                        1,
+                        5
+                    ) != 'frame' && substr($htmlArray[$x], 1, 7) != 'isindex' && substr(
+                        $htmlArray[$x],
+                        1,
+                        5
+                    ) != 'param' && substr($htmlArray[$x], 1, 4) != 'area' && substr(
+                        $htmlArray[$x],
+                        1,
+                        4
+                    ) != 'base' && substr($htmlArray[$x], 0, 2) != '<!' && substr($htmlArray[$x], 0, 5) != '<?xml'
                 ) {
                     $tabs++;
                 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace HTML\Sourceopt\User;
 
 use HTML\Sourceopt\Service\CleanHtmlService;
@@ -18,7 +19,6 @@ class FrontendHook implements SingletonInterface
 
     /**
      * @var \HTML\Sourceopt\Service\CleanHtmlService
-     * @inject
      */
     protected $cleanHtmlService = null;
 
