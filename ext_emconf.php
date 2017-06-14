@@ -18,10 +18,11 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 'ronald.steiner@googlemail.com, boris.nicolai@andavida.com, tim@fruit-lab.de',
     'author_company' => null,
     'constraints' =>
-    [
-        'depends' =>
         [
-            'typo3' => '7.6.0-8.7.99',
+            'depends' =>
+                [
+                    'typo3' => '7.6.0-8.7.99',
+                    'php' => '5.6.0-0.0.0',
+                ],
         ],
-    ],
 ];
