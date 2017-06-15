@@ -16,7 +16,7 @@ sourceopt.removeComments.keep.10 = /^TYPO3SEARCH_/usi
 # cat=plugin.sourceopt/typo/70; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.headerComment
 sourceopt.headerComment =
 
-# cat=plugin.sourceopt/typo/75; type=options [LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml0=0,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml1=1,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml2=2,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml3=3,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml4=4,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml5=5]; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml
+# cat=plugin.sourceopt/typo/75; type=options [LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml0=0,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml1=1,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml2=2,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml3=3,LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml4=4]; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml
 sourceopt.formatHtml = 4
 
 # cat=plugin.sourceopt/typo/76; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlTabSize

@@ -25,6 +25,9 @@
 	developing and checking the code as well as compressing the code that it is faster
 	transferred to the user agent.</source>
 			</trans-unit>
+			<trans-unit id="sourceopt.formatHtml0" xml:space="preserve">
+				<source>Disable</source>
+			</trans-unit>
 			<trans-unit id="sourceopt.formatHtml1" xml:space="preserve">
 				<source>No line break at all (code in one line)</source>
 			</trans-unit>

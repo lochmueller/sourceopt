@@ -28,7 +28,7 @@ class CleanHtmlService implements SingletonInterface
      *
      * @var integer
      */
-    protected $formatType = 2;
+    protected $formatType = 0;
 
     /**
      * Tab character
@@ -129,7 +129,7 @@ class CleanHtmlService implements SingletonInterface
             $html = $manipulation->manipulate($html, $configuration);
         }
 
-        if ($this->formatType) {
+        if ($this->formatType > 0) {
             $this->formatHtml($html);
         }
     }
