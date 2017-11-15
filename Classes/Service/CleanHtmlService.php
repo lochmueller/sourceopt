@@ -52,6 +52,12 @@ class CleanHtmlService implements SingletonInterface
     protected $headerComment = '';
 
     /**
+     * Empty space char
+     * @var string
+     */
+    protected $emptySpaceChar = ' ';
+
+    /**
      * Set variables based on given config
      *
      * @param array $config
@@ -83,6 +89,10 @@ class CleanHtmlService implements SingletonInterface
 
             if (isset($config['headerComment'])) {
                 $this->headerComment = $config['headerComment'];
+            }
+
+            if (isset($config['dropEmptySpaceChar']) && (bool)$config['dropEmptySpaceChar']) {
+                $this->emptySpaceChar = '';
             }
         }
     }
@@ -189,7 +199,7 @@ class CleanHtmlService implements SingletonInterface
                 $htmlArray[$z] = $htmlArrayTemp[$x];
                 $z++;
             } else {
-                $htmlArray[$z] = ' ';
+                $htmlArray[$z] = $this->emptySpaceChar;
                 $z++;
             }
         }

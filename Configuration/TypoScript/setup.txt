@@ -8,6 +8,8 @@ config.sourceopt {
 		debugComment = {$sourceopt.formatHtml.debugComment}
 	}
 
+	dropEmptySpaceChar = 0
+
 	removeGenerator = {$sourceopt.removeGenerator}
 	removeBlurScript = {$sourceopt.removeBlurScript}
 	removeComments = {$sourceopt.removeComments}
