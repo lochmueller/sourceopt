@@ -7,6 +7,9 @@
 			<trans-unit id="sourceopt.enabled" xml:space="preserve">
 				<source>Enabled: Shall the optimization of the source be enabled for this template</source>
 			</trans-unit>
+			<trans-unit id="sourceopt.headerComment" xml:space="preserve">
+				<source><![CDATA[Set the header comment to the given value.]]></source>
+			</trans-unit>
 			<trans-unit id="sourceopt.removeGenerator" xml:space="preserve">
 				<source><![CDATA[Remove generator: Remove <meta name="generator" content="TYPO3 x.x CMS">]]></source>
 			</trans-unit>
