@@ -67,7 +67,7 @@ class RemoveComments implements ManipulationInterface
             $commentHtml = str_replace("-->", "", $commentHtml);
             $commentHtml = trim($commentHtml);
             foreach ($this->whiteListCommentsPatterns as $pattern) {
-                if (preg_match($pattern, $commentHtml)) {
+                if (!empty($pattern) && preg_match($pattern, $commentHtml)) {
                     return true;
                 }
             }
