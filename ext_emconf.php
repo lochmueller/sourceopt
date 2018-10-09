@@ -9,12 +9,10 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Dr. Ronald P. Steiner, Boris Nicolai, Tim Lochmueller',
     'author_email' => 'ronald.steiner@googlemail.com, boris.nicolai@andavida.com, tim@fruit-lab.de',
     'author_company' => null,
-    'constraints' =>
-        [
-            'depends' =>
-                [
-                    'typo3' => '8.7.0-9.5.99',
-                    'php' => '5.6.0-0.0.0',
-                ],
+    'constraints' =>[
+        'depends' => [
+            'typo3' => '8.7.0 - 9.5.99',
+            'php' => '7.2',
         ],
+    ],
 ];
