@@ -6,6 +6,7 @@ use HTML\Sourceopt\Manipulation\ManipulationInterface;
 use HTML\Sourceopt\Manipulation\RemoveBlurScript;
 use HTML\Sourceopt\Manipulation\RemoveComments;
 use HTML\Sourceopt\Manipulation\RemoveGenerator;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -66,12 +67,11 @@ class CleanHtmlService implements SingletonInterface
      */
     public function setVariables(array $config)
     {
-        switch (TYPO3_OS) { // set newline
-            case 'WIN':
-                $this->newline = "\r\n";
-                break;
-            default:
-                $this->newline = "\n";
+        // Set newline based on OS
+        if (Environment::isWindows()) {
+            $this->newline = "\r\n";
+        } else {
+            $this->newline = "\n";
         }
 
         if (!empty($config)) {
@@ -421,7 +421,7 @@ class CleanHtmlService implements SingletonInterface
     {
         $html = str_replace("\t", "", $html);
         // convert newlines according to the current OS
-        if (TYPO3_OS == "WIN") {
+        if (Environment::isWindows()) {
             $html = str_replace("\n", "\r\n", $html);
         } else {
             $html = str_replace("\r\n", "\n", $html);
