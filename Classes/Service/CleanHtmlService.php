@@ -140,8 +140,10 @@ class CleanHtmlService implements SingletonInterface
         }
 
         if ($this->formatType > 0) {
-            $this->formatHtml($html);
+            $html = $this->formatHtml($html);
         }
+
+        return $html;
     }
 
     /**
@@ -339,6 +341,8 @@ class CleanHtmlService implements SingletonInterface
         if ($tabs != 0 && $this->debugComment === true) {
             $html .= '<!--' . $tabs . " open elements found-->\r\n";
         }
+
+        return $html;
     }
 
     /**
