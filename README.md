@@ -5,3 +5,7 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/lochmueller/sourceopt/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/lochmueller/sourceopt/?branch=master)
 
 You can find the documentation [here](https://docs.typo3.org/typo3cms/extensions/sourceopt/).
+
+
+ToDo:
+- Try external packages like https://github.com/ArjanSchouten/HtmlMinifier
