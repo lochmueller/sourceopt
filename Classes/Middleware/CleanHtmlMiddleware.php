@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CleanHtmlMiddleware implements MiddlewareInterface
@@ -42,7 +43,10 @@ class CleanHtmlMiddleware implements MiddlewareInterface
                 $GLOBALS['TSFE']->config['config']['sourceopt.']
             );
 
-            // @todo replace old body with $processedHtml
+            // Replace old body with $processedHtml
+            $responseBody = new Stream('php://temp', 'rw');
+            $responseBody->write($processedHtml);
+            $response = $response->withBody($responseBody);
         }
 
         return $response;
