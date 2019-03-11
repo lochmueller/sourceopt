@@ -103,13 +103,13 @@ class CleanHtmlService implements SingletonInterface
      * @param string $html
      * @param array $config
      *
-     * @return void
+     * @return string
      */
-    public function clean(&$html, $config = [])
+    public function clean($html, $config = [])
     {
         if (!empty($config)) {
             if ((bool)$config['enabled'] === false) {
-                return;
+                return $html;
             }
 
             $this->setVariables($config);
