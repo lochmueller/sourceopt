@@ -3,7 +3,6 @@
   "type": "typo3-cms-extension",
   "description": "Optimization of the final page: reformatting the (x)html output, removal of new lines, and quotes.",
   "homepage": "https://github.com/lochmueller/sourceopt",
-  "version": "2.0.0",
   "autoload": {
     "psr-4": {
       "HTML\\Sourceopt\\": "Classes/"
@@ -17,7 +16,7 @@
   },
   "require": {
     "php": ">=7.2.0",
-    "typo3/cms-core": "~9.5.0 || dev-master"
+    "typo3/cms-core": "~9.5.0||dev-master"
   },
   "replace": {
     "sourceopt": "self.version",
