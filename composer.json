@@ -16,18 +16,18 @@
     }
   },
   "require": {
-    "php": ">=7.2.0",
-    "typo3/cms-core": "^9.5||^10.1"
+    "php": "^7.2||^7.3",
+    "typo3/cms-core": "^9.5||^10.2"
   },
   "replace": {
     "typo3-ter/sourceopt": "self.version"
   },
   "require-dev": {
-    "namelesscoder/typo3-repository-client": "1.2.0",
-    "phpunit/phpunit": "~4.8.0",
+    "namelesscoder/typo3-repository-client": "^1.2",
+    "phpunit/phpunit": "^4.8",
     "squizlabs/php_codesniffer": "^2.6",
     "phpmd/phpmd": "^2.4",
-    "scrutinizer/ocular": "^1.3.0"
+    "scrutinizer/ocular": "^1.3"
   },
   "config": {
     "vendor-dir": ".Build/vendor",
