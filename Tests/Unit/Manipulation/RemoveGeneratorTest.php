@@ -8,17 +8,16 @@
 namespace HTML\Sourceopt\Tests\Unit\Service;
 
 use HTML\Sourceopt\Manipulation\RemoveGenerator;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /**
  * RemoveGeneratorTest
  */
-class RemoveGeneratorTest extends UnitTestCase
+class RemoveGeneratorTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
      * @test
-     * @provider generatorProvider
+     * @dataProvider generatorProvider
      */
     public function testRemoveGenerator($before, $after)
     {
@@ -28,7 +27,7 @@ class RemoveGeneratorTest extends UnitTestCase
         $this->assertEquals($after, $result);
     }
 
-    protected function generatorProvider(): array
+    public function generatorProvider(): array
     {
         return [
             [
