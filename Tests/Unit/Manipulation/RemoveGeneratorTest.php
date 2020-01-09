@@ -18,20 +18,51 @@ class RemoveGeneratorTest extends UnitTestCase
 
     /**
      * @test
+     * @provider generatorProvider
      */
-    public function testRemoveGenerator()
+    public function testRemoveGenerator($before, $after)
     {
-        $html = '<head>
+        $cleanService = new RemoveGenerator();
+        $result = $cleanService->manipulate($before);
+
+        $this->assertEquals($after, $result);
+    }
+
+    protected function generatorProvider(): array
+    {
+        return [
+            [
+                '<head>
 <meta name="Regisseur" content="Peter Jackson">
 <meta name="generator" content="Tester">
-</head>';
-        $cleanService = new RemoveGenerator();
-        $result = $cleanService->manipulate($html);
-
-        $expected = '<head>
+</head>',
+                '<head>
 <meta name="Regisseur" content="Peter Jackson">
 
-</head>';
-        $this->assertEquals($expected, $result);
+</head>',
+            ],
+            [
+                '<head>
+<meta name="Regisseur" content="Peter Jackson">
+<meta name="generator" content="TYPO3 CMS" />
+</head>',
+                '<head>
+<meta name="Regisseur" content="Peter Jackson">
+
+</head>',
+            ],
+            [
+                '<head>
+<meta name="Regisseur" content="Peter Jackson">
+<meta name="other" content="generator" />
+</head>',
+                '<head>
+<meta name="Regisseur" content="Peter Jackson">
+<meta name="other" content="generator" />
+</head>',
+            ],
+        ];
+
+
     }
 }

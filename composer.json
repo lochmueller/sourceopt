@@ -1,44 +1,43 @@
 {
-  "name": "lochmueller/sourceopt",
-  "type": "typo3-cms-extension",
-  "description": "Optimization of the final page: reformatting the (x)html output, removal of new lines, and quotes.",
-  "homepage": "https://github.com/lochmueller/sourceopt",
-  "license": "GPL-2.0-or-later",
-  "autoload": {
-    "psr-4": {
-      "HTML\\Sourceopt\\": "Classes/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "HTML\\Sourceopt\\Tests\\": "Tests",
-      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
-    }
-  },
-  "require": {
-    "php": "^7.2||^7.3",
-    "typo3/cms-core": "^9.5||^10.2"
-  },
-  "replace": {
-    "typo3-ter/sourceopt": "self.version"
-  },
-  "require-dev": {
-    "namelesscoder/typo3-repository-client": "^1.2",
-    "phpunit/phpunit": "^4.8",
-    "squizlabs/php_codesniffer": "^2.6",
-    "phpmd/phpmd": "^2.4",
-    "scrutinizer/ocular": "^1.3"
-  },
-  "config": {
-    "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin"
-  },
-  "extra": {
-    "typo3/cms": {
-      "web-dir": ".Build/Web",
-      "Package": {
-        "partOfMinimalUsableSystem": true
-      }
-    }
-  }
+	"name": "lochmueller/sourceopt",
+	"type": "typo3-cms-extension",
+	"description": "Optimization of the final page: reformatting the (x)html output, removal of new lines, and quotes.",
+	"homepage": "https://github.com/lochmueller/sourceopt",
+	"license": "GPL-2.0-or-later",
+	"autoload": {
+		"psr-4": {
+			"HTML\\Sourceopt\\": "Classes/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"HTML\\Sourceopt\\Tests\\": "Tests",
+			"TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+		}
+	},
+	"require": {
+		"php": "^7.2||^7.3",
+		"typo3/cms-core": "^9.5||^10.2"
+	},
+	"replace": {
+		"typo3-ter/sourceopt": "self.version"
+	},
+	"require-dev": {
+		"namelesscoder/typo3-repository-client": "^1.2",
+		"phpunit/phpunit": "^4.8",
+		"squizlabs/php_codesniffer": "^2.6",
+		"phpmd/phpmd": "^2.4",
+		"scrutinizer/ocular": "^1.3"
+	},
+	"config": {
+		"vendor-dir": ".Build/vendor",
+		"bin-dir": ".Build/bin"
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "staticfilecache",
+			"cms-package-dir": "{$vendor-dir}/typo3/cms",
+			"web-dir": ".Build/Web"
+		}
+	}
 }
