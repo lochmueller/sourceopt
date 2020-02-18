@@ -161,9 +161,9 @@ class CleanHtmlService implements SingletonInterface
      *
      * @param string $html
      *
-     * @return void
+     * @return string
      */
-    protected function formatHtml(&$html)
+    protected function formatHtml($html)
     {
         // Save original formated comments, pre, textarea, styles and java-scripts & replace them with markers
         preg_match_all(

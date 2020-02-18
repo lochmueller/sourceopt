@@ -7,9 +7,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Http\NullResponse;
 use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
+/**
+ * CleanHtmlMiddleware
+ */
 class CleanHtmlMiddleware implements MiddlewareInterface
 {
     /**
@@ -34,8 +39,8 @@ class CleanHtmlMiddleware implements MiddlewareInterface
         $response = $handler->handle($request);
 
         if (
-            !($response instanceof \TYPO3\CMS\Core\Http\NullResponse)
-            && $GLOBALS['TSFE'] instanceof \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+            !($response instanceof NullResponse)
+            && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController
             && $GLOBALS['TSFE']->isOutputting()) {
 
             $processedHtml = $this->cleanHtmlService->clean(
