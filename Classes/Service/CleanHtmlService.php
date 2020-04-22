@@ -295,31 +295,22 @@ class CleanHtmlService implements SingletonInterface
 
             // count up a tab
             if (substr($htmlArray[$x], 0, 1) == '<' && substr($htmlArray[$x], 1, 1) != '/') {
-                if (substr($htmlArray[$x], 1, 1) != ' ' && substr($htmlArray[$x], 1, 3) != 'img' && substr(
-                        $htmlArray[$x],
-                        1,
-                        2
-                    ) != 'br' && substr($htmlArray[$x], 1, 2) != 'hr' && substr(
-                        $htmlArray[$x],
-                        1,
-                        5
-                    ) != 'input' && substr($htmlArray[$x], 1, 4) != 'link' && substr(
-                        $htmlArray[$x],
-                        1,
-                        4
-                    ) != 'meta' && substr($htmlArray[$x], 1, 4) != 'col ' && substr(
-                        $htmlArray[$x],
-                        1,
-                        5
-                    ) != 'frame' && substr($htmlArray[$x], 1, 7) != 'isindex' && substr(
-                        $htmlArray[$x],
-                        1,
-                        5
-                    ) != 'param' && substr($htmlArray[$x], 1, 4) != 'area' && substr(
-                        $htmlArray[$x],
-                        1,
-                        4
-                    ) != 'base' && substr($htmlArray[$x], 0, 2) != '<!' && substr($htmlArray[$x], 0, 5) != '<?xml'
+                if (
+                    substr($htmlArray[$x], 1, 1) !== ' '
+                    && substr($htmlArray[$x], 1, 3) !== 'img'
+                    && substr($htmlArray[$x], 1, 2) !== 'br'
+                    && substr($htmlArray[$x], 1, 2) !== 'hr'
+                    && substr($htmlArray[$x], 1, 5) !== 'input'
+                    && substr($htmlArray[$x], 1, 4) !== 'link'
+                    && substr($htmlArray[$x], 1, 4) !== 'meta'
+                    && substr($htmlArray[$x], 1, 4) !== 'col '
+                    && substr($htmlArray[$x], 1, 5) !== 'frame'
+                    && substr($htmlArray[$x], 1, 7) !== 'isindex'
+                    && substr($htmlArray[$x], 1, 5) !== 'param'
+                    && substr($htmlArray[$x], 1, 4) !== 'area'
+                    && substr($htmlArray[$x], 1, 4) !== 'base'
+                    && substr($htmlArray[$x], 0, 2) !== '<!'
+                    && substr($htmlArray[$x], 0, 5) !== '<?xml'
                 ) {
                     $tabs++;
                 }
