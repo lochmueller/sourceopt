@@ -298,6 +298,7 @@ class CleanHtmlService implements SingletonInterface
                 if (
                     substr($htmlArray[$x], 1, 1) !== ' '
                     && substr($htmlArray[$x], 1, 3) !== 'img'
+                    && substr($htmlArray[$x], 1, 6) !== 'source'
                     && substr($htmlArray[$x], 1, 2) !== 'br'
                     && substr($htmlArray[$x], 1, 2) !== 'hr'
                     && substr($htmlArray[$x], 1, 5) !== 'input'
