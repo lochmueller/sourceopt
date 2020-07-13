@@ -192,6 +192,10 @@ class CleanHtmlService implements SingletonInterface
             -1,
             PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
         );
+
+        if ($htmlArrayTemp === false) {
+            return $html;
+        }
         // remove empty lines
         $htmlArray = [''];
         $z = 1;
