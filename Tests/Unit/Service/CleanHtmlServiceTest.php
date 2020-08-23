@@ -13,30 +13,32 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CleanHtmlServiceTest extends \PHPUnit\Framework\TestCase
 {
-
-
     public function testFormatHtml()
     {
-
-        $this->markTestSkipped('Ignore!');
-
         $clean = new CleanHtmlService();
         $config = [
             'enabled' => true,
+            'removeComments' => true,
             'formatHtml' => 4,
             'formatHtml.' => [
                 'tabSize' => 2,
             ],
         ];
 
-        $svg = '<path></path>
-<path></path>';
-
+        $svg =
+'<svg>
+  <path/>
+  <path/>
+  <path>
+    <path/>
+    <path>
+      <path>
+        <path></path>
+      </path>
+    </path>
+  </path>
+</svg>';
         $result = $clean->clean($svg, $config);
-
-        var_dump($result);
-
-
+        $this->assertEquals($svg, $result);
     }
-
 }
