@@ -194,6 +194,11 @@ class CleanHtmlService implements SingletonInterface
         );
 
         if ($htmlArrayTemp === false) {
+            // Restore saved comments, styles and java-scripts
+            for ($i = 0; $i < count($noFormat); $i++) {
+                $noFormat[$i] = $this->rTrimLines($noFormat[$i]); // remove white space after line ending
+                $html = str_replace("<!-- ELEMENT $i -->", $noFormat[$i], $html);
+            }
             return $html;
         }
         // remove empty lines
