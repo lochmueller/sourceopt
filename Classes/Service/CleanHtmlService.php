@@ -139,6 +139,11 @@ class CleanHtmlService implements SingletonInterface
             $html = $manipulation->manipulate($html, $configuration);
         }
 
+        // cleanup HTML5 self-closing elements
+        if(!isset($GLOBALS['TSFE']->config['config']['doctype']) || 'x' !== substr($GLOBALS['TSFE']->config['config']['doctype'],0,1)) {
+            $html = preg_replace('/<((?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\s[^>]+?)\s?\/>/', '<$1>', $html);
+        }
+        
         if ($this->formatType > 0) {
             $html = $this->formatHtml($html);
         }
