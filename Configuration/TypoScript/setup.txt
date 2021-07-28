@@ -11,7 +11,6 @@ config.sourceopt {
 	dropEmptySpaceChar = 0
 
 	removeGenerator = {$sourceopt.removeGenerator}
-	removeBlurScript = {$sourceopt.removeBlurScript}
 	removeComments = {$sourceopt.removeComments}
 	removeComments.keep {
 		# TYPO3 specific comment
@@ -30,7 +29,7 @@ config.sourceopt {
 		# google search appliance
 		101 = /^googleoff_/usi
 		102 = /^googleon_/usi
-		
+
 		# Google pagespeed
 		104 = /^gps(e|s)/usi
 

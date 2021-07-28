@@ -13,9 +13,6 @@
 			<trans-unit id="sourceopt.removeGenerator" xml:space="preserve">
 				<source><![CDATA[Remove generator: Remove <meta name="generator" content="TYPO3 x.x CMS">]]></source>
 			</trans-unit>
-			<trans-unit id="sourceopt.removeBlurScript" xml:space="preserve">
-				<source><![CDATA[Remove blur-script: Removes the script in the head that defines the blur-function and also removes the "onFocus="blurLink(this);"" of tags; May cause problems if you work with JS]]></source>
-			</trans-unit>
 			<trans-unit id="sourceopt.removeComments" xml:space="preserve">
 				<source>Remove HTML-Comments</source>
 			</trans-unit>
