@@ -25,11 +25,6 @@ Constant Editor:
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 | sourceopt.removeGenerator         | boolean     | Remove <meta name="generator" content="TYPO3 x.x CMS">           | 1                  |
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
-| sourceopt.removeBlurScript        | boolean     | Removes the script in the head that defines the blur-function    | 1                  |
-|                                   |             | and also removes the "onFocus="blurLink(this);"" of tags;        |                    |
-|                                   |             |                                                                  |                    |
-|                                   |             | May cause problems if you work with JS                           |                    |
-+-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 | sourceopt.removeComments          | boolean     | Remove HTML-Comments                                             | 1                  |
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 | sourceopt.removeComments.keep.10  | boolean     | Spare this comments from remove: Regular expressions that match  | /^TYPO3SEARCH_/usi |

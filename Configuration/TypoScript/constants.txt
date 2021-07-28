@@ -4,9 +4,6 @@ sourceopt.enabled = 1
 # cat=plugin.sourceopt/enable/20; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeGenerator
 sourceopt.removeGenerator = 1
 
-# cat=plugin.sourceopt/enable/45; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeBlurScript
-sourceopt.removeBlurScript = 1
-
 # cat=plugin.sourceopt/enable/50; type=boolean;  label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeComments
 sourceopt.removeComments = 1
 
