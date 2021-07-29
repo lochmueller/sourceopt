@@ -3,7 +3,6 @@
 namespace HTML\Sourceopt\Service;
 
 use HTML\Sourceopt\Manipulation\ManipulationInterface;
-use HTML\Sourceopt\Manipulation\RemoveBlurScript;
 use HTML\Sourceopt\Manipulation\RemoveComments;
 use HTML\Sourceopt\Manipulation\RemoveGenerator;
 use TYPO3\CMS\Core\Core\Environment;
@@ -67,13 +66,6 @@ class CleanHtmlService implements SingletonInterface
      */
     public function setVariables(array $config)
     {
-        // Set newline based on OS
-        if (Environment::isWindows()) {
-            $this->newline = "\r\n";
-        } else {
-            $this->newline = "\n";
-        }
-
         if (!empty($config)) {
             if ($config['formatHtml'] && is_numeric($config['formatHtml'])) {
                 $this->formatType = (int)$config['formatHtml'];
@@ -114,6 +106,8 @@ class CleanHtmlService implements SingletonInterface
 
             $this->setVariables($config);
         }
+        // convert line-breaks to UNIX
+        $this->convNlOs($html);
 
         $manipulations = [];
 
@@ -123,10 +117,6 @@ class CleanHtmlService implements SingletonInterface
 
         if (isset($config['removeComments']) && (bool)$config['removeComments']) {
             $manipulations['removeComments'] = GeneralUtility::makeInstance(RemoveComments::class);
-        }
-
-        if (isset($config['removeBlurScript']) && (bool)$config['removeBlurScript']) {
-            $manipulations['removeBlurScript'] = GeneralUtility::makeInstance(RemoveBlurScript::class);
         }
 
         if (!empty($this->headerComment)) {
@@ -143,9 +133,16 @@ class CleanHtmlService implements SingletonInterface
         if(!isset($GLOBALS['TSFE']->config['config']['doctype']) || 'x' !== substr($GLOBALS['TSFE']->config['config']['doctype'],0,1)) {
             $html = preg_replace('/<((?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\s[^>]+?)\s?\/>/', '<$1>', $html);
         }
-        
+
         if ($this->formatType > 0) {
             $html = $this->formatHtml($html);
+        }
+        // remove white space after line ending
+        $this->rTrimLines($html);
+
+        // recover line-breaks
+        if (Environment::isWindows()) {
+          $html = str_replace($this->newline, "\r\n", $html);
         }
 
         return $html;
@@ -201,7 +198,6 @@ class CleanHtmlService implements SingletonInterface
         if ($htmlArrayTemp === false) {
             // Restore saved comments, styles and java-scripts
             for ($i = 0; $i < count($noFormat); $i++) {
-                $noFormat[$i] = $this->rTrimLines($noFormat[$i]); // remove white space after line ending
                 $html = str_replace("<!-- ELEMENT $i -->", $noFormat[$i], $html);
             }
             return $html;
@@ -295,11 +291,7 @@ class CleanHtmlService implements SingletonInterface
             }
 
             // remove white spaces and line breaks and add current tag to the html-string
-            if (substr($htmlArray[$x - 1], 0, 4) == '<pre' // remove white space after line ending in PRE / TEXTAREA / comment
-                || substr($htmlArray[$x - 1], 0, 9) == '<textarea' || substr($htmlArray[$x - 1], 0, 4) == '<!--'
-            ) {
-                $html .= $this->rTrimLines($htmlArray[$x]);
-            } elseif (substr($htmlArray[$x], 0, 9) == '<![CDATA[' // remove multiple white space in CDATA / XML
+            if (substr($htmlArray[$x], 0, 9) == '<![CDATA[' // remove multiple white space in CDATA / XML
                 || substr($htmlArray[$x], 0, 5) == '<?xml'
             ) {
                 $html .= $this->killWhiteSpace($htmlArray[$x]);
@@ -339,13 +331,12 @@ class CleanHtmlService implements SingletonInterface
 
         // Restore saved comments, styles and java-scripts
         for ($i = 0; $i < count($noFormat); $i++) {
-            $noFormat[$i] = $this->rTrimLines($noFormat[$i]); // remove white space after line ending
             $html = str_replace("<!-- ELEMENT $i -->", $noFormat[$i], $html);
         }
 
         // include debug comment at the end
         if ($tabs != 0 && $this->debugComment === true) {
-            $html .= '<!--' . $tabs . " open elements found-->\r\n";
+            $html .= "<!-- $tabs open elements found -->";
         }
 
         return $html;
@@ -360,10 +351,10 @@ class CleanHtmlService implements SingletonInterface
      */
     protected function killLineBreaks($html)
     {
-        $html = $this->convNlOs($html);
-        $html = str_replace($this->newline, "", $html);
+        $html = str_replace($this->newline, '', $html);
         $html = preg_replace('/\s\s+/u', ' ', $html);
         return $html;
+        #? return preg_replace('/\n|\s+(\s)/u', '$1', $html);
     }
 
     /**
@@ -375,7 +366,6 @@ class CleanHtmlService implements SingletonInterface
      */
     protected function killWhiteSpace($html)
     {
-        $html = $this->convNlOs($html);
         $temp = explode($this->newline, $html);
         for ($i = 0; $i < count($temp); $i++) {
             if (!trim($temp[$i])) {
@@ -396,15 +386,9 @@ class CleanHtmlService implements SingletonInterface
      *
      * @return string
      */
-    protected function rTrimLines($html)
+    protected function rTrimLines(&$html)
     {
-        $html = $this->convNlOs($html);
-        $temp = explode($this->newline, $html);
-        for ($i = 0; $i < count($temp); $i++) {
-            $temp[$i] = rtrim($temp[$i]);
-        }
-        $html = implode($this->newline, $temp);
-        return $html;
+        $html = preg_replace('/\s+$/m', '', $html);
     }
 
     /**
@@ -414,32 +398,9 @@ class CleanHtmlService implements SingletonInterface
      *
      * @return string
      */
-    protected function convNlOs($html)
+    protected function convNlOs(&$html)
     {
-        $html = preg_replace("(\r\n|\n|\r)", $this->newline, $html);
-        return $html;
-    }
-
-    /**
-     * Remove tabs and empty spaces before and after lines, transforms linebreaks system conform
-     *
-     * @param string $html Html-Code
-     *
-     * @return void
-     */
-    protected function trimLines(&$html)
-    {
-        $html = str_replace("\t", "", $html);
-        // convert newlines according to the current OS
-        if (Environment::isWindows()) {
-            $html = str_replace("\n", "\r\n", $html);
-        } else {
-            $html = str_replace("\r\n", "\n", $html);
-        }
-        $temp = explode($this->newline, $html);
-        $temp = array_map('trim', $temp);
-        $html = implode($this->newline, $temp);
-        unset($temp);
+        $html = preg_replace("(\r\n|\r)", $this->newline, $html);
     }
 
     /**
@@ -454,72 +415,12 @@ class CleanHtmlService implements SingletonInterface
         $temp = explode($this->newline, $html);
         $result = [];
         for ($i = 0; $i < count($temp); ++$i) {
-            if ("" == trim($temp[$i])) {
+            if ('' == trim($temp[$i])) {
                 continue;
             }
             $result[] = $temp[$i];
         }
         $html = implode($this->newline, $result);
-    }
-
-    /**
-     * Remove new lines where unnecessary
-     * spares line breaks within: pre, textarea, ...
-     *
-     * @param string $html
-     *
-     * @return void
-     */
-    protected function removeNewLines(&$html)
-    {
-        $splitArray = [
-            'textarea',
-            'pre'
-        ]; // eventuell auch: span, script, style
-        $peaces = preg_split('#(<(' . implode('|', $splitArray) . ').*>.*</\2>)#Uis', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
-        $html = "";
-        for ($i = 0; $i < count($peaces); $i++) {
-            if (($i + 1) % 3 == 0) {
-                continue;
-            }
-            $html .= (($i - 1) % 3 != 0) ? $this->killLineBreaks($peaces[$i]) : $peaces[$i];
-        }
-    }
-
-    /**
-     * Remove obsolete link schema
-     *
-     * @param string $html
-     *
-     * @return void
-     */
-    protected function removeLinkSchema(&$html)
-    {
-        $html = preg_replace("/<link rel=\"?schema.dc\"?.+?>/is", "", $html);
-    }
-
-    /**
-     * Remove empty alt tags
-     *
-     * @param string $html
-     *
-     * @return void
-     */
-    protected function removeEmptyAltAtr(&$html)
-    {
-        $html = str_replace("alt=\"\"", "", $html);
-    }
-
-    /**
-     * Remove broken links in <a> tags
-     *
-     * @param string $html
-     *
-     * @return void
-     */
-    protected function removeRealUrlBrokenRootLink(&$html)
-    {
-        $html = str_replace('href=".html"', 'href=""', $html);
     }
 
     /**
@@ -529,10 +430,6 @@ class CleanHtmlService implements SingletonInterface
      */
     public function includeHeaderComment(&$html)
     {
-        if (!empty($this->headerComment)) {
-            $html = preg_replace_callback('/<meta http-equiv(.*)>/Usi', function ($matches) {
-                return trim($matches[0] . $this->newline . $this->tab . $this->tab . '<!-- ' . $this->headerComment . '-->');
-            }, $html, 1);
-        }
+        $html = preg_replace('/^(-->)$/m', "\n\t" . $this->headerComment . "\n$1", $html);
     }
 }
