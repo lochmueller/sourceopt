@@ -15,8 +15,11 @@ jobs:
       - name: Set up PHP Version
         run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php }}
 
+      - name: Prepare env
+        run: export TYPO3_PATH_WEB="$PWD/.Build/Web"
+
       - name: Install dependencies
-        run: composer install
+        run: composer require "typo3/cms-core:^${{ matrix.typo3 }}" "typo3/testing-framework"
 
       - name: Execute tests
         run: composer test
