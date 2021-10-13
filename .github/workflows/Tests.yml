@@ -37,7 +37,7 @@ jobs:
         run: composer require --dev squizlabs/php_codesniffer --no-interaction --no-update
 
       - name: Execute sniffer checks
-        run: ls -al ~
+        run: ls -al ~/.composer/
         # run: .Build/vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
 
   messdetector:
@@ -52,5 +52,5 @@ jobs:
         run: composer require --dev phpmd/phpmd --no-interaction --no-update
 
       - name: Execute mess checks
-        run: ls -al ~
+        run: ls -al ~/.composer/
         # run: .Build/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming
