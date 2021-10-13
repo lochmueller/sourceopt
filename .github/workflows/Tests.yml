@@ -22,3 +22,17 @@ jobs:
 
       - name: Execute tests
         run: composer test
+
+  # codingstyle:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+
+  #     - name: Set up PHP Version
+  #       run: sudo update-alternatives --set php /usr/bin/php7.4
+
+  #     - name: Install requirements
+  #       run: composer global require --dev friendsofphp/php-cs-fixer --no-interaction --no-update
+
+  #     - name: Execute style check
+  #       run: /home/runner/.composer/vendor/bin/php-cs-fixer  --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
