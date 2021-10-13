@@ -16,7 +16,9 @@ jobs:
         run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php }}
 
       - name: Install dependencies
-        run: composer global require "typo3/minimal:^${{ matrix.typo3 }}" "typo3/testing-framework:^6.4" --no-interaction --no-update
+        run: |
+          composer install
+          composer require "typo3/minimal:^${{ matrix.typo3 }}" --no-interaction --no-update
 
       - name: Execute tests
         run: composer test
