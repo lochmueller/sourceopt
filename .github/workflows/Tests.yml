@@ -1,0 +1,25 @@
+name: Tests
+
+on: push
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        typo3: [9.5, 10.4, 11.5]
+        php: [7.4]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up PHP Version
+        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php }}
+
+      - name: Install dependencies
+        run: composer global require "typo3/minimal:${{ matrix.typo3 }}" --no-interaction --no-update
+
+      - name: Install testing framework
+        run: composer global require "typo3/testing-framework:6.4" --no-interaction --no-update
+
+      - name: Execute tests
+        run: /home/runner/.composer/vendor/bin/phpunit --colors -c /home/runner/.composer/vendor/typo3/testing-framework/Resources/Core/Build/UnitTests.xml Tests/Unit
