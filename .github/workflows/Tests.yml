@@ -11,7 +11,7 @@ jobs:
         php: [7.4]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Set up PHP Version
         run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php }}
@@ -28,7 +28,7 @@ jobs:
   codesniffer:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Set up PHP Version
         run: sudo update-alternatives --set php /usr/bin/php7.4
@@ -42,7 +42,7 @@ jobs:
   messdetector:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Set up PHP Version
         run: sudo update-alternatives --set php /usr/bin/php7.4
