@@ -34,10 +34,10 @@ jobs:
         run: sudo update-alternatives --set php /usr/bin/php7.4
 
       - name: Install requirements
-        run: composer global require --dev squizlabs/php_codesniffer --no-interaction --no-update
+        run: composer require squizlabs/php_codesniffer --no-interaction --no-update
 
       - name: Execute sniffer checks
-        run: phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
+        run: vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
 
   messdetector:
     runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ jobs:
         run: sudo update-alternatives --set php /usr/bin/php7.4
 
       - name: Install requirements
-        run: composer global require --dev phpmd/phpmd --no-interaction --no-update
+        run: composer require phpmd/phpmd --no-interaction --no-update
 
       - name: Execute sniffer checks
-        run: phpmd Classes/ text cleancode,codesize,controversial,design,naming
+        run: vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming
