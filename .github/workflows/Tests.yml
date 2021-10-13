@@ -38,3 +38,17 @@ jobs:
 
       - name: Execute sniffer checks
         run: vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
+
+  messdetector:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up PHP Version
+        run: sudo update-alternatives --set php /usr/bin/php7.4
+
+      - name: Install requirements
+        run: composer require --dev phpmd/phpmd --no-interaction --no-update
+
+      - name: Execute sniffer checks
+        run: vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming
