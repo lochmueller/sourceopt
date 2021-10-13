@@ -37,8 +37,7 @@ jobs:
         run: composer global require --dev squizlabs/php_codesniffer --no-interaction
 
       - name: Execute sniffer checks
-        run: ls -al /home/runner/.composer
-        # run: .Build/vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
+        run: ~/.composer/vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
 
   messdetector:
     runs-on: ubuntu-latest
@@ -52,5 +51,4 @@ jobs:
         run: composer global require --dev phpmd/phpmd --no-interaction
 
       - name: Execute mess checks
-        run: ls -al /home/runner/.composer
-        # run: .Build/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming
+        run: ~/.composer/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming
