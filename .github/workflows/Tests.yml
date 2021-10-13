@@ -34,7 +34,9 @@ jobs:
         run: sudo update-alternatives --set php /usr/bin/php7.4
 
       - name: Install requirements
-        run: composer global require --dev squizlabs/php_codesniffer --no-interaction --no-update
+        run: |
+          composer global require --dev squizlabs/php_codesniffer --no-interaction --no-update
+          composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
 
       - name: Execute sniffer checks
         run: /home/runner/.composer/vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
@@ -48,7 +50,9 @@ jobs:
         run: sudo update-alternatives --set php /usr/bin/php7.4
 
       - name: Install requirements
-        run: composer global require --dev phpmd/phpmd --no-interaction --no-update
+        run: |
+          composer global require --dev phpmd/phpmd --no-interaction --no-update
+          composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
 
       - name: Execute sniffer checks
         run: /home/runner/.composer/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming
