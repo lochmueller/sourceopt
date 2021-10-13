@@ -40,4 +40,4 @@ jobs:
         run: composer require --dev squizlabs/php_codesniffer --no-interaction --no-update
 
       - name: Execute sniffer checks
-        run: .Build/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
+        run: vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
