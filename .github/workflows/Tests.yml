@@ -1,0 +1,54 @@
+name: Tests
+
+on: push
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        typo3: [10.4, 11.5]
+        php: [7.4]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up PHP Version
+        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php }}
+
+      - name: Prepare env
+        run: export TYPO3_PATH_WEB="$PWD/.Build/Web"
+
+      - name: Install dependencies
+        run: composer require "typo3/cms-core:^${{ matrix.typo3 }}" "typo3/testing-framework"
+
+      - name: Execute tests
+        run: composer test
+
+  codesniffer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up PHP Version
+        run: sudo update-alternatives --set php /usr/bin/php7.4
+
+      - name: Install requirements
+        run: composer global require --dev squizlabs/php_codesniffer --no-interaction
+
+      - name: Execute sniffer checks
+        run: ~/.composer/vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
+
+  messdetector:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up PHP Version
+        run: sudo update-alternatives --set php /usr/bin/php7.4
+
+      - name: Install requirements
+        run: composer global require --dev phpmd/phpmd --no-interaction
+
+      - name: Execute mess checks
+        run: ~/.composer/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming --ignore-errors-on-exit --ignore-violations-on-exit

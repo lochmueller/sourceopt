@@ -130,8 +130,13 @@ class CleanHtmlService implements SingletonInterface
         }
 
         // cleanup HTML5 self-closing elements
-        if(!isset($GLOBALS['TSFE']->config['config']['doctype']) || 'x' !== substr($GLOBALS['TSFE']->config['config']['doctype'],0,1)) {
-            $html = preg_replace('/<((?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\s[^>]+?)\s?\/>/', '<$1>', $html);
+        if (!isset($GLOBALS['TSFE']->config['config']['doctype']) ||
+            'x' !== substr($GLOBALS['TSFE']->config['config']['doctype'], 0, 1)) {
+            $html = preg_replace(
+                '/<((?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\s[^>]+?)\s?\/>/',
+                '<$1>',
+                $html
+            );
         }
 
         if ($this->formatType > 0) {
@@ -142,7 +147,7 @@ class CleanHtmlService implements SingletonInterface
 
         // recover line-breaks
         if (Environment::isWindows()) {
-          $html = str_replace($this->newline, "\r\n", $html);
+            $html = str_replace($this->newline, "\r\n", $html);
         }
 
         return $html;
@@ -204,16 +209,11 @@ class CleanHtmlService implements SingletonInterface
         }
         // remove empty lines
         $htmlArray = [''];
-        $z = 1;
+        $index = 1;
         for ($x = 0; $x < count($htmlArrayTemp); $x++) {
-            $t = trim($htmlArrayTemp[$x]);
-            if ($t !== '') {
-                $htmlArray[$z] = $htmlArrayTemp[$x];
-                $z++;
-            } else {
-                $htmlArray[$z] = $this->emptySpaceChar;
-                $z++;
-            }
+            $text = trim($htmlArrayTemp[$x]);
+            $htmlArray[$index] = $text !== '' ? $htmlArrayTemp[$x] : $this->emptySpaceChar;
+            $index++;
         }
 
         // rebuild html
@@ -301,8 +301,7 @@ class CleanHtmlService implements SingletonInterface
 
             // count up a tab
             if (substr($htmlArray[$x], 0, 1) == '<' && substr($htmlArray[$x], 1, 1) != '/') {
-                if (
-                    substr($htmlArray[$x], 1, 1) !== ' '
+                if (substr($htmlArray[$x], 1, 1) !== ' '
                     && substr($htmlArray[$x], 1, 3) !== 'img'
                     && substr($htmlArray[$x], 1, 6) !== 'source'
                     && substr($htmlArray[$x], 1, 2) !== 'br'
@@ -370,10 +369,11 @@ class CleanHtmlService implements SingletonInterface
         for ($i = 0; $i < count($temp); $i++) {
             if (!trim($temp[$i])) {
                 unset($temp[$i]);
-            } else {
-                $temp[$i] = trim($temp[$i]);
-                $temp[$i] = preg_replace('/\s\s+/', ' ', $temp[$i]);
+                continue;
             }
+
+            $temp[$i] = trim($temp[$i]);
+            $temp[$i] = preg_replace('/\s\s+/', ' ', $temp[$i]);
         }
         $html = implode($this->newline, $temp);
         return $html;
