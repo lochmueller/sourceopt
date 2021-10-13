@@ -51,4 +51,4 @@ jobs:
         run: composer global require --dev phpmd/phpmd --no-interaction
 
       - name: Execute mess checks
-        run: ~/.composer/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming
+        run: ~/.composer/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming --ignore-errors-on-exit

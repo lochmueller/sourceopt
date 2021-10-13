@@ -209,16 +209,11 @@ class CleanHtmlService implements SingletonInterface
         }
         // remove empty lines
         $htmlArray = [''];
-        $z = 1;
+        $index = 1;
         for ($x = 0; $x < count($htmlArrayTemp); $x++) {
-            $t = trim($htmlArrayTemp[$x]);
-            if ($t !== '') {
-                $htmlArray[$z] = $htmlArrayTemp[$x];
-                $z++;
-            } else {
-                $htmlArray[$z] = $this->emptySpaceChar;
-                $z++;
-            }
+            $text = trim($htmlArrayTemp[$x]);
+            $htmlArray[$index] = $text !== '' ? $htmlArrayTemp[$x] : $this->emptySpaceChar;
+            $index++;
         }
 
         // rebuild html
@@ -374,10 +369,11 @@ class CleanHtmlService implements SingletonInterface
         for ($i = 0; $i < count($temp); $i++) {
             if (!trim($temp[$i])) {
                 unset($temp[$i]);
-            } else {
-                $temp[$i] = trim($temp[$i]);
-                $temp[$i] = preg_replace('/\s\s+/', ' ', $temp[$i]);
+                continue;
             }
+
+            $temp[$i] = trim($temp[$i]);
+            $temp[$i] = preg_replace('/\s\s+/', ' ', $temp[$i]);
         }
         $html = implode($this->newline, $temp);
         return $html;
