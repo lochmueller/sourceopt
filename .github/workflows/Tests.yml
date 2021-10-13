@@ -35,11 +35,11 @@ jobs:
 
       - name: Install requirements
         run: |
-          composer global require --dev squizlabs/php_codesniffer --no-interaction --no-update
+          composer require --dev squizlabs/php_codesniffer --no-interaction --no-update
           composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
 
       - name: Execute sniffer checks
-        run: /home/runner/.composer/vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
+        run: .Build/vendor/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
 
   messdetector:
     runs-on: ubuntu-latest
@@ -51,8 +51,8 @@ jobs:
 
       - name: Install requirements
         run: |
-          composer global require --dev phpmd/phpmd --no-interaction --no-update
+          composer require --dev phpmd/phpmd --no-interaction --no-update
           composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
 
       - name: Execute sniffer checks
-        run: /home/runner/.composer/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming
+        run: .Build/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming
