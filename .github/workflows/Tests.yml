@@ -16,9 +16,7 @@ jobs:
         run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php }}
 
       - name: Install dependencies
-        run: |
-          composer install
-          composer update "typo3/cms-core:^${{ matrix.typo3 }}" --no-interaction --with-all-dependencies
+        run: composer require "typo3/cms-core:^${{ matrix.typo3 }}" "typo3/testing-framework:^6.4" --no-interaction
 
       - name: Execute tests
         run: composer test
