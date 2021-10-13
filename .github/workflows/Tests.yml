@@ -19,4 +19,4 @@ jobs:
         run: composer global require "typo3/minimal:^${{ matrix.typo3 }}" "typo3/testing-framework:^6.4" --no-interaction --no-update
 
       - name: Execute tests
-        run: /home/runner/.composer/vendor/bin/phpunit --colors -c /home/runner/.composer/vendor/typo3/testing-framework/Resources/Core/Build/UnitTests.xml Tests/Unit
+        run: composer test
