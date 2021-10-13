@@ -25,16 +25,19 @@ jobs:
       - name: Execute tests
         run: composer test
 
-  # codingstyle:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v1
+  codesniffer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
 
-  #     - name: Set up PHP Version
-  #       run: sudo update-alternatives --set php /usr/bin/php7.4
+      - name: Set up PHP Version
+        run: sudo update-alternatives --set php /usr/bin/php7.4
 
-  #     - name: Install requirements
-  #       run: composer require --dev squizlabs/php_codesniffer --no-interaction --no-update
+      - name: Prepare env
+        run: export TYPO3_PATH_WEB="$PWD/.Build/Web"
 
-  #     - name: Execute style check
-  #       run: .Build/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
+      - name: Install requirements
+        run: composer require --dev squizlabs/php_codesniffer --no-interaction --no-update
+
+      - name: Execute sniffer checks
+        run: .Build/bin/phpcs --runtime-set ignore_warnings_on_exit true --standard=PSR2 Classes/
