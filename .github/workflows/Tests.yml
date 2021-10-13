@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           composer install
-          composer update "typo3/cms-core:^${{ matrix.typo3 }}" --no-interaction
+          composer update "typo3/cms-core:^${{ matrix.typo3 }}" --no-interaction --with-all-dependencies
 
       - name: Execute tests
         run: composer test
