@@ -24,7 +24,8 @@
 	},
 	"require-dev": {
 		"typo3/testing-framework": "^6.4",
-		"friendsofphp/php-cs-fixer": "^3.3"
+		"friendsofphp/php-cs-fixer": "^3.3",
+		"phpmd/phpmd": "^2.10"
 	},
 	"config": {
 		"vendor-dir": ".Build/vendor",
@@ -47,8 +48,11 @@
 		"code:php-cs-fixer": [
 			"php-cs-fixer fix --config Resources/Private/Build/PhpCsFixer.php --cache-file=.Build/phpcs.cache"
 		],
-		"code:cs": [
-			"phpcs --config Resources/Private/Build/PhpCsFixer.php"
+		"code:php-cs-fixer:ci": [
+			"php-cs-fixer fix --dry-run --config Resources/Private/Build/PhpCsFixer.php --cache-file=.Build/phpcs.cache"
+		],
+		"code:phpmd": [
+			"phpmd Classes/ text cleancode,codesize,controversial,design,naming --ignore-errors-on-exit --ignore-violations-on-exit"
 		]
 	}
 }

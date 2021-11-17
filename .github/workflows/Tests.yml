@@ -45,10 +45,10 @@ jobs:
           tools: composer
 
       - name: Install requirements
-        run: composer global require --dev squizlabs/php_codesniffer --no-interaction
+        run: composer install
 
       - name: Execute php-cs-fixer checks
-        run: ~/.composer/vendor/bin/php-cs-fixer fix --dry-run --config Resources/Private/Build/PhpCsFixer.php --cache-file=.Build/phpcs.cache
+        run: composer code:php-cs-fixer:ci
 
   messdetector:
     runs-on: ubuntu-latest
@@ -62,7 +62,7 @@ jobs:
           tools: composer
 
       - name: Install requirements
-        run: composer global require --dev phpmd/phpmd --no-interaction
+        run: composer install
 
       - name: Execute mess checks
-        run: ~/.composer/vendor/bin/phpmd Classes/ text cleancode,codesize,controversial,design,naming --ignore-errors-on-exit --ignore-violations-on-exit
+        run: composer code:phpmd
