@@ -128,16 +128,16 @@ class SvgStoreService implements SingletonInterface
         }
 
         $svg = preg_replace_callback(
-        '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)#[^"]+"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
-        function (array $matches): string {
-          return sprintf('<use%s href="#%s"/>', $matches['pre'].$matches['post'], $this->convertFilePath($matches['href']));
-      },
-        '<svg xmlns="http://www.w3.org/2000/svg">'
-      //."\n<style>\n".implode("\n",$this->styl)."\n</style>"
-      //."\n<defs>\n".implode("\n",$this->defs)."\n</defs>"
-      ."\n<symbol ".implode("</symbol>\n<symbol ", $this->svgs)."</symbol>\n"
-      .'</svg>'
-    );
+            '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)#[^"]+"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
+            function (array $matches): string {
+                return sprintf('<use%s href="#%s"/>', $matches['pre'].$matches['post'], $this->convertFilePath($matches['href']));
+            },
+            '<svg xmlns="http://www.w3.org/2000/svg">'
+            //."\n<style>\n".implode("\n",$this->styl)."\n</style>"
+            //."\n<defs>\n".implode("\n",$this->defs)."\n</defs>"
+            ."\n<symbol ".implode("</symbol>\n<symbol ", $this->svgs)."</symbol>\n"
+            .'</svg>'
+        );
 
         //unset($this->styl);// save MEM
     //unset($this->defs);// save MEM
