@@ -9,6 +9,12 @@ return [
             'after' => [
                 'typo3/cms-frontend/maintenance-mode',
             ],
+        ],
+        'html/sourceopt/svg-store' => [
+            'target' => \HTML\Sourceopt\Middleware\SvgStoreMiddleware::class,
+            'after' => [
+                'html/sourceopt/clean-html',
+            ]
         ]
     ]
 ];

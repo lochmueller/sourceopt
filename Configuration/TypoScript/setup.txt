@@ -37,3 +37,8 @@ config.sourceopt {
 		10 = {$sourceopt.removeComments.keep.10}
 	}
 }
+config.svgstore {
+	enabled = {$svgstore.enabled}
+	fileSize = {$svgstore.fileSize}
+	outputDir = {$svgstore.outputDir}
+}
