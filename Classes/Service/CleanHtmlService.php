@@ -100,10 +100,6 @@ class CleanHtmlService implements SingletonInterface
     public function clean($html, $config = [])
     {
         if (!empty($config)) {
-            if ((bool)$config['enabled'] === false) {
-                return $html;
-            }
-
             $this->setVariables($config);
         }
         // convert line-breaks to UNIX

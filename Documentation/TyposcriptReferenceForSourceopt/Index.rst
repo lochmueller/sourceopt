@@ -9,14 +9,11 @@
 TypoScript Reference for sourceopt
 ----------------------------------
 
-All configuration of sourceopt (beside the obsolete) can be done via
-constant editor (“PLUGIN.SOURCEOPT”)
+All configuration of sourceopt (beside the obsolete) can be done via constant editor (“PLUGIN.SOURCEOPT”)
 
-Certainly you also can set the configuration directly via TypoScript
-setup.
+Certainly you also can set the configuration directly via TypoScript setup.
 
-Here is a reference that is valid for both, TypoScript setup and
-Constant Editor:
+Here is a reference that is valid for both, TypoScript setup and Constant Editor:
 
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 | Property                          | Data type   | Description                                                      | Default            |
