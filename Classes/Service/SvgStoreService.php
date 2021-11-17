@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class SvgStore
+ * Class SvgStore.
  *
  * @author Marcus Förster ; https://github.com/xerc
  */
@@ -25,10 +25,10 @@ class SvgStoreService implements SingletonInterface
         #$this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
         $this->svgs = [];
 
-        $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath();// [^/]$
+        $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
 
         if (isset($GLOBALS['TSFE']->config['config']['svgstore.']['outputDir']) && !empty($GLOBALS['TSFE']->config['config']['svgstore.']['outputDir'])) {
-            $this->outputDir = '/typo3temp/'.$GLOBALS['TSFE']->config['config']['svgstore.']['outputDir'];// TODO; please beautify
+            $this->outputDir = '/typo3temp/'.$GLOBALS['TSFE']->config['config']['svgstore.']['outputDir']; // TODO; please beautify
         }
 
         $this->connPool = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
@@ -52,8 +52,8 @@ class SvgStoreService implements SingletonInterface
             throw new \Exception('fix HTML!');
         }
 
-        # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attributes
-        $html['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>/s', function (array $matches): string {// ^[/]
+        // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attributes
+        $html['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>/s', function (array $matches): string { // ^[/]
             if (!isset($this->svgFileArr[$matches['src']])) { // check usage
                 return $matches[0];
             }
@@ -62,8 +62,8 @@ class SvgStoreService implements SingletonInterface
             return sprintf('<svg%s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$matches['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($matches['src']));
         }, $html['body']);
 
-        # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object#attributes
-        $html['body'] = preg_replace_callback('/<object(?<pre>[^>]*)data="(?<data>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?:<\/object>)/s', function (array $matches): string {// ^[/]
+        // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object#attributes
+        $html['body'] = preg_replace_callback('/<object(?<pre>[^>]*)data="(?<data>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?:<\/object>)/s', function (array $matches): string { // ^[/]
             if (!isset($this->svgFileArr[$matches['data']])) { // check usage
                 return $matches[0];
             }
@@ -77,7 +77,7 @@ class SvgStoreService implements SingletonInterface
 
     private function convertFilePath(string $path): string
     {
-        return preg_replace('/.svg$|[^\w\-]/', '', str_replace('/', '-', ltrim($path, '/')));// ^[^/]
+        return preg_replace('/.svg$|[^\w\-]/', '', str_replace('/', '-', ltrim($path, '/'))); // ^[^/]
     }
 
     private function addFileToSpriteArr(string $hash, string $path): ?array
@@ -119,7 +119,7 @@ class SvgStoreService implements SingletonInterface
 
         $this->svgFileArr = [];
         foreach ($svgFileArr as $index => $row) {
-            if (!$this->svgFileArr[($row['path'] = '/'.$storageArr[$row['storage']].$row['identifier'])] = $this->addFileToSpriteArr($row['sha1'], $row['path'])) {// ^[/]
+            if (!$this->svgFileArr[($row['path'] = '/'.$storageArr[$row['storage']].$row['identifier'])] = $this->addFileToSpriteArr($row['sha1'], $row['path'])) { // ^[/]
                 unset($this->svgFileArr[$row['path']]);
             }
         }
@@ -168,7 +168,7 @@ class SvgStoreService implements SingletonInterface
         $storageResources = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\StorageRepository::class)->findAll();
         foreach ($storageResources as $storage) {
             if ('relative' == $storage->getConfiguration()['pathType']) {
-                $storageResources[$storage->getUid()] = rtrim($storage->getConfiguration()['basePath'], '/');// [^/]$
+                $storageResources[$storage->getUid()] = rtrim($storage->getConfiguration()['basePath'], '/'); // [^/]$
             }
         }
         unset($storageResources[0]); // keep!
@@ -198,7 +198,7 @@ class SvgStoreService implements SingletonInterface
             ->groupBy('sys_file.uid')
             ->orderBy('sys_file.uid')
             ->execute()
-            ->fetchAll()// TODO; use stdClass
+            ->fetchAll() // TODO; use stdClass
         ;
     }
 }
