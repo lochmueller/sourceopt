@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HTML\Sourceopt\Service;
 
 use HTML\Sourceopt\Manipulation\ManipulationInterface;
@@ -11,64 +13,60 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Service: Clean parsed HTML functionality
- * Based on the extension 'sourceopt'
+ * Based on the extension 'sourceopt'.
  */
 class CleanHtmlService implements SingletonInterface
 {
-
     /**
-     * Enable Debug comment in footer
+     * Enable Debug comment in footer.
      *
-     * @var boolean
+     * @var bool
      */
     protected $debugComment = false;
 
     /**
-     * Format Type
+     * Format Type.
      *
-     * @var integer
+     * @var int
      */
     protected $formatType = 0;
 
     /**
-     * Tab character
+     * Tab character.
      *
      * @var string
      */
     protected $tab = "\t";
 
     /**
-     * Newline character
+     * Newline character.
      *
      * @var string
      */
     protected $newline = "\n";
 
     /**
-     * Configured extra header comment
+     * Configured extra header comment.
      *
      * @var string
      */
     protected $headerComment = '';
 
     /**
-     * Empty space char
+     * Empty space char.
+     *
      * @var string
      */
     protected $emptySpaceChar = ' ';
 
     /**
-     * Set variables based on given config
-     *
-     * @param array $config
-     *
-     * @return void
+     * Set variables based on given config.
      */
-    public function setVariables(array $config)
+    public function setVariables(array $config): void
     {
         if (!empty($config)) {
             if ($config['formatHtml'] && is_numeric($config['formatHtml'])) {
-                $this->formatType = (int)$config['formatHtml'];
+                $this->formatType = (int) $config['formatHtml'];
             }
 
             if ($config['formatHtml.']['tabSize'] && is_numeric($config['formatHtml.']['tabSize'])) {
@@ -76,24 +74,24 @@ class CleanHtmlService implements SingletonInterface
             }
 
             if (isset($config['formatHtml.']['debugComment'])) {
-                $this->debugComment = (bool)$config['formatHtml.']['debugComment'];
+                $this->debugComment = (bool) $config['formatHtml.']['debugComment'];
             }
 
             if (isset($config['headerComment'])) {
                 $this->headerComment = $config['headerComment'];
             }
 
-            if (isset($config['dropEmptySpaceChar']) && (bool)$config['dropEmptySpaceChar']) {
+            if (isset($config['dropEmptySpaceChar']) && (bool) $config['dropEmptySpaceChar']) {
                 $this->emptySpaceChar = '';
             }
         }
     }
 
     /**
-     * Clean given HTML with formatter
+     * Clean given HTML with formatter.
      *
      * @param string $html
-     * @param array $config
+     * @param array  $config
      *
      * @return string
      */
@@ -107,11 +105,11 @@ class CleanHtmlService implements SingletonInterface
 
         $manipulations = [];
 
-        if (isset($config['removeGenerator']) && (bool)$config['removeGenerator']) {
+        if (isset($config['removeGenerator']) && (bool) $config['removeGenerator']) {
             $manipulations['removeGenerator'] = GeneralUtility::makeInstance(RemoveGenerator::class);
         }
 
-        if (isset($config['removeComments']) && (bool)$config['removeComments']) {
+        if (isset($config['removeComments']) && (bool) $config['removeComments']) {
             $manipulations['removeComments'] = GeneralUtility::makeInstance(RemoveComments::class);
         }
 
@@ -121,13 +119,13 @@ class CleanHtmlService implements SingletonInterface
 
         foreach ($manipulations as $key => $manipulation) {
             /** @var ManipulationInterface $manipulation */
-            $configuration = isset($config[$key . '.']) && is_array($config[$key . '.']) ? $config[$key . '.'] : [];
+            $configuration = isset($config[$key.'.']) && \is_array($config[$key.'.']) ? $config[$key.'.'] : [];
             $html = $manipulation->manipulate($html, $configuration);
         }
 
         // cleanup HTML5 self-closing elements
-        if (!isset($GLOBALS['TSFE']->config['config']['doctype']) ||
-            'x' !== substr($GLOBALS['TSFE']->config['config']['doctype'], 0, 1)) {
+        if (!isset($GLOBALS['TSFE']->config['config']['doctype'])
+            || 'x' !== substr($GLOBALS['TSFE']->config['config']['doctype'], 0, 1)) {
             $html = preg_replace(
                 '/<((?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\s[^>]+?)\s?\/>/',
                 '<$1>',
@@ -160,7 +158,7 @@ class CleanHtmlService implements SingletonInterface
      *    2 => minimalistic line breaks (structure defining box-elements)
      *    3 => aesthetic line breaks (important box-elements)
      *    4 => logic line breaks (all box-elements)
-     *    5 => max line breaks (all elements)
+     *    5 => max line breaks (all elements).
      *
      * @param string $html
      *
@@ -175,8 +173,8 @@ class CleanHtmlService implements SingletonInterface
             $matches
         );
         $noFormat = $matches[0]; // do not format these block elements
-        for ($i = 0; $i < count($noFormat); $i++) {
-            $html = str_replace($noFormat[$i], "\n<!-- ELEMENT $i -->", $html);
+        for ($i = 0; $i < \count($noFormat); ++$i) {
+            $html = str_replace($noFormat[$i], "\n<!-- ELEMENT {$i} -->", $html);
         }
 
         // define box elements for formatting
@@ -184,7 +182,7 @@ class CleanHtmlService implements SingletonInterface
         $functionalBoxElements = 'dd|dt|frameset|li|tbody|td|tfoot|th|thead|tr|colgroup';
         $usableBoxElements = 'applet|button|del|iframe|ins|map|object|script';
         $imagineBoxElements = 'html|body|head|meta|title|link|script|base|!--';
-        $allBoxLikeElements = '(?>' . $trueBoxElements . '|' . $functionalBoxElements . '|' . $usableBoxElements . '|' . $imagineBoxElements . ')';
+        $allBoxLikeElements = '(?>'.$trueBoxElements.'|'.$functionalBoxElements.'|'.$usableBoxElements.'|'.$imagineBoxElements.')';
         $esteticBoxLikeElements = '(?>html|head|body|meta name|title|div|table|h1|h2|h3|h4|h5|h6|p|form|pre|center|!--)';
         $structureBoxLikeElements = '(?>html|head|body|div|!--)';
 
@@ -193,102 +191,103 @@ class CleanHtmlService implements SingletonInterface
             '/(<(?:[^<>]+(?:"[^"]*"|\'[^\']*\')?)+>)/',
             $html,
             -1,
-            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+            \PREG_SPLIT_DELIM_CAPTURE | \PREG_SPLIT_NO_EMPTY
         );
 
-        if ($htmlArrayTemp === false) {
+        if (false === $htmlArrayTemp) {
             // Restore saved comments, styles and java-scripts
-            for ($i = 0; $i < count($noFormat); $i++) {
-                $html = str_replace("<!-- ELEMENT $i -->", $noFormat[$i], $html);
+            for ($i = 0; $i < \count($noFormat); ++$i) {
+                $html = str_replace("<!-- ELEMENT {$i} -->", $noFormat[$i], $html);
             }
+
             return $html;
         }
         // remove empty lines
         $htmlArray = [''];
         $index = 1;
-        for ($x = 0; $x < count($htmlArrayTemp); $x++) {
+        for ($x = 0; $x < \count($htmlArrayTemp); ++$x) {
             $text = trim($htmlArrayTemp[$x]);
-            $htmlArray[$index] = $text !== '' ? $htmlArrayTemp[$x] : $this->emptySpaceChar;
-            $index++;
+            $htmlArray[$index] = '' !== $text ? $htmlArrayTemp[$x] : $this->emptySpaceChar;
+            ++$index;
         }
 
         // rebuild html
         $html = '';
         $tabs = 0;
-        for ($x = 0; $x < count($htmlArray); $x++) {
+        for ($x = 0; $x < \count($htmlArray); ++$x) {
             // check if the element should stand in a new line
             $newline = false;
-            if (substr($htmlArray[$x - 1], 0, 5) == '<?xml') {
+            if ('<?xml' == substr($htmlArray[$x - 1], 0, 5)) {
                 $newline = true;
-            } elseif ($this->formatType == 2 && ( // minimalistic line break
-                    # this element has a line break before itself
+            } elseif (2 == $this->formatType && ( // minimalistic line break
+                    // this element has a line break before itself
                     preg_match(
-                        '/<' . $structureBoxLikeElements . '(.*)>/Usi',
+                        '/<'.$structureBoxLikeElements.'(.*)>/Usi',
                         $htmlArray[$x]
                     ) || preg_match(
-                        '/<' . $structureBoxLikeElements . '(.*) \/>/Usi',
+                        '/<'.$structureBoxLikeElements.'(.*) \/>/Usi',
                         $htmlArray[$x]
-                    ) || # one element before is a element that has a line break after
-                    preg_match(
-                        '/<\/' . $structureBoxLikeElements . '(.*)>/Usi',
+                    ) // one element before is a element that has a line break after
+                    || preg_match(
+                        '/<\/'.$structureBoxLikeElements.'(.*)>/Usi',
                         $htmlArray[$x - 1]
-                    ) || substr(
+                    ) || '<!--' == substr(
                         $htmlArray[$x - 1],
                         0,
                         4
-                    ) == '<!--' || preg_match('/<' . $structureBoxLikeElements . '(.*) \/>/Usi', $htmlArray[$x - 1]))
+                    ) || preg_match('/<'.$structureBoxLikeElements.'(.*) \/>/Usi', $htmlArray[$x - 1]))
             ) {
                 $newline = true;
-            } elseif ($this->formatType == 3 && ( // aestetic line break
-                    # this element has a line break before itself
+            } elseif (3 == $this->formatType && ( // aestetic line break
+                    // this element has a line break before itself
                     preg_match(
-                        '/<' . $esteticBoxLikeElements . '(.*)>/Usi',
+                        '/<'.$esteticBoxLikeElements.'(.*)>/Usi',
                         $htmlArray[$x]
                     ) || preg_match(
-                        '/<' . $esteticBoxLikeElements . '(.*) \/>/Usi',
+                        '/<'.$esteticBoxLikeElements.'(.*) \/>/Usi',
                         $htmlArray[$x]
-                    ) || # one element before is a element that has a line break after
-                    preg_match('/<\/' . $esteticBoxLikeElements . '(.*)>/Usi', $htmlArray[$x - 1]) || substr(
+                    ) // one element before is a element that has a line break after
+                    || preg_match('/<\/'.$esteticBoxLikeElements.'(.*)>/Usi', $htmlArray[$x - 1]) || '<!--' == substr(
                         $htmlArray[$x - 1],
                         0,
                         4
-                    ) == '<!--' || preg_match('/<' . $esteticBoxLikeElements . '(.*) \/>/Usi', $htmlArray[$x - 1]))
+                    ) || preg_match('/<'.$esteticBoxLikeElements.'(.*) \/>/Usi', $htmlArray[$x - 1]))
             ) {
                 $newline = true;
             } elseif ($this->formatType >= 4 && ( // logical line break
-                    # this element has a line break before itself
+                    // this element has a line break before itself
                     preg_match(
-                        '/<' . $allBoxLikeElements . '(.*)>/Usi',
+                        '/<'.$allBoxLikeElements.'(.*)>/Usi',
                         $htmlArray[$x]
                     ) || preg_match(
-                        '/<' . $allBoxLikeElements . '(.*) \/>/Usi',
+                        '/<'.$allBoxLikeElements.'(.*) \/>/Usi',
                         $htmlArray[$x]
-                    ) || # one element before is a element that has a line break after
-                    preg_match('/<\/' . $allBoxLikeElements . '(.*)>/Usi', $htmlArray[$x - 1]) || substr(
+                    ) // one element before is a element that has a line break after
+                    || preg_match('/<\/'.$allBoxLikeElements.'(.*)>/Usi', $htmlArray[$x - 1]) || '<!--' == substr(
                         $htmlArray[$x - 1],
                         0,
                         4
-                    ) == '<!--' || preg_match('/<' . $allBoxLikeElements . '(.*) \/>/Usi', $htmlArray[$x - 1]))
+                    ) || preg_match('/<'.$allBoxLikeElements.'(.*) \/>/Usi', $htmlArray[$x - 1]))
             ) {
                 $newline = true;
             }
 
             // count down a tab
-            if (substr($htmlArray[$x], 0, 2) == '</') {
-                $tabs--;
+            if ('</' == substr($htmlArray[$x], 0, 2)) {
+                --$tabs;
             }
 
             // add tabs and line breaks in front of the current tag
             if ($newline) {
                 $html .= $this->newline;
-                for ($y = 0; $y < $tabs; $y++) {
+                for ($y = 0; $y < $tabs; ++$y) {
                     $html .= $this->tab;
                 }
             }
 
             // remove white spaces and line breaks and add current tag to the html-string
-            if (substr($htmlArray[$x], 0, 9) == '<![CDATA[' // remove multiple white space in CDATA / XML
-                || substr($htmlArray[$x], 0, 5) == '<?xml'
+            if ('<![CDATA[' == substr($htmlArray[$x], 0, 9) // remove multiple white space in CDATA / XML
+                || '<?xml' == substr($htmlArray[$x], 0, 5)
             ) {
                 $html .= $this->killWhiteSpace($htmlArray[$x]);
             } else { // remove all line breaks
@@ -296,25 +295,25 @@ class CleanHtmlService implements SingletonInterface
             }
 
             // count up a tab
-            if (substr($htmlArray[$x], 0, 1) == '<' && substr($htmlArray[$x], 1, 1) != '/') {
-                if (substr($htmlArray[$x], 1, 1) !== ' '
-                    && substr($htmlArray[$x], 1, 3) !== 'img'
-                    && substr($htmlArray[$x], 1, 6) !== 'source'
-                    && substr($htmlArray[$x], 1, 2) !== 'br'
-                    && substr($htmlArray[$x], 1, 2) !== 'hr'
-                    && substr($htmlArray[$x], 1, 5) !== 'input'
-                    && substr($htmlArray[$x], 1, 4) !== 'link'
-                    && substr($htmlArray[$x], 1, 4) !== 'meta'
-                    && substr($htmlArray[$x], 1, 4) !== 'col '
-                    && substr($htmlArray[$x], 1, 5) !== 'frame'
-                    && substr($htmlArray[$x], 1, 7) !== 'isindex'
-                    && substr($htmlArray[$x], 1, 5) !== 'param'
-                    && substr($htmlArray[$x], 1, 4) !== 'area'
-                    && substr($htmlArray[$x], 1, 4) !== 'base'
-                    && substr($htmlArray[$x], 0, 2) !== '<!'
-                    && substr($htmlArray[$x], 0, 5) !== '<?xml'
+            if ('<' == substr($htmlArray[$x], 0, 1) && '/' != substr($htmlArray[$x], 1, 1)) {
+                if (' ' !== substr($htmlArray[$x], 1, 1)
+                    && 'img' !== substr($htmlArray[$x], 1, 3)
+                    && 'source' !== substr($htmlArray[$x], 1, 6)
+                    && 'br' !== substr($htmlArray[$x], 1, 2)
+                    && 'hr' !== substr($htmlArray[$x], 1, 2)
+                    && 'input' !== substr($htmlArray[$x], 1, 5)
+                    && 'link' !== substr($htmlArray[$x], 1, 4)
+                    && 'meta' !== substr($htmlArray[$x], 1, 4)
+                    && 'col ' !== substr($htmlArray[$x], 1, 4)
+                    && 'frame' !== substr($htmlArray[$x], 1, 5)
+                    && 'isindex' !== substr($htmlArray[$x], 1, 7)
+                    && 'param' !== substr($htmlArray[$x], 1, 5)
+                    && 'area' !== substr($htmlArray[$x], 1, 4)
+                    && 'base' !== substr($htmlArray[$x], 1, 4)
+                    && '<!' !== substr($htmlArray[$x], 0, 2)
+                    && '<?xml' !== substr($htmlArray[$x], 0, 5)
                 ) {
-                    $tabs++;
+                    ++$tabs;
                 }
             }
         }
@@ -325,20 +324,20 @@ class CleanHtmlService implements SingletonInterface
         }
 
         // Restore saved comments, styles and java-scripts
-        for ($i = 0; $i < count($noFormat); $i++) {
-            $html = str_replace("<!-- ELEMENT $i -->", $noFormat[$i], $html);
+        for ($i = 0; $i < \count($noFormat); ++$i) {
+            $html = str_replace("<!-- ELEMENT {$i} -->", $noFormat[$i], $html);
         }
 
         // include debug comment at the end
-        if ($tabs != 0 && $this->debugComment === true) {
-            $html .= "<!-- $tabs open elements found -->";
+        if (0 != $tabs && true === $this->debugComment) {
+            $html .= "<!-- {$tabs} open elements found -->";
         }
 
         return $html;
     }
 
     /**
-     * Remove ALL line breaks and multiple white space
+     * Remove ALL line breaks and multiple white space.
      *
      * @param string $html
      *
@@ -347,13 +346,13 @@ class CleanHtmlService implements SingletonInterface
     protected function killLineBreaks($html)
     {
         $html = str_replace($this->newline, '', $html);
-        $html = preg_replace('/\s\s+/u', ' ', $html);
-        return $html;
-        #? return preg_replace('/\n|\s+(\s)/u', '$1', $html);
+
+        return preg_replace('/\s\s+/u', ' ', $html);
+        //? return preg_replace('/\n|\s+(\s)/u', '$1', $html);
     }
 
     /**
-     * Remove multiple white space, keeps line breaks
+     * Remove multiple white space, keeps line breaks.
      *
      * @param string $html
      *
@@ -362,7 +361,7 @@ class CleanHtmlService implements SingletonInterface
     protected function killWhiteSpace($html)
     {
         $temp = explode($this->newline, $html);
-        for ($i = 0; $i < count($temp); $i++) {
+        for ($i = 0; $i < \count($temp); ++$i) {
             if (!trim($temp[$i])) {
                 unset($temp[$i]);
                 continue;
@@ -371,12 +370,12 @@ class CleanHtmlService implements SingletonInterface
             $temp[$i] = trim($temp[$i]);
             $temp[$i] = preg_replace('/\s\s+/', ' ', $temp[$i]);
         }
-        $html = implode($this->newline, $temp);
-        return $html;
+
+        return implode($this->newline, $temp);
     }
 
     /**
-     * Remove white space at the end of lines, keeps other white space and line breaks
+     * Remove white space at the end of lines, keeps other white space and line breaks.
      *
      * @param string $html
      *
@@ -388,7 +387,7 @@ class CleanHtmlService implements SingletonInterface
     }
 
     /**
-     * Convert newlines according to the current OS
+     * Convert newlines according to the current OS.
      *
      * @param string $html
      *
@@ -400,17 +399,15 @@ class CleanHtmlService implements SingletonInterface
     }
 
     /**
-     * Remove empty lines
+     * Remove empty lines.
      *
      * @param string $html
-     *
-     * @return void
      */
-    protected function removeEmptyLines(&$html)
+    protected function removeEmptyLines(&$html): void
     {
         $temp = explode($this->newline, $html);
         $result = [];
-        for ($i = 0; $i < count($temp); ++$i) {
+        for ($i = 0; $i < \count($temp); ++$i) {
             if ('' == trim($temp[$i])) {
                 continue;
             }
@@ -420,12 +417,12 @@ class CleanHtmlService implements SingletonInterface
     }
 
     /**
-     * Include configured header comment in HTML content block
+     * Include configured header comment in HTML content block.
      *
      * @param $html
      */
-    public function includeHeaderComment(&$html)
+    public function includeHeaderComment(&$html): void
     {
-        $html = preg_replace('/^(-->)$/m', "\n\t" . $this->headerComment . "\n$1", $html);
+        $html = preg_replace('/^(-->)$/m', "\n\t".$this->headerComment."\n$1", $html);
     }
 }

@@ -1,18 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HTML\Sourceopt\Service;
 
-use HTML\Sourceopt\Manipulation\ManipulationInterface;
-use HTML\Sourceopt\Manipulation\RemoveComments;
-use HTML\Sourceopt\Manipulation\RemoveGenerator;
-use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-
+/**
+ * @internal
+ * @coversNothing
+ */
 class CleanHtmlServiceTest extends \PHPUnit\Framework\TestCase
 {
-    public function testFormatHtml()
+    public function testFormatHtml(): void
     {
         $this->markTestSkipped();
 

@@ -1,6 +1,8 @@
 <?php
+
+declare(strict_types=1);
 /**
- * RemoveGeneratorTest
+ * RemoveGeneratorTest.
  *
  * @author  Tim Lochmüller
  */
@@ -10,16 +12,20 @@ namespace HTML\Sourceopt\Tests\Unit\Service;
 use HTML\Sourceopt\Manipulation\RemoveGenerator;
 
 /**
- * RemoveGeneratorTest
+ * RemoveGeneratorTest.
+ *
+ * @internal
+ * @coversNothing
  */
 class RemoveGeneratorTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
-     * @test
      * @dataProvider generatorProvider
+     *
+     * @param mixed $before
+     * @param mixed $after
      */
-    public function testRemoveGenerator($before, $after)
+    public function testRemoveGenerator($before, $after): void
     {
         $cleanService = new RemoveGenerator();
         $result = $cleanService->manipulate($before);
@@ -61,7 +67,5 @@ class RemoveGeneratorTest extends \PHPUnit\Framework\TestCase
 </head>',
             ],
         ];
-
-
     }
 }

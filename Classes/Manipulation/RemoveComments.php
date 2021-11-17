@@ -1,6 +1,8 @@
 <?php
+
+declare(strict_types=1);
 /**
- * RemoveComments
+ * RemoveComments.
  *
  * @author  Tim Lochmüller
  */
@@ -8,13 +10,12 @@
 namespace HTML\Sourceopt\Manipulation;
 
 /**
- * RemoveComments
+ * RemoveComments.
  */
 class RemoveComments implements ManipulationInterface
 {
-
     /**
-     * Patterns for white-listing comments inside content
+     * Patterns for white-listing comments inside content.
      *
      * @var array
      */
@@ -40,19 +41,20 @@ class RemoveComments implements ManipulationInterface
             $matches
         );
         foreach ($matches[0] as $tag) {
-            if ($this->keepComment($tag) === false) {
+            if (false === $this->keepComment($tag)) {
                 $html = str_replace($tag, '', $html);
             }
         }
+
         return $html;
     }
 
     /**
-     * Check if a comment is defined to be kept in a pattern whiteListOfComments
+     * Check if a comment is defined to be kept in a pattern whiteListOfComments.
      *
      * @param string $commentHtml
      *
-     * @return boolean
+     * @return bool
      */
     protected function keepComment($commentHtml)
     {
@@ -63,8 +65,8 @@ class RemoveComments implements ManipulationInterface
 
         // if not defined in white list
         if (!empty($this->whiteListCommentsPatterns)) {
-            $commentHtml = str_replace("<!--", "", $commentHtml);
-            $commentHtml = str_replace("-->", "", $commentHtml);
+            $commentHtml = str_replace('<!--', '', $commentHtml);
+            $commentHtml = str_replace('-->', '', $commentHtml);
             $commentHtml = trim($commentHtml);
             foreach ($this->whiteListCommentsPatterns as $pattern) {
                 if (!empty($pattern) && preg_match($pattern, $commentHtml)) {
@@ -72,6 +74,7 @@ class RemoveComments implements ManipulationInterface
                 }
             }
         }
+
         return false;
     }
 }

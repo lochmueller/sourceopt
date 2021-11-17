@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HTML\Sourceopt\Middleware;
 
 use HTML\Sourceopt\Service\CleanHtmlService;
@@ -13,14 +15,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
- * CleanHtmlMiddleware
+ * CleanHtmlMiddleware.
  */
 class CleanHtmlMiddleware implements MiddlewareInterface
 {
     /**
      * @var CleanHtmlService
      */
-    protected $cleanHtmlService = null;
+    protected $cleanHtmlService;
 
     public function __construct()
     {
@@ -28,21 +30,17 @@ class CleanHtmlMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Clean the HTML output
-     *
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
+     * Clean the HTML output.
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
 
-        if(!($response instanceof NullResponse)
+        if (!($response instanceof NullResponse)
         && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController
         && $GLOBALS['TSFE']->isOutputting()
         && false !== (bool) $GLOBALS['TSFE']->config['config']['sourceopt.']['enabled']
-        ){
+        ) {
             $processedHtml = $this->cleanHtmlService->clean(
                 $response->getBody()->__toString(),
                 $GLOBALS['TSFE']->config['config']['sourceopt.']
