@@ -36,7 +36,6 @@ class CleanHtmlMiddleware implements MiddlewareInterface
 
         if (!($response instanceof NullResponse)
         && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController
-        && $GLOBALS['TSFE']->isOutputting()
         && false !== (bool) $GLOBALS['TSFE']->config['config']['sourceopt.']['enabled']
         ) {
             $processedHtml = $this->cleanHtmlService->clean(
