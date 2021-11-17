@@ -9,14 +9,11 @@
 TypoScript Reference for sourceopt
 ----------------------------------
 
-All configuration of sourceopt (beside the obsolete) can be done via
-constant editor (“PLUGIN.SOURCEOPT”)
+All configuration of sourceopt (beside the obsolete) can be done via constant editor (“PLUGIN.SOURCEOPT”)
 
-Certainly you also can set the configuration directly via TypoScript
-setup.
+Certainly you also can set the configuration directly via TypoScript setup.
 
-Here is a reference that is valid for both, TypoScript setup and
-Constant Editor:
+Here is a reference that is valid for both, TypoScript setup and Constant Editor:
 
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 | Property                          | Data type   | Description                                                      | Default            |
@@ -55,4 +52,17 @@ Constant Editor:
 | sourceopt.formatHtml.debugComment | boolean     | Includes a comment at the end of the html source code that       | ``[empty]``        |
 |                                   |             | points the numbers of open html tags. This will only work        |                    |
 |                                   |             | together with formatHtml                                         |                    |
++-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
+
+TypoScript Reference for svgstore
+---------------------------------
+
++-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
+| Property                          | Data type   | Description                                                      | Default            |
++===================================+=============+==================================================================+====================+
+| svgstore.enabled                  | boolean     | Is the SVG extract & merge enabled for this template             | 1                  |
++-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
+| svgstore.fileSize                 | boolean     | Maximum file size of a SVG to include (in ``[byte]``)            | 50000              |
++-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
+| svgstore.outputDir                | boolean     | Relative path to store the SVG sprite (!=``[empty]``)            | assets/svg/        |
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+

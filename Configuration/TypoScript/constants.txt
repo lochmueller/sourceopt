@@ -21,3 +21,12 @@ sourceopt.formatHtml.tabSize =
 
 # cat=plugin.sourceopt/enable/77; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlDebugComment
 sourceopt.formatHtml.debugComment = 0
+
+# cat=plugin.svgstore/enable/01; type=boolean; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.enabled
+svgstore.enabled = 1
+
+# cat=plugin.svgstore/file/10; type=int+; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.fileSize
+svgstore.fileSize = 50000
+
+# cat=plugin.svgstore/file/20; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.outputDir
+svgstore.outputDir =
