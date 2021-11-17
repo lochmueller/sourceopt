@@ -18,8 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up PHP Version
-        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
 
       - name: Prepare env
         run: export TYPO3_PATH_WEB="$PWD/.Build/Web"
@@ -35,8 +38,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up PHP Version
-        run: sudo update-alternatives --set php /usr/bin/php7.4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
 
       - name: Install requirements
         run: composer global require --dev squizlabs/php_codesniffer --no-interaction
@@ -49,8 +55,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up PHP Version
-        run: sudo update-alternatives --set php /usr/bin/php7.4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
 
       - name: Install requirements
         run: composer global require --dev phpmd/phpmd --no-interaction
