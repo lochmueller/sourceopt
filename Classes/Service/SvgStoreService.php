@@ -17,7 +17,7 @@ class SvgStoreService implements SingletonInterface
    *
    * @var string
    */
-  protected $outputDir  = '/fileadmin/assets/svg/';// fallback
+  protected $outputDir  = '/typo3temp/assets/svg/';// fallback
 
   public function __construct()
   {
@@ -29,7 +29,7 @@ class SvgStoreService implements SingletonInterface
 
     if(isset($GLOBALS['TSFE']->config['config']['svgstore.']['outputDir']) && !empty($GLOBALS['TSFE']->config['config']['svgstore.']['outputDir']))
     {
-      $this->outputDir  = '/'.$GLOBALS['TYPO3_CONF_VARS']['BE']['fileadminDir'].$GLOBALS['TSFE']->config['config']['svgstore.']['outputDir'];
+      $this->outputDir  = '/typo3temp/'.$GLOBALS['TSFE']->config['config']['svgstore.']['outputDir'];
     }
 
     $this->connPool   = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
