@@ -41,7 +41,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: 8.0
           tools: composer
 
       - name: Install requirements
@@ -58,7 +58,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: 8.0
           tools: composer
 
       - name: Install requirements
