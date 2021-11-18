@@ -68,7 +68,7 @@ class CleanHtmlService implements SingletonInterface
             }
 
             if ($config['formatHtml.']['tabSize'] && is_numeric($config['formatHtml.']['tabSize'])) {
-                $this->tab = str_pad('', $config['formatHtml.']['tabSize'], ' ');
+                $this->tab = str_pad('', (int) $config['formatHtml.']['tabSize'], ' ');
             }
 
             if (isset($config['formatHtml.']['debugComment'])) {
