@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace HTML\Sourceopt\Service;
 
@@ -21,8 +23,8 @@ class SvgStoreService implements SingletonInterface
 
     public function __construct()
     {
-        #$this->styl = []; # https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
-        #$this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
+        //$this->styl = []; # https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
+        //$this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
         $this->svgs = [];
 
         $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
@@ -87,25 +89,25 @@ class SvgStoreService implements SingletonInterface
         }
 
         if (1 === preg_match('/<(?:style|defs|url\()/', $svg)) {
-            return null;# check links @ __construct
+            return null; // check links @ __construct
         }
 
         $svg = preg_replace('/<\/svg>.*|xlink:|\s(?:(?:width|height|version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // clean !?: \s+(?<atr>[\w\-]+)=["\'](?<val>[^"\']+)["\']
 
-        #$svg = preg_replace('/((?:id|class)=")/', '$1'.$hash.'__', $svg); // extend  IDs
-        #$svg = preg_replace('/(href="|url\()#/', '$1#'.$hash.'__', $svg); // recover IDs
+        //$svg = preg_replace('/((?:id|class)=")/', '$1'.$hash.'__', $svg); // extend  IDs
+        //$svg = preg_replace('/(href="|url\()#/', '$1#'.$hash.'__', $svg); // recover IDs
 
-        #$svg = preg_replace_callback('/<style[^>]*>(?<styl>.+?)<\/style>|<defs[^>]*>(?<defs>.+?)<\/defs>/s', function(array $matches) use($hash): string {
-        #    if(isset($matches['styl']))
-        #    {
-        #        $this->styl[] = preg_replace('/\s*(\.|#){1}(.+?)\s*\{/', '$1'.$hash.'__$2{', $matches['styl']); // patch CSS # https://mathiasbynens.be/notes/css-escapes
-        #    }
-        #    if(isset($matches['defs']))
-        #    {
-        #        $this->defs[] = trim($matches['defs']);
-        #    }
-        #    return '';
-        #}, $svg);
+        //$svg = preg_replace_callback('/<style[^>]*>(?<styl>.+?)<\/style>|<defs[^>]*>(?<defs>.+?)<\/defs>/s', function(array $matches) use($hash): string {
+        //    if(isset($matches['styl']))
+        //    {
+        //        $this->styl[] = preg_replace('/\s*(\.|#){1}(.+?)\s*\{/', '$1'.$hash.'__$2{', $matches['styl']); // patch CSS # https://mathiasbynens.be/notes/css-escapes
+        //    }
+        //    if(isset($matches['defs']))
+        //    {
+        //        $this->defs[] = trim($matches['defs']);
+        //    }
+        //    return '';
+        //}, $svg);
 
         $this->svgs[] = preg_replace('/.*<svg((?:(?!id=)[^>])+)(?:id="[^"]*")?([^>]*>)/s', 'id="'.$this->convertFilePath($path).'"$1$2', $svg, 1); // change ID;
 
@@ -130,14 +132,14 @@ class SvgStoreService implements SingletonInterface
                 return sprintf('<use%s href="#%s"/>', $matches['pre'].$matches['post'], $this->convertFilePath($matches['href']));
             },
             '<svg xmlns="http://www.w3.org/2000/svg">'
-            #."\n<style>\n".implode("\n", $this->styl)."\n</style>"
-            #."\n<defs>\n".implode("\n", $this->defs)."\n</defs>"
+            //."\n<style>\n".implode("\n", $this->styl)."\n</style>"
+            //."\n<defs>\n".implode("\n", $this->defs)."\n</defs>"
             ."\n<symbol ".implode("</symbol>\n<symbol ", $this->svgs)."</symbol>\n"
             .'</svg>'
         );
 
-        #unset($this->styl); // save MEM
-        #unset($this->defs); // save MEM
+        //unset($this->styl); // save MEM
+        //unset($this->defs); // save MEM
         unset($this->svgs); // save MEM
 
         if (\is_int($var = $GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml']) && 1 == $var) {

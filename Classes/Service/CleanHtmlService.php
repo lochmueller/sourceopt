@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace HTML\Sourceopt\Service;
 
@@ -213,8 +215,8 @@ class CleanHtmlService implements SingletonInterface
         $html = '';
         $tabs = 0;
         for ($x = 0; $x < \count($htmlArray); ++$x) {
-            $htmlArrayBefore = isset($htmlArray[$x - 1]) ? $htmlArray[$x - 1] : '';
-            $htmlArrayCurrent = isset($htmlArray[$x]) ? $htmlArray[$x] : '';
+            $htmlArrayBefore = $htmlArray[$x - 1] ?? '';
+            $htmlArrayCurrent = $htmlArray[$x] ?? '';
 
             // check if the element should stand in a new line
             $newline = false;
