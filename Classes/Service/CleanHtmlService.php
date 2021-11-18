@@ -213,65 +213,68 @@ class CleanHtmlService implements SingletonInterface
         $html = '';
         $tabs = 0;
         for ($x = 0; $x < \count($htmlArray); ++$x) {
+            $htmlArrayBefore = isset($htmlArray[$x - 1]) ? $htmlArray[$x - 1] : '';
+            $htmlArrayCurrent = isset($htmlArray[$x]) ? $htmlArray[$x] : '';
+
             // check if the element should stand in a new line
             $newline = false;
-            if ('<?xml' == substr($htmlArray[$x - 1], 0, 5)) {
+            if ('<?xml' == substr($htmlArrayBefore, 0, 5)) {
                 $newline = true;
             } elseif (2 == $this->formatType && ( // minimalistic line break
                     // this element has a line break before itself
                     preg_match(
                         '/<'.$structureBoxLikeElements.'(.*)>/Usi',
-                        $htmlArray[$x]
+                        $htmlArrayCurrent
                     ) || preg_match(
                         '/<'.$structureBoxLikeElements.'(.*) \/>/Usi',
-                        $htmlArray[$x]
+                        $htmlArrayCurrent
                     ) // one element before is a element that has a line break after
                     || preg_match(
                         '/<\/'.$structureBoxLikeElements.'(.*)>/Usi',
-                        $htmlArray[$x - 1]
+                        $htmlArrayBefore
                     ) || '<!--' == substr(
-                        $htmlArray[$x - 1],
+                        $htmlArrayBefore,
                         0,
                         4
-                    ) || preg_match('/<'.$structureBoxLikeElements.'(.*) \/>/Usi', $htmlArray[$x - 1]))
+                    ) || preg_match('/<'.$structureBoxLikeElements.'(.*) \/>/Usi', $htmlArrayBefore))
             ) {
                 $newline = true;
             } elseif (3 == $this->formatType && ( // aestetic line break
                     // this element has a line break before itself
                     preg_match(
                         '/<'.$esteticBoxLikeElements.'(.*)>/Usi',
-                        $htmlArray[$x]
+                        $htmlArrayCurrent
                     ) || preg_match(
                         '/<'.$esteticBoxLikeElements.'(.*) \/>/Usi',
-                        $htmlArray[$x]
+                        $htmlArrayCurrent
                     ) // one element before is a element that has a line break after
-                    || preg_match('/<\/'.$esteticBoxLikeElements.'(.*)>/Usi', $htmlArray[$x - 1]) || '<!--' == substr(
-                        $htmlArray[$x - 1],
+                    || preg_match('/<\/'.$esteticBoxLikeElements.'(.*)>/Usi', $htmlArrayBefore) || '<!--' == substr(
+                        $htmlArrayBefore,
                         0,
                         4
-                    ) || preg_match('/<'.$esteticBoxLikeElements.'(.*) \/>/Usi', $htmlArray[$x - 1]))
+                    ) || preg_match('/<'.$esteticBoxLikeElements.'(.*) \/>/Usi', $htmlArrayBefore))
             ) {
                 $newline = true;
             } elseif ($this->formatType >= 4 && ( // logical line break
                     // this element has a line break before itself
                     preg_match(
                         '/<'.$allBoxLikeElements.'(.*)>/Usi',
-                        $htmlArray[$x]
+                        $htmlArrayCurrent
                     ) || preg_match(
                         '/<'.$allBoxLikeElements.'(.*) \/>/Usi',
-                        $htmlArray[$x]
+                        $htmlArrayCurrent
                     ) // one element before is a element that has a line break after
-                    || preg_match('/<\/'.$allBoxLikeElements.'(.*)>/Usi', $htmlArray[$x - 1]) || '<!--' == substr(
-                        $htmlArray[$x - 1],
+                    || preg_match('/<\/'.$allBoxLikeElements.'(.*)>/Usi', $htmlArrayBefore) || '<!--' == substr(
+                        $htmlArrayBefore,
                         0,
                         4
-                    ) || preg_match('/<'.$allBoxLikeElements.'(.*) \/>/Usi', $htmlArray[$x - 1]))
+                    ) || preg_match('/<'.$allBoxLikeElements.'(.*) \/>/Usi', $htmlArrayBefore))
             ) {
                 $newline = true;
             }
 
             // count down a tab
-            if ('</' == substr($htmlArray[$x], 0, 2)) {
+            if ('</' == substr($htmlArrayCurrent, 0, 2)) {
                 --$tabs;
             }
 
@@ -284,32 +287,32 @@ class CleanHtmlService implements SingletonInterface
             }
 
             // remove white spaces and line breaks and add current tag to the html-string
-            if ('<![CDATA[' == substr($htmlArray[$x], 0, 9) // remove multiple white space in CDATA / XML
-                || '<?xml' == substr($htmlArray[$x], 0, 5)
+            if ('<![CDATA[' == substr($htmlArrayCurrent, 0, 9) // remove multiple white space in CDATA / XML
+                || '<?xml' == substr($htmlArrayCurrent, 0, 5)
             ) {
-                $html .= $this->killWhiteSpace($htmlArray[$x]);
+                $html .= $this->killWhiteSpace($htmlArrayCurrent);
             } else { // remove all line breaks
-                $html .= $this->killLineBreaks($htmlArray[$x]);
+                $html .= $this->killLineBreaks($htmlArrayCurrent);
             }
 
             // count up a tab
-            if ('<' == substr($htmlArray[$x], 0, 1) && '/' != substr($htmlArray[$x], 1, 1)) {
-                if (' ' !== substr($htmlArray[$x], 1, 1)
-                    && 'img' !== substr($htmlArray[$x], 1, 3)
-                    && 'source' !== substr($htmlArray[$x], 1, 6)
-                    && 'br' !== substr($htmlArray[$x], 1, 2)
-                    && 'hr' !== substr($htmlArray[$x], 1, 2)
-                    && 'input' !== substr($htmlArray[$x], 1, 5)
-                    && 'link' !== substr($htmlArray[$x], 1, 4)
-                    && 'meta' !== substr($htmlArray[$x], 1, 4)
-                    && 'col ' !== substr($htmlArray[$x], 1, 4)
-                    && 'frame' !== substr($htmlArray[$x], 1, 5)
-                    && 'isindex' !== substr($htmlArray[$x], 1, 7)
-                    && 'param' !== substr($htmlArray[$x], 1, 5)
-                    && 'area' !== substr($htmlArray[$x], 1, 4)
-                    && 'base' !== substr($htmlArray[$x], 1, 4)
-                    && '<!' !== substr($htmlArray[$x], 0, 2)
-                    && '<?xml' !== substr($htmlArray[$x], 0, 5)
+            if ('<' == substr($htmlArrayCurrent, 0, 1) && '/' != substr($htmlArrayCurrent, 1, 1)) {
+                if (' ' !== substr($htmlArrayCurrent, 1, 1)
+                    && 'img' !== substr($htmlArrayCurrent, 1, 3)
+                    && 'source' !== substr($htmlArrayCurrent, 1, 6)
+                    && 'br' !== substr($htmlArrayCurrent, 1, 2)
+                    && 'hr' !== substr($htmlArrayCurrent, 1, 2)
+                    && 'input' !== substr($htmlArrayCurrent, 1, 5)
+                    && 'link' !== substr($htmlArrayCurrent, 1, 4)
+                    && 'meta' !== substr($htmlArrayCurrent, 1, 4)
+                    && 'col ' !== substr($htmlArrayCurrent, 1, 4)
+                    && 'frame' !== substr($htmlArrayCurrent, 1, 5)
+                    && 'isindex' !== substr($htmlArrayCurrent, 1, 7)
+                    && 'param' !== substr($htmlArrayCurrent, 1, 5)
+                    && 'area' !== substr($htmlArrayCurrent, 1, 4)
+                    && 'base' !== substr($htmlArrayCurrent, 1, 4)
+                    && '<!' !== substr($htmlArrayCurrent, 0, 2)
+                    && '<?xml' !== substr($htmlArrayCurrent, 0, 5)
                 ) {
                     ++$tabs;
                 }
