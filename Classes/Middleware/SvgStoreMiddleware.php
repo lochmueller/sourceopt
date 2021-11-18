@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace HTML\Sourceopt\Middleware;
 
@@ -27,7 +25,6 @@ class SvgStoreMiddleware implements MiddlewareInterface
 
         if (!($response instanceof NullResponse)
         && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController
-        && $GLOBALS['TSFE']->isOutputting()
         && false !== (bool) $GLOBALS['TSFE']->config['config']['svgstore.']['enabled']
         ) {
             $processedHtml = GeneralUtility::makeInstance(\HTML\Sourceopt\Service\SvgStoreService::class)
