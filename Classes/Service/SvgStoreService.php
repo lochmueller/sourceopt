@@ -92,7 +92,7 @@ class SvgStoreService implements SingletonInterface
             return null; // check links @ __construct
         }
 
-        $svg = preg_replace('/<\/svg>.*|xlink:|\s(?:(?:width|height|version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // clean !?: \s+(?<atr>[\w\-]+)=["\'](?<val>[^"\']+)["\']
+        $svg = preg_replace('/<\/svg>.*|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // clean !?: \s+(?<atr>[\w\-]+)=["\'](?<val>[^"\']+)["\']
 
         //$svg = preg_replace('/((?:id|class)=")/', '$1'.$hash.'__', $svg); // extend  IDs
         //$svg = preg_replace('/(href="|url\()#/', '$1#'.$hash.'__', $svg); // recover IDs
