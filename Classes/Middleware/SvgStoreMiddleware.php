@@ -28,6 +28,7 @@ class SvgStoreMiddleware implements MiddlewareInterface
         if (!($response instanceof NullResponse)
         && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController
         && false !== (bool) $GLOBALS['TSFE']->config['config']['svgstore.']['enabled']
+        && 'text/html' == substr($response->getHeaderLine('Content-Type'),0,9)
         ) {
             $processedHtml = GeneralUtility::makeInstance(\HTML\Sourceopt\Service\SvgStoreService::class)
                 ->process($response->getBody()->__toString())

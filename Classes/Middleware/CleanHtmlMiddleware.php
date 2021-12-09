@@ -39,6 +39,7 @@ class CleanHtmlMiddleware implements MiddlewareInterface
         if (!($response instanceof NullResponse)
         && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController
         && false !== (bool) $GLOBALS['TSFE']->config['config']['sourceopt.']['enabled']
+        && 'text/html' == substr($response->getHeaderLine('Content-Type'),0,9)
         ) {
             $processedHtml = $this->cleanHtmlService->clean(
                 $response->getBody()->__toString(),

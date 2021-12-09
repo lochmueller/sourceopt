@@ -27,6 +27,3 @@ svgstore.enabled = 1
 
 # cat=plugin.svgstore/file/10; type=int+; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.fileSize
 svgstore.fileSize = 50000
-
-# cat=plugin.svgstore/file/20; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.outputDir
-svgstore.outputDir =

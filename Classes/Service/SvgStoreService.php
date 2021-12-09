@@ -14,27 +14,17 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class SvgStoreService implements SingletonInterface
 {
-    /**
-     * SVG-Sprite storage DIR.
-     *
-     * @var string
-     */
-    protected $outputDir = '/typo3temp/assets/svg/'; // fallback
-
     public function __construct()
     {
         //$this->styl = []; # https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
         //$this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
         $this->svgs = [];
 
-        $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
+        $this->outputDir  = '/typo3temp/assets/svg/';
+        $this->sitePath   = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
 
-        if (isset($GLOBALS['TSFE']->config['config']['svgstore.']['outputDir']) && !empty($GLOBALS['TSFE']->config['config']['svgstore.']['outputDir'])) {
-            $this->outputDir = '/typo3temp/'.$GLOBALS['TSFE']->config['config']['svgstore.']['outputDir']; // TODO; please beautify
-        }
-
-        $this->connPool = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
-        $this->svgCache = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
+        $this->connPool   = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
+        $this->svgCache   = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
     }
 
     public function process(string $html): string
@@ -55,23 +45,25 @@ class SvgStoreService implements SingletonInterface
         }
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attributes
-        $html['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>/s', function (array $matches): string { // ^[/]
-            if (!isset($this->svgFileArr[$matches['src']])) { // check usage
-                return $matches[0];
-            }
-            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap)="[^"]*"/', '', $matches['pre'].$matches['post']); // cleanup
+        $html['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?!\s*<\/picture>)/s', function (array $match): string { // ^[/]
 
-            return sprintf('<svg%s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$matches['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($matches['src']));
+            if (!isset($this->svgFileArr[$match['src']])) { // check usage
+                return $match[0];
+            }
+            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
+
+            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($match['src']));
         }, $html['body']);
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object#attributes
-        $html['body'] = preg_replace_callback('/<object(?<pre>[^>]*)data="(?<data>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?:<\/object>)/s', function (array $matches): string { // ^[/]
-            if (!isset($this->svgFileArr[$matches['data']])) { // check usage
-                return $matches[0];
-            }
-            $attr = preg_replace('/\s(?:form|name|type|usemap)="[^"]*"/', '', $matches['pre'].$matches['post']); // cleanup
+        $html['body'] = preg_replace_callback('/<object(?<pre>[^>]*)data="(?<data>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?:<\/object>)/s', function (array $match): string { // ^[/]
 
-            return sprintf('<svg%s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$matches['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($matches['data']));
+            if (!isset($this->svgFileArr[$match['data']])) { // check usage
+                return $match[0];
+            }
+            $attr = preg_replace('/\s(?:form|name|type|usemap)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
+
+            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($match['data']));
         }, $html['body']);
 
         return $html['head'].$html['body'];
@@ -88,30 +80,60 @@ class SvgStoreService implements SingletonInterface
             return null;
         }
 
-        if (1 === preg_match('/<(?:style|defs|url\()/', $svg)) {
+        if (1 === preg_match('/<(?:style|defs|use)|url\(/', $svg)) {
             return null; // check links @ __construct
         }
-
-        $svg = preg_replace('/<\/svg>.*|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // clean !?: \s+(?<atr>[\w\-]+)=["\'](?<val>[^"\']+)["\']
 
         //$svg = preg_replace('/((?:id|class)=")/', '$1'.$hash.'__', $svg); // extend  IDs
         //$svg = preg_replace('/(href="|url\()#/', '$1#'.$hash.'__', $svg); // recover IDs
 
-        //$svg = preg_replace_callback('/<style[^>]*>(?<styl>.+?)<\/style>|<defs[^>]*>(?<defs>.+?)<\/defs>/s', function(array $matches) use($hash): string {
-        //    if(isset($matches['styl']))
+        //$svg = preg_replace_callback('/<style[^>]*>(?<styl>.+?)<\/style>|<defs[^>]*>(?<defs>.+?)<\/defs>/s', function(array $match) use($hash): string {
+        //
+        //    if(isset($match['styl']))
         //    {
-        //        $this->styl[] = preg_replace('/\s*(\.|#){1}(.+?)\s*\{/', '$1'.$hash.'__$2{', $matches['styl']); // patch CSS # https://mathiasbynens.be/notes/css-escapes
+        //        $this->styl[] = preg_replace('/\s*(\.|#){1}(.+?)\s*\{/', '$1'.$hash.'__$2{', $match['styl']); // patch CSS # https://mathiasbynens.be/notes/css-escapes
         //    }
-        //    if(isset($matches['defs']))
+        //    if(isset($match['defs']))
         //    {
-        //        $this->defs[] = trim($matches['defs']);
+        //        $this->defs[] = trim($match['defs']);
         //    }
         //    return '';
         //}, $svg);
 
-        $this->svgs[] = preg_replace('/.*<svg((?:(?!id=)[^>])+)(?:id="[^"]*")?([^>]*>)/s', 'id="'.$this->convertFilePath($path).'"$1$2', $svg, 1); // change ID;
 
-        return preg_match('/\s+viewBox="\s*([+-]?[\d\.]+(?:\s+[+-]?[\d\.]+){3})\s*"/', $svg, $match) ? ['attr' => ' viewBox="'.preg_replace('/\s+/', ' ', $match[1]).'"', 'hash' => $hash] : null;
+        // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
+        $svg = preg_replace('/.*<svg|<\/svg>.*|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
+
+        // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
+        $svg = preg_replace_callback('/([^>]+)\s*(?=>)/s', function (array $match) use(&$attr): string {
+
+            if(false === preg_match_all('/\s(?<attr>[\w\-]+)=["\']\s*(?<value>[^"\']+)\s*["\']/', $match[1], $matches)) {
+              return $match[0];
+            }
+            foreach($matches['attr'] as $index => $attribute)
+            {
+                switch($attribute)
+                {
+                  case 'id':
+                  case 'width':
+                  case 'height':
+                      unset($matches[0][$index]);
+                      break;
+
+                  case 'viewBox':
+                      $attr[]             = sprintf('%s="%s"', $attribute, $matches['value'][$index]); // save!
+                  default:
+                      $matches[0][$index] = sprintf('%s="%s"', $attribute, $matches['value'][$index]); // cleanup
+                }
+            }
+            return implode(' ', $matches[0]);
+        }, $svg, 1);
+
+        if ($attr) { // TODO; beautify
+            $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // append ID
+        }
+
+        return !$attr ?: ['attr' => implode(' ', $attr), 'hash' => $hash];
     }
 
     private function populateCache(): bool
@@ -128,8 +150,8 @@ class SvgStoreService implements SingletonInterface
 
         $svg = preg_replace_callback(
             '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)#[^"]+"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
-            function (array $matches): string {
-                return sprintf('<use%s href="#%s"/>', $matches['pre'].$matches['post'], $this->convertFilePath($matches['href']));
+            function (array $match): string {
+                return sprintf('<use%s href="#%s"/>', $match['pre'].$match['post'], $this->convertFilePath($match['href']));
             },
             '<svg xmlns="http://www.w3.org/2000/svg">'
             //."\n<style>\n".implode("\n", $this->styl)."\n</style>"
@@ -148,6 +170,7 @@ class SvgStoreService implements SingletonInterface
 
         $svg = preg_replace('/<([a-z]+)\s*(\/|>\s*<\/\1)>\s*/i', '', $svg); // remove emtpy
         $svg = preg_replace('/<((circle|ellipse|line|path|polygon|polyline|rect|stop|use)\s[^>]+?)\s*>\s*<\/\2>/', '<$1/>', $svg); // shorten/minify
+
 
         if (!is_dir($this->sitePath.$this->outputDir)) {
             GeneralUtility::mkdir_deep($this->sitePath.$this->outputDir);
