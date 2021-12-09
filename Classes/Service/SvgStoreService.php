@@ -55,7 +55,7 @@ class SvgStoreService implements SingletonInterface
         }
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attributes
-        $html['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>/s', function (array $matches): string { // ^[/]
+        $html['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?!\s*<\/picture>)/s', function (array $matches): string { // ^[/]
 
             if (!isset($this->svgFileArr[$matches['src']])) { // check usage
                 return $matches[0];
