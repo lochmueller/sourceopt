@@ -20,11 +20,11 @@ class SvgStoreService implements SingletonInterface
         //$this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
         $this->svgs = [];
 
-        $this->outputDir  = '/typo3temp/assets/svg/';
-        $this->sitePath   = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
+        $this->outputDir = '/typo3temp/assets/svg/';
+        $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
 
-        $this->connPool   = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
-        $this->svgCache   = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
+        $this->connPool = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
+        $this->svgCache = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
     }
 
     public function process(string $html): string
@@ -46,7 +46,6 @@ class SvgStoreService implements SingletonInterface
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attributes
         $html['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?!\s*<\/picture>)/s', function (array $match): string { // ^[/]
-
             if (!isset($this->svgFileArr[$match['src']])) { // check usage
                 return $match[0];
             }
@@ -57,7 +56,6 @@ class SvgStoreService implements SingletonInterface
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object#attributes
         $html['body'] = preg_replace_callback('/<object(?<pre>[^>]*)data="(?<data>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?:<\/object>)/s', function (array $match): string { // ^[/]
-
             if (!isset($this->svgFileArr[$match['data']])) { // check usage
                 return $match[0];
             }
@@ -100,20 +98,16 @@ class SvgStoreService implements SingletonInterface
         //    return '';
         //}, $svg);
 
-
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
         $svg = preg_replace('/.*<svg|<\/svg>.*|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
-        $svg = preg_replace_callback('/([^>]+)\s*(?=>)/s', function (array $match) use(&$attr): string {
-
-            if(false === preg_match_all('/\s(?<attr>[\w\-]+)=["\']\s*(?<value>[^"\']+)\s*["\']/', $match[1], $matches)) {
-              return $match[0];
+        $svg = preg_replace_callback('/([^>]+)\s*(?=>)/s', function (array $match) use (&$attr): string {
+            if (false === preg_match_all('/\s(?<attr>[\w\-]+)=["\']\s*(?<value>[^"\']+)\s*["\']/', $match[1], $matches)) {
+                return $match[0];
             }
-            foreach($matches['attr'] as $index => $attribute)
-            {
-                switch($attribute)
-                {
+            foreach ($matches['attr'] as $index => $attribute) {
+                switch ($attribute) {
                   case 'id':
                   case 'width':
                   case 'height':
@@ -121,11 +115,13 @@ class SvgStoreService implements SingletonInterface
                       break;
 
                   case 'viewBox':
-                      $attr[]             = sprintf('%s="%s"', $attribute, $matches['value'][$index]); // save!
+                      $attr[] = sprintf('%s="%s"', $attribute, $matches['value'][$index]); // save!
+                      // no break
                   default:
                       $matches[0][$index] = sprintf('%s="%s"', $attribute, $matches['value'][$index]); // cleanup
                 }
             }
+
             return implode(' ', $matches[0]);
         }, $svg, 1);
 
@@ -170,7 +166,6 @@ class SvgStoreService implements SingletonInterface
 
         $svg = preg_replace('/<([a-z]+)\s*(\/|>\s*<\/\1)>\s*/i', '', $svg); // remove emtpy
         $svg = preg_replace('/<((circle|ellipse|line|path|polygon|polyline|rect|stop|use)\s[^>]+?)\s*>\s*<\/\2>/', '<$1/>', $svg); // shorten/minify
-
 
         if (!is_dir($this->sitePath.$this->outputDir)) {
             GeneralUtility::mkdir_deep($this->sitePath.$this->outputDir);

@@ -384,7 +384,7 @@ class CleanHtmlService implements SingletonInterface
      *
      * @return string
      */
-    protected function rTrimLines(&$html)
+    protected function rTrimLines(& $html)
     {
         $html = preg_replace('/\s+$/m', '', $html);
     }
@@ -396,7 +396,7 @@ class CleanHtmlService implements SingletonInterface
      *
      * @return string
      */
-    protected function convNlOs(&$html)
+    protected function convNlOs(& $html)
     {
         $html = preg_replace("(\r\n|\r)", $this->newline, $html);
     }
@@ -406,7 +406,7 @@ class CleanHtmlService implements SingletonInterface
      *
      * @param string $html
      */
-    protected function removeEmptyLines(&$html): void
+    protected function removeEmptyLines(& $html): void
     {
         $temp = explode($this->newline, $html);
         $result = [];
@@ -424,7 +424,7 @@ class CleanHtmlService implements SingletonInterface
      *
      * @param $html
      */
-    public function includeHeaderComment(&$html): void
+    public function includeHeaderComment(& $html): void
     {
         $html = preg_replace('/^(-->)$/m', "\n\t".$this->headerComment."\n$1", $html);
     }
