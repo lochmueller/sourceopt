@@ -52,9 +52,6 @@
 			<trans-unit id="svgstore.fileSize" xml:space="preserve">
 				<source>Maximum file size of the SVG to include</source>
 			</trans-unit>
-			<trans-unit id="svgstore.outputDir" xml:space="preserve">
-				<source>Relative path to store the SVG sprite</source>
-			</trans-unit>
 		</body>
 	</file>
 </xliff>

@@ -14,27 +14,17 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class SvgStoreService implements SingletonInterface
 {
-    /**
-     * SVG-Sprite storage DIR.
-     *
-     * @var string
-     */
-    protected $outputDir = '/typo3temp/assets/svg/'; // fallback
-
     public function __construct()
     {
         //$this->styl = []; # https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
         //$this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
         $this->svgs = [];
 
-        $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
+        $this->outputDir  = '/typo3temp/assets/svg/';
+        $this->sitePath   = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
 
-        if (isset($GLOBALS['TSFE']->config['config']['svgstore.']['outputDir']) && !empty($GLOBALS['TSFE']->config['config']['svgstore.']['outputDir'])) {
-            $this->outputDir = '/typo3temp/'.$GLOBALS['TSFE']->config['config']['svgstore.']['outputDir']; // TODO; please beautify
-        }
-
-        $this->connPool = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
-        $this->svgCache = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
+        $this->connPool   = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
+        $this->svgCache   = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
     }
 
     public function process(string $html): string

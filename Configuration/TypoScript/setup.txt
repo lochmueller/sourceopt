@@ -40,5 +40,4 @@ config.sourceopt {
 config.svgstore {
 	enabled = {$svgstore.enabled}
 	fileSize = {$svgstore.fileSize}
-	outputDir = {$svgstore.outputDir}
 }
