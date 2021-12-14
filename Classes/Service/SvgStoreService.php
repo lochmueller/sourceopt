@@ -78,7 +78,7 @@ class SvgStoreService implements SingletonInterface
             return null;
         }
 
-        if (1 === preg_match('/<(?:style|defs|use)|url\(/', $svg)) {
+        if (1 === preg_match('/<(?:style|defs)|url\(/', $svg)) {
             return null; // check links @ __construct
         }
 
@@ -147,6 +147,9 @@ class SvgStoreService implements SingletonInterface
         $svg = preg_replace_callback(
             '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)#[^"]+"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
             function (array $match): string {
+                if (!isset($this->svgFileArr[$match['href']])) { // check usage
+                    return $match[0];
+                }
                 return sprintf('<use%s href="#%s"/>', $match['pre'].$match['post'], $this->convertFilePath($match['href']));
             },
             '<svg xmlns="http://www.w3.org/2000/svg">'
