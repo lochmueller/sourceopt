@@ -219,7 +219,8 @@ class SvgStoreService implements SingletonInterface
                 $queryBuilder->expr()->lt('sys_file.size', $queryBuilder->createNamedParameter($GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'])),
             )
             ->groupBy('sys_file.uid')
-            ->orderBy('sys_file.uid')
+            ->orderBy('sys_file.storage')
+            ->addOrderBy('sys_file.identifier')
             ->execute()
             ->fetchAll() // TODO; use stdClass
         ;
