@@ -74,7 +74,7 @@ class SvgStoreService implements SingletonInterface
 
     private function addFileToSpriteArr(string $hash, string $path): ?array
     {
-        if (1 === preg_match('/;base64/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
+        if (1 === preg_match('/(?:;base64|i:a?i?pgf)/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
             return null;
         }
 
