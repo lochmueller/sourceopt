@@ -51,7 +51,7 @@ class SvgStoreService implements SingletonInterface
             }
             $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap|crossorigin|decoding|referrerpolicy)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
-            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($match['src']));
+            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['src']));
         }, $html['body']);
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object#attributes
@@ -61,7 +61,7 @@ class SvgStoreService implements SingletonInterface
             }
             $attr = preg_replace('/\s(?:form|name|type|usemap)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
-            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($match['data']));
+            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['data']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['data']));
         }, $html['body']);
 
         return $html['head'].$html['body'];
