@@ -214,9 +214,18 @@ class SvgStoreService implements SingletonInterface
                 )
             )
             ->where(
-                $queryBuilder->expr()->in('sys_file.storage', $queryBuilder->createNamedParameter($storageIds, \TYPO3\CMS\Core\Database\Connection::PARAM_INT_ARRAY)),
-                $queryBuilder->expr()->eq('sys_file.mime_type', $queryBuilder->createNamedParameter('image/svg+xml')),
-                $queryBuilder->expr()->lt('sys_file.size', $queryBuilder->createNamedParameter($GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'])),
+                $queryBuilder->expr()->in(
+                    'sys_file.storage',
+                    $queryBuilder->createNamedParameter($storageIds, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+                ),
+                $queryBuilder->expr()->lt(
+                    'sys_file.size',
+                    $queryBuilder->createNamedParameter((int) $GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'], \PDO::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
+                    'sys_file.mime_type',
+                    $queryBuilder->createNamedParameter('image/svg+xml')
+                )
             )
             ->groupBy('sys_file.uid')
             ->orderBy('sys_file.storage')
