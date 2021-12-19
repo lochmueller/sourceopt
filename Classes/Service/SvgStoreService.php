@@ -49,7 +49,7 @@ class SvgStoreService implements SingletonInterface
             if (!isset($this->svgFileArr[$match['src']])) { // check usage
                 return $match[0];
             }
-            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
+            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap|crossorigin|decoding|referrerpolicy)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
             return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($match['src']));
         }, $html['body']);
