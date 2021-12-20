@@ -49,9 +49,9 @@ class SvgStoreService implements SingletonInterface
             if (!isset($this->svgFileArr[$match['src']])) { // check usage
                 return $match[0];
             }
-            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
+            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap|crossorigin|decoding|referrerpolicy)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
-            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($match['src']));
+            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['src']));
         }, $html['body']);
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object#attributes
@@ -61,7 +61,7 @@ class SvgStoreService implements SingletonInterface
             }
             $attr = preg_replace('/\s(?:form|name|type|usemap)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
-            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], $attr, $this->spritePath, $this->convertFilePath($match['data']));
+            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['data']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['data']));
         }, $html['body']);
 
         return $html['head'].$html['body'];
@@ -74,7 +74,7 @@ class SvgStoreService implements SingletonInterface
 
     private function addFileToSpriteArr(string $hash, string $path): ?array
     {
-        if (1 === preg_match('/;base64/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
+        if (1 === preg_match('/(?:;base64|i:a?i?pgf)/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
             return null;
         }
 
@@ -103,7 +103,7 @@ class SvgStoreService implements SingletonInterface
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
         $svg = preg_replace_callback('/([^>]+)\s*(?=>)/s', function (array $match) use (&$attr): string {
-            if (false === preg_match_all('/\s(?<attr>[\w\-]+)=["\']\s*(?<value>[^"\']+)\s*["\']/', $match[1], $matches)) {
+            if (false === preg_match_all('/\s(?<attr>[\w\-]+)="\s*(?<value>[^"]+)\s*"/', $match[1], $matches)) {
                 return $match[0];
             }
             foreach ($matches['attr'] as $index => $attribute) {
@@ -214,12 +214,22 @@ class SvgStoreService implements SingletonInterface
                 )
             )
             ->where(
-                $queryBuilder->expr()->in('sys_file.storage', $queryBuilder->createNamedParameter($storageIds, \TYPO3\CMS\Core\Database\Connection::PARAM_INT_ARRAY)),
-                $queryBuilder->expr()->eq('sys_file.mime_type', $queryBuilder->createNamedParameter('image/svg+xml')),
-                $queryBuilder->expr()->lt('sys_file.size', $queryBuilder->createNamedParameter($GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'])),
+                $queryBuilder->expr()->in(
+                    'sys_file.storage',
+                    $queryBuilder->createNamedParameter($storageIds, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+                ),
+                $queryBuilder->expr()->lt(
+                    'sys_file.size',
+                    $queryBuilder->createNamedParameter((int) $GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'], \PDO::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
+                    'sys_file.mime_type',
+                    $queryBuilder->createNamedParameter('image/svg+xml')
+                )
             )
             ->groupBy('sys_file.uid')
-            ->orderBy('sys_file.uid')
+            ->orderBy('sys_file.storage')
+            ->addOrderBy('sys_file.identifier')
             ->execute()
             ->fetchAll() // TODO; use stdClass
         ;
