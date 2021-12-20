@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace HTML\Sourceopt\Service;
 
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -12,18 +11,22 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author Marcus Förster ; https://github.com/xerc
  */
-class SvgStoreService implements SingletonInterface
+class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 {
+    /**
+     * SVG-Sprite storage directory.
+     *
+     * @var string
+     */
+    protected $outputDir = '/typo3temp/assets/svg/';
+
     public function __construct()
     {
         //$this->styl = []; # https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
         //$this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
         $this->svgs = [];
 
-        $this->outputDir = '/typo3temp/assets/svg/';
         $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
-
-        $this->connPool = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
         $this->svgCache = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
     }
 
@@ -134,15 +137,23 @@ class SvgStoreService implements SingletonInterface
 
     private function populateCache(): bool
     {
-        $storageArr = $this->getStorageArrayFromDB();
-        $svgFileArr = $this->getSvgFilesArrayFromDB(array_keys($storageArr));
+        $storageArr = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\StorageRepository::class)->findAll();
+        foreach ($storageArr as $storage) {
+            if ('relative' == $storage->getConfiguration()['pathType']) {
+                $storageArr[$storage->getUid()] = rtrim($storage->getConfiguration()['basePath'], '/'); // [^/]$
+            }
+        }
+        unset($storageArr[0]); // keep!
 
-        $this->svgFileArr = [];
+        $svgFileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(array_keys($storageArr));
         foreach ($svgFileArr as $index => $row) {
             if (!$this->svgFileArr[($row['path'] = '/'.$storageArr[$row['storage']].$row['identifier'])] = $this->addFileToSpriteArr($row['sha1'], $row['path'])) { // ^[/]
                 unset($this->svgFileArr[$row['path']]);
             }
         }
+
+        unset($storageArr); // save MEM
+        unset($svgFileArr); // save MEM
 
         $svg = preg_replace_callback(
             '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)#[^"]+"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
@@ -178,60 +189,10 @@ class SvgStoreService implements SingletonInterface
         if (false === file_put_contents($this->sitePath.$this->spritePath, $svg)) {
             return false;
         }
-        unset($svg); // save MEM
 
         $this->svgCache->set('svgFileArr', $this->svgFileArr);
         $this->svgCache->set('spritePath', $this->spritePath);
 
         return true;
-    }
-
-    private function getStorageArrayFromDB(): array
-    {
-        $storageResources = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\StorageRepository::class)->findAll();
-        foreach ($storageResources as $storage) {
-            if ('relative' == $storage->getConfiguration()['pathType']) {
-                $storageResources[$storage->getUid()] = rtrim($storage->getConfiguration()['basePath'], '/'); // [^/]$
-            }
-        }
-        unset($storageResources[0]); // keep!
-
-        return $storageResources;
-    }
-
-    private function getSvgFilesArrayFromDB(array $storageIds): array
-    {
-        return ($queryBuilder = $this->connPool->getQueryBuilderForTable('sys_file'))
-            ->select('sys_file.storage', 'sys_file.identifier', 'sys_file.sha1')
-            ->from('sys_file')
-            ->innerJoin(
-                'sys_file',
-                'sys_file_reference',
-                'sys_file_reference',
-                $queryBuilder->expr()->eq(
-                    'sys_file_reference.uid_local',
-                    $queryBuilder->quoteIdentifier('sys_file.uid')
-                )
-            )
-            ->where(
-                $queryBuilder->expr()->in(
-                    'sys_file.storage',
-                    $queryBuilder->createNamedParameter($storageIds, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
-                ),
-                $queryBuilder->expr()->lt(
-                    'sys_file.size',
-                    $queryBuilder->createNamedParameter((int) $GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'], \PDO::PARAM_INT)
-                ),
-                $queryBuilder->expr()->eq(
-                    'sys_file.mime_type',
-                    $queryBuilder->createNamedParameter('image/svg+xml')
-                )
-            )
-            ->groupBy('sys_file.uid')
-            ->orderBy('sys_file.storage')
-            ->addOrderBy('sys_file.identifier')
-            ->execute()
-            ->fetchAll() // TODO; use stdClass
-        ;
     }
 }
