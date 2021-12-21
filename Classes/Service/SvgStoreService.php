@@ -106,7 +106,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
         $svg = preg_replace_callback('/([^>]+)\s*(?=>)/s', function (array $match) use (&$attr): string {
-            if (false === preg_match_all('/\s(?<attr>[\w\-]+)="\s*(?<value>[^"]+)\s*"/', $match[1], $matches)) {
+            if (false === preg_match_all('/(?!\s)(?<attr>[\w\-]+)="\s*(?<value>[^"]+)\s*"/', $match[1], $matches)) {
                 return $match[0];
             }
             foreach ($matches['attr'] as $index => $attribute) {
@@ -119,9 +119,6 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
                   case 'viewBox':
                       $attr[] = sprintf('%s="%s"', $attribute, $matches['value'][$index]); // save!
-                      // no break
-                  default:
-                      $matches[0][$index] = sprintf('%s="%s"', $attribute, $matches['value'][$index]); // cleanup
                 }
             }
 
@@ -130,9 +127,11 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
         if ($attr) { // TODO; beautify
             $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // append ID
+
+            return ['attr' => implode(' ', $attr), 'hash' => $hash];
         }
 
-        return !$attr ?: ['attr' => implode(' ', $attr), 'hash' => $hash];
+        return null;
     }
 
     private function populateCache(): bool
@@ -151,9 +150,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
                 unset($this->svgFileArr[$row['path']]);
             }
         }
-
-        unset($storageArr); // save MEM
-        unset($svgFileArr); // save MEM
+        unset($storageArr, $svgFileArr); // save MEM
 
         $svg = preg_replace_callback(
             '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)#[^"]+"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
@@ -161,6 +158,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
                 if (!isset($this->svgFileArr[$match['href']])) { // check usage
                     return $match[0];
                 }
+
                 return sprintf('<use%s href="#%s"/>', $match['pre'].$match['post'], $this->convertFilePath($match['href']));
             },
             '<svg xmlns="http://www.w3.org/2000/svg">'
