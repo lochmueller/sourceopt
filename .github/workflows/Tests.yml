@@ -8,12 +8,10 @@ jobs:
     strategy:
       matrix:
         typo3: [10.4, 11.5]
-        php: [7.3, 7.4, 8.0]
+        php: [7.4, 8.0]
         exclude:
           - php: "8.0"
             typo3: "10.4"
-          - php: "7.3"
-            typo3: "11.5"
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
