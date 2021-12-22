@@ -14,10 +14,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class SvgFileRepository extends \TYPO3\CMS\Core\Resource\FileRepository
 {
     /**
-     * Retrieves all used SVGs within given storage-array
-     *
-     * @param array $storageUids
-     * @return array
+     * Retrieves all used SVGs within given storage-array.
      */
     public function findAllByStorageUids(array $storageUids): array
     {
