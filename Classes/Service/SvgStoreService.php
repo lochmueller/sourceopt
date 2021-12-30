@@ -102,7 +102,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         //}, $svg);
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
-        $svg = preg_replace('/^.*?<svg|\s*(<\/svg>)(?!.+\1).*$|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
+        $svg = preg_replace('/^.*?<svg|\s*(<\/svg>)(?!.*\1).*$|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
         $svg = preg_replace_callback('/([^>]*)\s*(?=>)/s', function (array $match) use (&$attr): string {
