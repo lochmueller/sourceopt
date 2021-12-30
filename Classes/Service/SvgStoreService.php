@@ -102,10 +102,10 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         //}, $svg);
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
-        $svg = preg_replace('/.*<svg|<\/svg>.*|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
+        $svg = preg_replace('/^.*?<svg|\s*(<\/svg>)(?!.+\1).*$|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
-        $svg = preg_replace_callback('/([^>]+)\s*(?=>)/s', function (array $match) use (&$attr): string {
+        $svg = preg_replace_callback('/([^>]*)\s*(?=>)/s', function (array $match) use (&$attr): string {
             if (false === preg_match_all('/(?!\s)(?<attr>[\w\-]+)="\s*(?<value>[^"]+)\s*"/', $match[1], $matches)) {
                 return $match[0];
             }
@@ -118,7 +118,9 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
                       break;
 
                   case 'viewBox':
-                      $attr[] = sprintf('%s="%s"', $attribute, $matches['value'][$index]); // save!
+                      if (false !== preg_match('/\S+\s\S+\s\+?(?<width>[\d\.]+)\s\+?(?<height>[\d\.]+)/', $matches['value'][$index], $match)) {
+                          $attr[] = sprintf('%s="0 0 %s %s"', $attribute, $match['width'], $match['height']); // save!
+                      }
                 }
             }
 
