@@ -105,7 +105,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         $svg = preg_replace('/^.*?<svg|\s*(<\/svg>)(?!.+\1).*$|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
-        $svg = preg_replace_callback('/([^>]+)\s*(?=>)/s', function (array $match) use (&$attr): string {
+        $svg = preg_replace_callback('/([^>]*)\s*(?=>)/s', function (array $match) use (&$attr): string {
             if (false === preg_match_all('/(?!\s)(?<attr>[\w\-]+)="\s*(?<value>[^"]+)\s*"/', $match[1], $matches)) {
                 return $match[0];
             }
