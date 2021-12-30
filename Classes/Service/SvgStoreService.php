@@ -118,7 +118,9 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
                       break;
 
                   case 'viewBox':
-                      $attr[] = sprintf('%s="%s"', $attribute, $matches['value'][$index]); // save!
+                      if (false !== preg_match('/\S+\s\S+\s\+?(?<width>[\d\.]+)\s\+?(?<height>[\d\.]+)/', $matches['value'][$index], $match)) {
+                          $attr[] = sprintf('%s="0 0 %s %s"', $attribute, $match['width'], $match['height']); // save!
+                      }
                 }
             }
 
