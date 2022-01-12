@@ -128,7 +128,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         }, $svg, 1);
 
         if ($attr) { // TODO; beautify
-            $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // append ID
+            $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // prepend ID
 
             return ['attr' => implode(' ', $attr), 'hash' => $hash];
         }
@@ -190,8 +190,8 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             return false;
         }
 
-        $this->svgCache->set('svgFileArr', $this->svgFileArr);
         $this->svgCache->set('spritePath', $this->spritePath);
+        $this->svgCache->set('svgFileArr', $this->svgFileArr);
 
         return true;
     }
