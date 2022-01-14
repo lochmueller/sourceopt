@@ -146,7 +146,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         }
         unset($storageArr[0]); // keep!
 
-        $svgFileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(array_keys($storageArr));
+        $svgFileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(\array_keys($storageArr));
         foreach ($svgFileArr as $index => $row) {
             if (!$this->svgFileArr[($row['path'] = '/'.$storageArr[$row['storage']].$row['identifier'])] = $this->addFileToSpriteArr($row['sha1'], $row['path'])) { // ^[/]
                 unset($this->svgFileArr[$row['path']]);
