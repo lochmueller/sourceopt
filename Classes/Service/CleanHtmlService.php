@@ -65,11 +65,11 @@ class CleanHtmlService implements SingletonInterface
     public function setVariables(array $config): void
     {
         if (!empty($config)) {
-            if ($config['formatHtml'] && is_numeric($config['formatHtml'])) {
+            if ($config['formatHtml'] && \is_numeric($config['formatHtml'])) {
                 $this->formatType = (int) $config['formatHtml'];
             }
 
-            if ($config['formatHtml.']['tabSize'] && is_numeric($config['formatHtml.']['tabSize'])) {
+            if ($config['formatHtml.']['tabSize'] && \is_numeric($config['formatHtml.']['tabSize'])) {
                 $this->tab = str_pad('', (int) $config['formatHtml.']['tabSize'], ' ');
             }
 

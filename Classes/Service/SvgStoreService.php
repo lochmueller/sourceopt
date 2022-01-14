@@ -102,7 +102,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         //}, $svg);
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
-        $svg = preg_replace('/^.*?<svg|\s*(<\/svg>)(?!.+\1).*$|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
+        $svg = preg_replace('/^.*?<svg|\s*(<\/svg>)(?!.*\1).*$|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
         $svg = preg_replace_callback('/([^>]*)\s*(?=>)/s', function (array $match) use (&$attr): string {
@@ -128,7 +128,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         }, $svg, 1);
 
         if ($attr) { // TODO; beautify
-            $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // append ID
+            $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // prepend ID
 
             return ['attr' => implode(' ', $attr), 'hash' => $hash];
         }
@@ -146,7 +146,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         }
         unset($storageArr[0]); // keep!
 
-        $svgFileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(array_keys($storageArr));
+        $svgFileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(\array_keys($storageArr));
         foreach ($svgFileArr as $index => $row) {
             if (!$this->svgFileArr[($row['path'] = '/'.$storageArr[$row['storage']].$row['identifier'])] = $this->addFileToSpriteArr($row['sha1'], $row['path'])) { // ^[/]
                 unset($this->svgFileArr[$row['path']]);
@@ -190,8 +190,8 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             return false;
         }
 
-        $this->svgCache->set('svgFileArr', $this->svgFileArr);
         $this->svgCache->set('spritePath', $this->spritePath);
+        $this->svgCache->set('svgFileArr', $this->svgFileArr);
 
         return true;
     }
