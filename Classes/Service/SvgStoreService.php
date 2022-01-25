@@ -77,6 +77,10 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
     private function addFileToSpriteArr(string $hash, string $path): ?array
     {
+        if (!file_exists($this->sitePath.$path)) {
+            return null;
+        }
+        
         if (1 === preg_match('/(?:;base64|i:a?i?pgf)/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
             return null;
         }
