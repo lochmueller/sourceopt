@@ -45,7 +45,7 @@ class SvgFileRepository extends \TYPO3\CMS\Core\Resource\FileRepository
                         $queryBuilder->createNamedParameter('image/svg+xml', \PDO::PARAM_STR)
                     )
                 )
-                ->groupBy('sys_file.uid')
+                ->groupBy('sys_file.uid', 'sys_file.storage', 'sys_file.identifier', 'sys_file.sha1')
                 ->orderBy('sys_file.storage')
                 ->addOrderBy('sys_file.identifier')
                 ->execute()
