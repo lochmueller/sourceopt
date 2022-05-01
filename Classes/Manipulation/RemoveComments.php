@@ -33,7 +33,7 @@ class RemoveComments implements ManipulationInterface
             $this->whiteListCommentsPatterns = $configuration['keep.'];
         }
 
-        // match all styles, scripts and comments
+        // match all comments, styles and scripts
         $matches = [];
         preg_match_all(
             '/(?s)((<!--.*?-->)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im',

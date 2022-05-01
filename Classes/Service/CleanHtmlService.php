@@ -166,7 +166,7 @@ class CleanHtmlService implements SingletonInterface
      */
     protected function formatHtml($html)
     {
-        // Save original formated comments, pre, textarea, styles and java-scripts & replace them with markers
+        // Save original formated pre, textarea, comments, styles and scripts & replace them with markers
         preg_match_all(
             '/(?s)((<!--.*?-->)|(<[ \n\r]*pre[^>]*>.*?<[ \n\r]*\/pre[^>]*>)|(<[ \n\r]*textarea[^>]*>.*?<[ \n\r]*\/textarea[^>]*>)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im',
             $html,
@@ -195,7 +195,7 @@ class CleanHtmlService implements SingletonInterface
         );
 
         if (false === $htmlArrayTemp) {
-            // Restore saved comments, styles and java-scripts
+            // Restore saved comments, styles and scripts
             for ($i = 0; $i < \count($noFormat); ++$i) {
                 $html = str_replace("<!-- ELEMENT {$i} -->", $noFormat[$i], $html);
             }
@@ -326,7 +326,7 @@ class CleanHtmlService implements SingletonInterface
             $this->removeEmptyLines($html);
         }
 
-        // Restore saved comments, styles and java-scripts
+        // Restore saved comments, styles and scripts
         for ($i = 0; $i < \count($noFormat); ++$i) {
             $html = str_replace("<!-- ELEMENT {$i} -->", $noFormat[$i], $html);
         }
