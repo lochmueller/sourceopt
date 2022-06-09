@@ -2,7 +2,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Source Optimization',
-    'description' => 'Optimization of the final page: reformatting the (x)html output, removal of new lines, quotes and optional combine referenced SVGs into one symbol-file via <use/>.',
+    'description' => 'Optimization of the final page: reformatting the (x)html output, removal of new-lines, comments and generator-info. In addition combines all SVG selected within content-elements into one <symbol> file & replaces images with their corresponding <use>.',
     'category' => 'fe',
     'version' => '4.0.4',
     'state' => 'stable',
