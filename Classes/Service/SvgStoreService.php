@@ -82,12 +82,12 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         if (!file_exists($this->sitePath.$path)) {
             return null;
         }
-        
-        if (1 === preg_match('/(?:;base64|i:a?i?pgf)/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
+
+        if (preg_match('/(?:;base64|i:a?i?pgf)/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
             return null;
         }
 
-        if (1 === preg_match('/<(?:style|defs)|url\(/', $svg)) {
+        if (preg_match('/<(?:style|defs)|url\(/', $svg)) {
             return null; // check links @ __construct
         }
 
@@ -180,7 +180,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         //unset($this->defs); // save MEM
         unset($this->svgs); // save MEM
 
-        if (\is_int($var = $GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml']) && 1 == $var) {
+        if ($GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml'] ?? false) {
             $svg = preg_replace('/[\n\r\t\v\0]|\s{2,}/', '', $svg);
         }
 
