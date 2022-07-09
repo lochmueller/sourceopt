@@ -43,31 +43,33 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             throw new \Exception('file does not exists: '.$this->sitePath.$this->spritePath);
         }
 
-        if (!preg_match('/(?<head>.+?<\/head>)(?<body>.+)/s', $html, $html) && 5 == \count($html)) {
-            throw new \Exception('fix HTML!');
+        if ($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false) {
+            $dom = ['head' => '', 'body' => $html];
+        } elseif (!preg_match('/(?<head>.+?<\/head>)(?<body>.+)/s', $html, $dom) && 5 == \count($dom)) {
+            return $html;
         }
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attributes
-        $html['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?!\s*<\/picture>)/s', function (array $match): string { // ^[/]
+        $dom['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?!\s*<\/picture>)/s', function (array $match): string { // ^[/]
             if (!isset($this->svgFileArr[$match['src']])) { // check usage
                 return $match[0];
             }
             $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap|crossorigin|decoding|referrerpolicy)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
             return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['src']));
-        }, $html['body']);
+        }, $dom['body']);
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object#attributes
-        $html['body'] = preg_replace_callback('/<object(?<pre>[^>]*)data="(?<data>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?:<\/object>)/s', function (array $match): string { // ^[/]
+        $dom['body'] = preg_replace_callback('/<object(?<pre>[^>]*)data="(?<data>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?:<\/object>)/s', function (array $match): string { // ^[/]
             if (!isset($this->svgFileArr[$match['data']])) { // check usage
                 return $match[0];
             }
             $attr = preg_replace('/\s(?:form|name|type|usemap)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
             return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['data']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['data']));
-        }, $html['body']);
+        }, $dom['body']);
 
-        return $html['head'].$html['body'];
+        return $dom['head'].$dom['body'];
     }
 
     private function convertFilePath(string $path): string
@@ -80,12 +82,12 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         if (!file_exists($this->sitePath.$path)) {
             return null;
         }
-        
-        if (1 === preg_match('/(?:;base64|i:a?i?pgf)/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
+
+        if (preg_match('/(?:;base64|i:a?i?pgf)/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
             return null;
         }
 
-        if (1 === preg_match('/<(?:style|defs)|url\(/', $svg)) {
+        if (preg_match('/<(?:style|defs)|url\(/', $svg)) {
             return null; // check links @ __construct
         }
 
@@ -178,7 +180,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         //unset($this->defs); // save MEM
         unset($this->svgs); // save MEM
 
-        if (\is_int($var = $GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml']) && 1 == $var) {
+        if ($GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml'] ?? false) {
             $svg = preg_replace('/[\n\r\t\v\0]|\s{2,}/', '', $svg);
         }
 
