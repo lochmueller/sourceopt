@@ -91,8 +91,12 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             return null; // check links @ __construct
         }
 
-        //$svg = preg_replace('/((?:id|class)=")/', '$1'.$hash.'__', $svg); // extend  IDs
-        //$svg = preg_replace('/(href="|url\()#/', '$1#'.$hash.'__', $svg); // recover IDs
+        // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
+        $svg = preg_replace('/^.*?<svg|\s*(<\/svg>)(?!.*\1).*$|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
+
+
+        //$svg = preg_replace('/(?<=(?:id|class)=")/', $hash.'__', $svg); // extend  IDs
+        //$svg = preg_replace('/(?<=href="|url\()#/', $hash.'__', $svg); // recover IDs
 
         //$svg = preg_replace_callback('/<style[^>]*>(?<styl>.+?)<\/style>|<defs[^>]*>(?<defs>.+?)<\/defs>/s', function(array $match) use($hash): string {
         //
@@ -106,9 +110,6 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         //    }
         //    return '';
         //}, $svg);
-
-        // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
-        $svg = preg_replace('/^.*?<svg|\s*(<\/svg>)(?!.*\1).*$|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
         $svg = preg_replace_callback('/([^>]*)\s*(?=>)/s', function (array $match) use (&$attr): string {
@@ -181,7 +182,8 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         unset($this->svgs); // save MEM
 
         if ($GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml'] ?? false) {
-            $svg = preg_replace('/[\n\r\t\v\0]|\s{2,}/', '', $svg);
+            $svg = preg_replace('/[\t\v]/', ' ', $svg);
+            $svg = preg_replace('/\s{2,}/', ' ', $svg);
         }
 
         $svg = preg_replace('/<([a-z]+)\s*(\/|>\s*<\/\1)>\s*/i', '', $svg); // remove emtpy
