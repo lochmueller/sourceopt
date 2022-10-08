@@ -182,12 +182,13 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         unset($this->svgs); // save MEM
 
         if ($GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml'] ?? false) {
-            $svg = preg_replace('/[\t\v]/', ' ', $svg);
-            $svg = preg_replace('/\s{2,}/', ' ', $svg);
+            $svg = preg_replace('/(?<=>)\s+(?=<)/', '', $svg);// remove emptiness
+            $svg = preg_replace('/[\t\v]/', ' ', $svg);// prepare shrinkage
+            $svg = preg_replace('/\s{2,}/', ' ', $svg);// shrink whitespace
         }
 
-        $svg = preg_replace('/<([a-z]+)\s*(\/|>\s*<\/\1)>\s*/i', '', $svg); // remove emtpy
-        $svg = preg_replace('/<((circle|ellipse|line|path|polygon|polyline|rect|stop|use)\s[^>]+?)\s*>\s*<\/\2>/', '<$1/>', $svg); // shorten/minify
+        $svg = preg_replace('/<([a-z]+)\s*(\/|>\s*<\/\1)>\s*|\s+(?=\/>)/i', '', $svg); // remove emtpy TAGs & shorten endings
+        $svg = preg_replace('/<((circle|ellipse|line|path|polygon|polyline|rect|stop|use)\s[^>]+?)\s*>\s*<\/\2>/', '<$1/>', $svg); // shorten/minify TAG syntax
 
         if (!is_dir($this->sitePath.$this->outputDir)) {
             GeneralUtility::mkdir_deep($this->sitePath.$this->outputDir);
