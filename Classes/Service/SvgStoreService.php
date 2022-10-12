@@ -182,9 +182,9 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         unset($this->svgs); // save MEM
 
         if ($GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml'] ?? false) {
-            $svg = preg_replace('/(?<=>)\s+(?=<)/', '', $svg);// remove emptiness
-            $svg = preg_replace('/[\t\v]/', ' ', $svg);// prepare shrinkage
-            $svg = preg_replace('/\s{2,}/', ' ', $svg);// shrink whitespace
+            $svg = preg_replace('/(?<=>)\s+(?=<)/', '', $svg); // remove emptiness
+            $svg = preg_replace('/[\t\v]/', ' ', $svg); // prepare shrinkage
+            $svg = preg_replace('/\s{2,}/', ' ', $svg); // shrink whitespace
         }
 
         $svg = preg_replace('/<([a-z]+)\s*(\/|>\s*<\/\1)>\s*|\s+(?=\/>)/i', '', $svg); // remove emtpy TAGs & shorten endings
