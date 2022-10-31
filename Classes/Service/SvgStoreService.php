@@ -153,13 +153,16 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         }
         unset($storageArr[0]); // keep!
 
-        $svgFileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(\array_keys($storageArr));
-        foreach ($svgFileArr as $index => $row) {
-            if (!$this->svgFileArr[($row['path'] = '/'.$storageArr[$row['storage']].$row['identifier'])] = $this->addFileToSpriteArr($row['sha1'], $row['path'])) { // ^[/]
-                unset($this->svgFileArr[$row['path']]);
+        $fileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(\array_keys($storageArr));
+        foreach ($fileArr as $file) {
+            $file['path'] = '/'.$storageArr[$file['storage']].$file['identifier']; // ^[/]
+            $file['defs'] = $this->addFileToSpriteArr($file['sha1'], $file['path']);
+
+            if (null !== $file['defs']) {
+                $this->svgFileArr[$file['path']] = $file['defs'];
             }
         }
-        unset($storageArr, $svgFileArr); // save MEM
+        unset($storageArr, $storage, $fileArr, $file); // save MEM
 
         $svg = preg_replace_callback(
             '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)#[^"]+"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
