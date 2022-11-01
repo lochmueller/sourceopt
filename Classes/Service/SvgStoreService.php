@@ -32,8 +32,8 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
     public function process(string $html): string
     {
-        $this->spritePath = $this->svgCache->get('spritePath');
-        $this->svgFileArr = $this->svgCache->get('svgFileArr');
+        $this->spritePath = $this->svgCache->get('spritePath') ?: '';
+        $this->svgFileArr = $this->svgCache->get('svgFileArr') ?: [];
 
         if (empty($this->spritePath) && !$this->populateCache()) {
             throw new \Exception('could not write file: '.$this->sitePath.$this->spritePath);
