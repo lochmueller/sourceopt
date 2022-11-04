@@ -356,12 +356,8 @@ class CleanHtmlService implements SingletonInterface
 
     /**
      * Remove multiple white space, keeps line breaks.
-     *
-     * @param string $html
-     *
-     * @return string
      */
-    protected function killWhiteSpace($html)
+    protected function killWhiteSpace(string $html): string
     {
         $temp = explode($this->newline, $html);
         for ($i = 0; $i < \count($temp); ++$i) {
@@ -379,34 +375,24 @@ class CleanHtmlService implements SingletonInterface
 
     /**
      * Remove white space at the end of lines, keeps other white space and line breaks.
-     *
-     * @param string $html
-     *
-     * @return string
      */
-    protected function rTrimLines(&$html)
+    protected function rTrimLines(string &$html): void
     {
         $html = preg_replace('/\s+$/m', '', $html);
     }
 
     /**
      * Convert newlines according to the current OS.
-     *
-     * @param string $html
-     *
-     * @return string
      */
-    protected function convNlOs(&$html)
+    protected function convNlOs(string &$html): void
     {
         $html = preg_replace("(\r\n|\r)", $this->newline, $html);
     }
 
     /**
      * Remove empty lines.
-     *
-     * @param string $html
      */
-    protected function removeEmptyLines(&$html): void
+    protected function removeEmptyLines(string &$html): void
     {
         $temp = explode($this->newline, $html);
         $result = [];
@@ -422,7 +408,7 @@ class CleanHtmlService implements SingletonInterface
     /**
      * Include configured header comment in HTML content block.
      */
-    public function includeHeaderComment(&$html): void
+    public function includeHeaderComment(string &$html): void
     {
         $html = preg_replace('/^(-->)$/m', "\n\t".$this->headerComment."\n$1", $html);
     }
