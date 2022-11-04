@@ -6,6 +6,7 @@ namespace HTML\Sourceopt\Service;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class CleanHtmlServiceTest extends \PHPUnit\Framework\TestCase

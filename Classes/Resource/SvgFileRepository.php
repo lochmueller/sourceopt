@@ -50,6 +50,6 @@ class SvgFileRepository extends \TYPO3\CMS\Core\Resource\FileRepository
                 ->addOrderBy('sys_file.identifier')
                 ->execute()
                 ->fetchAll() // TODO; use stdClass
-            ;
+        ;
     }
 }

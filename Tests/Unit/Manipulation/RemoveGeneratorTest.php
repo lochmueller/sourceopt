@@ -15,6 +15,7 @@ use HTML\Sourceopt\Manipulation\RemoveGenerator;
  * RemoveGeneratorTest.
  *
  * @internal
+ *
  * @coversNothing
  */
 class RemoveGeneratorTest extends \PHPUnit\Framework\TestCase

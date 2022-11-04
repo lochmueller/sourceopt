@@ -22,8 +22,8 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
     public function __construct()
     {
-        //$this->styl = []; # https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
-        //$this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
+        // $this->styl = []; # https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
+        // $this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
         $this->svgs = [];
 
         $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
@@ -94,11 +94,10 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
         $svg = preg_replace('/^.*?<svg|\s*(<\/svg>)(?!.*\1).*$|xlink:|\s(?:(?:version|xmlns)|(?:[a-z\-]+\:[a-z\-]+))="[^"]*"/s', '', $svg); // cleanup
 
+        // $svg = preg_replace('/(?<=(?:id|class)=")/', $hash.'__', $svg); // extend  IDs
+        // $svg = preg_replace('/(?<=href="|url\()#/', $hash.'__', $svg); // recover IDs
 
-        //$svg = preg_replace('/(?<=(?:id|class)=")/', $hash.'__', $svg); // extend  IDs
-        //$svg = preg_replace('/(?<=href="|url\()#/', $hash.'__', $svg); // recover IDs
-
-        //$svg = preg_replace_callback('/<style[^>]*>(?<styl>.+?)<\/style>|<defs[^>]*>(?<defs>.+?)<\/defs>/s', function(array $match) use($hash): string {
+        // $svg = preg_replace_callback('/<style[^>]*>(?<styl>.+?)<\/style>|<defs[^>]*>(?<defs>.+?)<\/defs>/s', function(array $match) use($hash): string {
         //
         //    if(isset($match['styl']))
         //    {
@@ -109,7 +108,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         //        $this->defs[] = trim($match['defs']);
         //    }
         //    return '';
-        //}, $svg);
+        // }, $svg);
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
         $svg = preg_replace_callback('/([^>]*)\s*(?=>)/s', function (array $match) use (&$attr): string {
@@ -118,16 +117,16 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             }
             foreach ($matches['attr'] as $index => $attribute) {
                 switch ($attribute) {
-                  case 'id':
-                  case 'width':
-                  case 'height':
-                      unset($matches[0][$index]);
-                      break;
+                    case 'id':
+                    case 'width':
+                    case 'height':
+                        unset($matches[0][$index]);
+                        break;
 
-                  case 'viewBox':
-                      if (false !== preg_match('/\S+\s\S+\s\+?(?<width>[\d\.]+)\s\+?(?<height>[\d\.]+)/', $matches['value'][$index], $match)) {
-                          $attr[] = sprintf('%s="0 0 %s %s"', $attribute, $match['width'], $match['height']); // save!
-                      }
+                    case 'viewBox':
+                        if (false !== preg_match('/\S+\s\S+\s\+?(?<width>[\d\.]+)\s\+?(?<height>[\d\.]+)/', $matches['value'][$index], $match)) {
+                            $attr[] = sprintf('%s="0 0 %s %s"', $attribute, $match['width'], $match['height']); // save!
+                        }
                 }
             }
 
@@ -153,7 +152,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         }
         unset($storageArr[0]); // keep!
 
-        $fileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(\array_keys($storageArr));
+        $fileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(array_keys($storageArr));
         foreach ($fileArr as $file) {
             $file['path'] = '/'.$storageArr[$file['storage']].$file['identifier']; // ^[/]
             $file['defs'] = $this->addFileToSpriteArr($file['sha1'], $file['path']);
@@ -174,14 +173,14 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
                 return sprintf('<use%s href="#%s"/>', $match['pre'].$match['post'], $this->convertFilePath($match['href']));
             },
             '<svg xmlns="http://www.w3.org/2000/svg">'
-            //."\n<style>\n".implode("\n", $this->styl)."\n</style>"
-            //."\n<defs>\n".implode("\n", $this->defs)."\n</defs>"
+            // ."\n<style>\n".implode("\n", $this->styl)."\n</style>"
+            // ."\n<defs>\n".implode("\n", $this->defs)."\n</defs>"
             ."\n<symbol ".implode("</symbol>\n<symbol ", $this->svgs)."</symbol>\n"
             .'</svg>'
         );
 
-        //unset($this->styl); // save MEM
-        //unset($this->defs); // save MEM
+        // unset($this->styl); // save MEM
+        // unset($this->defs); // save MEM
         unset($this->svgs); // save MEM
 
         if ($GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml'] ?? false) {
