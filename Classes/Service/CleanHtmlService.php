@@ -169,7 +169,7 @@ class CleanHtmlService implements SingletonInterface
         // Save original formated pre, textarea, comments, styles and scripts & replace them with markers
         preg_match_all(
             '/(?s)((<!--.*?-->)|(<[ \n\r]*pre[^>]*>.*?<[ \n\r]*\/pre[^>]*>)|(<[ \n\r]*textarea[^>]*>.*?<[ \n\r]*\/textarea[^>]*>)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im',
-            $html,
+            (string)$html,
             $matches
         );
         $noFormat = $matches[0]; // do not format these block elements
