@@ -43,7 +43,7 @@ class CleanHtmlMiddleware implements MiddlewareInterface
         ) {
             $processedHtml = $this->cleanHtmlService->clean(
                 $response->getBody()->__toString(),
-                $GLOBALS['TSFE']->config['config']['sourceopt.']
+                (array) $GLOBALS['TSFE']->config['config']['sourceopt.']
             );
 
             // Replace old body with $processedHtml

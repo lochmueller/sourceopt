@@ -20,5 +20,5 @@ interface ManipulationInterface
      *
      * @return string the manipulated HTML
      */
-    public function manipulate($html, array $configuration = []);
+    public function manipulate(string $html, array $configuration = []):string;
 }

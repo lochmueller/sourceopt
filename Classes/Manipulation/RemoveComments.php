@@ -27,7 +27,7 @@ class RemoveComments implements ManipulationInterface
      *
      * @return string the manipulated HTML
      */
-    public function manipulate($html, array $configuration = [])
+    public function manipulate(string $html, array $configuration = []):string
     {
         if (isset($configuration['keep.'])) {
             $this->whiteListCommentsPatterns = $configuration['keep.'];

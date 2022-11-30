@@ -90,12 +90,9 @@ class CleanHtmlService implements SingletonInterface
     /**
      * Clean given HTML with formatter.
      *
-     * @param string $html
-     * @param array  $config
-     *
      * @return string
      */
-    public function clean($html, $config = [])
+    public function clean(string $html, array $config = [])
     {
         if (!empty($config)) {
             $this->setVariables($config);
@@ -159,12 +156,8 @@ class CleanHtmlService implements SingletonInterface
      *    3 => aesthetic line breaks (important box-elements)
      *    4 => logic line breaks (all box-elements)
      *    5 => max line breaks (all elements).
-     *
-     * @param string $html
-     *
-     * @return string
      */
-    protected function formatHtml($html)
+    protected function formatHtml(string $html):string
     {
         // Save original formated pre, textarea, comments, styles and scripts & replace them with markers
         preg_match_all(
