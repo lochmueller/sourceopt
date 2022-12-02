@@ -124,7 +124,7 @@ class CleanHtmlService implements SingletonInterface
         if (!isset($GLOBALS['TSFE']->config['config']['doctype'])
             || 'x' !== substr($GLOBALS['TSFE']->config['config']['doctype'], 0, 1)) {
             $html = preg_replace(
-                '/<((?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\s[^>]+?)\s?\/>/',
+                '/<((?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\s[^>\\\\]+?)\s?\/>/',
                 '<$1>',
                 $html
             );

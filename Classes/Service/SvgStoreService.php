@@ -50,7 +50,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         }
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attributes
-        $dom['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?!\s*<\/picture>)/s', function (array $match): string { // ^[/]
+        $dom['body'] = preg_replace_callback('/<img(?<pre>[^>]*)src="(?:https?:)?(?:\/\/[^\/]+?)?(?<src>\/[^"]+\.svg)"(?<post>[^>]*?)[\s\/]*>(?!\s*<\/picture>)/s', function (array $match): string { // ^[/]
             if (!isset($this->svgFileArr[$match['src']])) { // check usage
                 return $match[0];
             }
