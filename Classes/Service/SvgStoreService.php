@@ -28,10 +28,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
         $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
         $this->svgCache = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
-    }
 
-    public function process(string $html): string
-    {
         $this->spritePath = $this->svgCache->get('spritePath') ?: '';
         $this->svgFileArr = $this->svgCache->get('svgFileArr') ?: [];
 
@@ -42,7 +39,10 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         if (!file_exists($this->sitePath.$this->spritePath)) {
             throw new \Exception('file does not exists: '.$this->sitePath.$this->spritePath);
         }
+    }
 
+    public function process(string $html): string
+    {
         if ($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false) {
             $dom = ['head' => '', 'body' => $html];
         } elseif (!preg_match('/(?<head>.+?<\/head>)(?<body>.+)/s', $html, $dom) && 5 == \count($dom)) {
@@ -77,13 +77,15 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         return preg_replace('/.svg$|[^\w\-]/', '', str_replace('/', '-', ltrim($path, '/'))); // ^[^/]
     }
 
-    private function addFileToSpriteArr(string $hash, string $path): ?array
+    private function addFileToSpriteArr(string $hash, string $path, array $attr = []): ?array
     {
         if (!file_exists($this->sitePath.$path)) {
             return null;
         }
 
-        if (preg_match('/(?:;base64|i:a?i?pgf)/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
+        $svg = file_get_contents($this->sitePath.$path);
+
+        if (preg_match('/(?:;base64|i:a?i?pgf)/', $svg)) { // noop!
             return null;
         }
 
@@ -133,13 +135,13 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             return implode(' ', $matches[0]);
         }, $svg, 1);
 
-        if ($attr) { // TODO; beautify
-            $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // prepend ID
-
-            return ['attr' => implode(' ', $attr), 'hash' => $hash];
+        if (empty($attr)) {
+            return null;
         }
 
-        return null;
+        $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // prepend ID
+
+        return ['attr' => implode(' ', $attr), 'hash' => $hash];
     }
 
     private function populateCache(): bool
