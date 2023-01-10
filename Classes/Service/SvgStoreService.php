@@ -11,6 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author Marcus Förster ; https://github.com/xerc
  */
+#[AllowDynamicProperties]
 class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
