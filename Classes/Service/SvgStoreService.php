@@ -11,22 +11,60 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author Marcus Förster ; https://github.com/xerc
  */
-#[AllowDynamicProperties]
 class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
-     * SVG-Sprite storage directory.
+     * SVG-Sprite relativ storage directory.
      *
      * @var string
      */
     protected $outputDir = '/typo3temp/assets/svg/';
 
+    /**
+     * TYPO3 absolute path to public web.
+     *
+     * @var string
+     */
+    protected $sitePath = '';
+
+    /**
+     * Final TYPO3 Frontend-Cache object.
+     *
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
+     */
+    protected $svgCache = null;
+
+    /**
+     * Final SVG-Sprite relativ file path.
+     *
+     * @var string
+     */
+    protected $spritePath = '';
+
+    /**
+     * Final SVG-Sprite Vectors.
+     *
+     * @var array
+     */
+    protected $svgs = [];
+
+    /**
+     * Final SVG-Sprite Styles.
+     *
+     * @var array
+     */
+    protected $styl = []; # ToFix ; https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
+
+    /**
+     * Final SVG-Sprite Objects.
+     *
+     * @var array
+     */
+    protected $defs = []; # ToFix ; https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
+
+
     public function __construct()
     {
-        // $this->styl = []; # https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
-        // $this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
-        $this->svgs = [];
-
         $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
         $this->svgCache = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
 
