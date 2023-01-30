@@ -84,7 +84,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
     {
         if ($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false) {
             $dom = ['head' => '', 'body' => $html];
-        } elseif (!preg_match('/(?<head>.+?<\/head>)(?<body>.+)/s', $html, $dom) && 5 == \count($dom)) {
+        } elseif (!preg_match('/(?<head>.+?<\/head>)(?<body>.+)/s', $html, $dom)) {
             return $html;
         }
 
