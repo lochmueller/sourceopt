@@ -42,7 +42,7 @@ class CleanHtmlMiddleware implements MiddlewareInterface
         && 'text/html' == substr($response->getHeaderLine('Content-Type'), 0, 9)
         ) {
             $processedHtml = $this->cleanHtmlService->clean(
-                $response->getBody()->__toString(),
+                (string) $response->getBody(),
                 (array) $GLOBALS['TSFE']->config['config']['sourceopt.']
             );
 

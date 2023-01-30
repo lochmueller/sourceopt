@@ -31,7 +31,7 @@ class SvgStoreMiddleware implements MiddlewareInterface
         && 'text/html' == substr($response->getHeaderLine('Content-Type'), 0, 9)
         ) {
             $processedHtml = GeneralUtility::makeInstance(\HTML\Sourceopt\Service\SvgStoreService::class)
-                ->process($response->getBody()->__toString())
+                ->process((string) $response->getBody())
             ;
 
             $responseBody = new Stream('php://temp', 'rw');
