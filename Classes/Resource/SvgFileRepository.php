@@ -38,7 +38,7 @@ class SvgFileRepository extends \TYPO3\CMS\Core\Resource\FileRepository
                     ),
                     $queryBuilder->expr()->lt(
                         'sys_file.size',
-                        $queryBuilder->createNamedParameter((int) $GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'], \PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter((int) $GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'] ?? null, \PDO::PARAM_INT)
                     ),
                     $queryBuilder->expr()->eq(
                         'sys_file.mime_type',

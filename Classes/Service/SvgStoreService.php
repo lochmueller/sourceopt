@@ -14,24 +14,60 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
-     * SVG-Sprite storage directory.
+     * SVG-Sprite relativ storage directory.
      *
      * @var string
      */
     protected $outputDir = '/typo3temp/assets/svg/';
 
+    /**
+     * TYPO3 absolute path to public web.
+     *
+     * @var string
+     */
+    protected $sitePath = '';
+
+    /**
+     * Final TYPO3 Frontend-Cache object.
+     *
+     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
+     */
+    protected $svgCache = null;
+
+    /**
+     * Final SVG-Sprite relativ file path.
+     *
+     * @var string
+     */
+    protected $spritePath = '';
+
+    /**
+     * Final SVG-Sprite Vectors.
+     *
+     * @var array
+     */
+    protected $svgs = [];
+
+    /**
+     * Final SVG-Sprite Styles.
+     *
+     * @var array
+     */
+    protected $styl = []; # ToFix ; https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
+
+    /**
+     * Final SVG-Sprite Objects.
+     *
+     * @var array
+     */
+    protected $defs = []; # ToFix ; https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
+
+
     public function __construct()
     {
-        // $this->styl = []; # https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
-        // $this->defs = []; # https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
-        $this->svgs = [];
-
         $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
         $this->svgCache = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
-    }
 
-    public function process(string $html): string
-    {
         $this->spritePath = $this->svgCache->get('spritePath') ?: '';
         $this->svgFileArr = $this->svgCache->get('svgFileArr') ?: [];
 
@@ -42,10 +78,13 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         if (!file_exists($this->sitePath.$this->spritePath)) {
             throw new \Exception('file does not exists: '.$this->sitePath.$this->spritePath);
         }
+    }
 
+    public function process(string $html): string
+    {
         if ($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false) {
             $dom = ['head' => '', 'body' => $html];
-        } elseif (!preg_match('/(?<head>.+?<\/head>)(?<body>.+)/s', $html, $dom) && 5 == \count($dom)) {
+        } elseif (!preg_match('/(?<head>.+?<\/head>)(?<body>.+)/s', $html, $dom)) {
             return $html;
         }
 
@@ -77,13 +116,15 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         return preg_replace('/.svg$|[^\w\-]/', '', str_replace('/', '-', ltrim($path, '/'))); // ^[^/]
     }
 
-    private function addFileToSpriteArr(string $hash, string $path): ?array
+    private function addFileToSpriteArr(string $hash, string $path, array $attr = []): ?array
     {
         if (!file_exists($this->sitePath.$path)) {
             return null;
         }
 
-        if (preg_match('/(?:;base64|i:a?i?pgf)/', $svg = file_get_contents($this->sitePath.$path))) { // noop!
+        $svg = file_get_contents($this->sitePath.$path);
+
+        if (preg_match('/(?:;base64|i:a?i?pgf)/', $svg)) { // noop!
             return null;
         }
 
@@ -133,13 +174,13 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             return implode(' ', $matches[0]);
         }, $svg, 1);
 
-        if ($attr) { // TODO; beautify
-            $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // prepend ID
-
-            return ['attr' => implode(' ', $attr), 'hash' => $hash];
+        if (empty($attr)) {
+            return null;
         }
 
-        return null;
+        $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // prepend ID
+
+        return ['attr' => implode(' ', $attr), 'hash' => $hash];
     }
 
     private function populateCache(): bool
@@ -164,7 +205,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         unset($storageArr, $storage, $fileArr, $file); // save MEM
 
         $svg = preg_replace_callback(
-            '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)#[^"]+"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
+            '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)(?:#[^"]*?)?"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
             function (array $match): string {
                 if (!isset($this->svgFileArr[$match['href']])) { // check usage
                     return $match[0];

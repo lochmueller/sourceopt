@@ -64,26 +64,24 @@ class CleanHtmlService implements SingletonInterface
      */
     public function setVariables(array $config): void
     {
-        if (!empty($config)) {
-            if ($config['formatHtml'] && is_numeric($config['formatHtml'])) {
-                $this->formatType = (int) $config['formatHtml'];
-            }
+        if (isset($config['headerComment']) && !empty($config['headerComment'])) {
+            $this->headerComment = $config['headerComment'];
+        }
 
-            if ($config['formatHtml.']['tabSize'] && is_numeric($config['formatHtml.']['tabSize'])) {
-                $this->tab = str_pad('', (int) $config['formatHtml.']['tabSize'], ' ');
-            }
+        if (isset($config['formatHtml']) && is_numeric($config['formatHtml'])) {
+            $this->formatType = (int) $config['formatHtml'];
+        }
 
-            if (isset($config['formatHtml.']['debugComment'])) {
-                $this->debugComment = (bool) $config['formatHtml.']['debugComment'];
-            }
+        if (isset($config['formatHtml.']['tabSize']) && is_numeric($config['formatHtml.']['tabSize'])) {
+            $this->tab = str_pad('', (int) $config['formatHtml.']['tabSize'], ' ');
+        }
 
-            if (isset($config['headerComment'])) {
-                $this->headerComment = $config['headerComment'];
-            }
+        if (isset($config['formatHtml.']['debugComment'])) {
+            $this->debugComment = (bool) $config['formatHtml.']['debugComment'];
+        }
 
-            if (isset($config['dropEmptySpaceChar']) && (bool) $config['dropEmptySpaceChar']) {
-                $this->emptySpaceChar = '';
-            }
+        if (isset($config['dropEmptySpaceChar']) && (bool) $config['dropEmptySpaceChar']) {
+            $this->emptySpaceChar = '';
         }
     }
 
