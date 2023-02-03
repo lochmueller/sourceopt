@@ -205,7 +205,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         unset($storageArr, $storage, $fileArr, $file); // save MEM
 
         $svg = preg_replace_callback(
-            '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)#[^"]+"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
+            '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)(?:#[^"]*?)?"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
             function (array $match): string {
                 if (!isset($this->svgFileArr[$match['href']])) { // check usage
                     return $match[0];
