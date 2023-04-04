@@ -128,18 +128,20 @@ class CleanHtmlService implements SingletonInterface
             );
         }
 
-        if ($this->formatType > 0) {
+        if ($this->formatType > 0 && is_string($html)) {
             $html = $this->formatHtml($html);
         }
-        // remove white space after line ending
-        $this->rTrimLines($html);
-
+        if ( is_string($html)) {
+            // remove white space after line ending
+            $this->rTrimLines($html);
+        }
+        
         // recover line-breaks
-        if (Environment::isWindows()) {
+        if (Environment::isWindows()  && is_string($html) ) {
             $html = str_replace($this->newline, "\r\n", $html);
         }
 
-        return $html;
+        return (string)$html;
     }
 
     /**
