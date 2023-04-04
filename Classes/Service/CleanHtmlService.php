@@ -92,7 +92,6 @@ class CleanHtmlService implements SingletonInterface
      */
     public function clean(string $html, array $config = [])
     {
-
         if (!empty($config)) {
             $this->setVariables($config);
         }
@@ -100,20 +99,25 @@ class CleanHtmlService implements SingletonInterface
         $this->convNlOs($html);
 
         $manipulations = [];
+
         if (isset($config['removeGenerator']) && (bool) $config['removeGenerator']) {
             $manipulations['removeGenerator'] = GeneralUtility::makeInstance(RemoveGenerator::class);
         }
+
         if (isset($config['removeComments']) && (bool) $config['removeComments']) {
             $manipulations['removeComments'] = GeneralUtility::makeInstance(RemoveComments::class);
         }
+
         if (!empty($this->headerComment)) {
             $this->includeHeaderComment($html);
         }
+
         foreach ($manipulations as $key => $manipulation) {
             /** @var ManipulationInterface $manipulation */
             $configuration = isset($config[$key.'.']) && \is_array($config[$key.'.']) ? $config[$key.'.'] : [];
             $html = $manipulation->manipulate($html, $configuration);
         }
+
         // cleanup HTML5 self-closing elements
         if (!isset($GLOBALS['TSFE']->config['config']['doctype'])
             || 'x' !== substr($GLOBALS['TSFE']->config['config']['doctype'], 0, 1)) {
@@ -131,6 +135,7 @@ class CleanHtmlService implements SingletonInterface
             // remove white space after line ending
             $this->rTrimLines($html);
         }
+        
         // recover line-breaks
         if (Environment::isWindows()  && is_string($html) ) {
             $html = str_replace($this->newline, "\r\n", $html);
