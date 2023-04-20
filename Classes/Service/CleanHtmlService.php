@@ -128,20 +128,20 @@ class CleanHtmlService implements SingletonInterface
             );
         }
 
-        if ($this->formatType > 0 && is_string($html)) {
+        if ($this->formatType > 0 && \is_string($html)) {
             $html = $this->formatHtml($html);
         }
-        if ( is_string($html)) {
+        if (\is_string($html)) {
             // remove white space after line ending
             $this->rTrimLines($html);
         }
-        
+
         // recover line-breaks
-        if (Environment::isWindows()  && is_string($html) ) {
+        if (Environment::isWindows() && \is_string($html)) {
             $html = str_replace($this->newline, "\r\n", $html);
         }
 
-        return (string)$html;
+        return (string) $html;
     }
 
     /**
@@ -157,7 +157,7 @@ class CleanHtmlService implements SingletonInterface
      *    4 => logic line breaks (all box-elements)
      *    5 => max line breaks (all elements).
      */
-    protected function formatHtml(string $html):string
+    protected function formatHtml(string $html): string
     {
         // Save original formated pre, textarea, comments, styles and scripts & replace them with markers
         preg_match_all(

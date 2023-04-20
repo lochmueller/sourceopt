@@ -32,7 +32,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
      *
      * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
      */
-    protected $svgCache = null;
+    protected $svgCache;
 
     /**
      * Final SVG-Sprite relativ file path.
@@ -53,15 +53,14 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
      *
      * @var array
      */
-    protected $styl = []; # ToFix ; https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
+    protected $styl = []; // ToFix ; https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
 
     /**
      * Final SVG-Sprite Objects.
      *
      * @var array
      */
-    protected $defs = []; # ToFix ; https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
-
+    protected $defs = []; // ToFix ; https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
 
     public function __construct()
     {
