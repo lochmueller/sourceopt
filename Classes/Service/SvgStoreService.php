@@ -35,11 +35,18 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
     protected $svgCache;
 
     /**
-     * Final SVG-Sprite relativ file path.
+     * Cached SVG-Sprite relativ file path.
      *
      * @var string
      */
     protected $spritePath = '';
+
+    /**
+     * Cached used SVG files (incl. defs).
+     *
+     * @var array
+     */
+    protected $svgFileArr = [];
 
     /**
      * Final SVG-Sprite Vectors.
