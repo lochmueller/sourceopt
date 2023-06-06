@@ -99,7 +99,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             if (!isset($this->svgFileArr[$match['src']])) { // check usage
                 return $match[0];
             }
-            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap|crossorigin|decoding|referrerpolicy)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
+            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap|crossorigin|decoding|fetchpriority|referrerpolicy)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
             return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['src']));
         }, $dom['body']);
