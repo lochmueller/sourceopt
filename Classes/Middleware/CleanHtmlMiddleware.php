@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace HTML\Sourceopt\Middleware;
 
-use HTML\Sourceopt\Service\CleanHtmlService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -20,16 +19,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 class CleanHtmlMiddleware implements MiddlewareInterface
 {
     /**
-     * @var CleanHtmlService
-     */
-    protected $cleanHtmlService;
-
-    public function __construct()
-    {
-        $this->cleanHtmlService = GeneralUtility::makeInstance(CleanHtmlService::class);
-    }
-
-    /**
      * Clean the HTML output.
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -42,10 +31,12 @@ class CleanHtmlMiddleware implements MiddlewareInterface
         && 'text/html' == substr($response->getHeaderLine('Content-Type'), 0, 9)
         && !empty($response->getBody())
         ) {
-            $processedHtml = $this->cleanHtmlService->clean(
-                (string) $response->getBody(),
-                (array) $GLOBALS['TSFE']->config['config']['sourceopt.']
-            );
+            $processedHtml = GeneralUtility::makeInstance(\HTML\Sourceopt\Service\CleanHtmlService::class)
+                ->clean(
+                    (string) $response->getBody(),
+                    (array) $GLOBALS['TSFE']->config['config']['sourceopt.']
+                )
+            ;
 
             // Replace old body with $processedHtml
             $responseBody = new Stream('php://temp', 'rw');

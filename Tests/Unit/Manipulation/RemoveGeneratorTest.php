@@ -22,9 +22,6 @@ class RemoveGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider generatorProvider
-     *
-     * @param mixed $before
-     * @param mixed $after
      */
     public function testRemoveGenerator($before, $after): void
     {
