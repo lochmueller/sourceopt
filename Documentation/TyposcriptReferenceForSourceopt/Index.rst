@@ -24,9 +24,11 @@ Here is a reference that is valid for both, TypoScript setup and Constant Editor
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 | sourceopt.removeComments          | boolean     | Remove HTML-Comments                                             | 1                  |
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
-| sourceopt.removeComments.keep.10  | boolean     | Spare this comments from remove: Regular expressions that match  | /^TYPO3SEARCH_/usi |
+| sourceopt.removeComments.keep     | array       | Spare these listed comments: Regular expressions that match      | ``.10``            |
 |                                   |             | comments that should not be removed. Very useful e.g. to keep    |                    |
 |                                   |             | the TYPO3SEARCH-Comments so indexed_search can work properly     |                    |
++-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
+| sourceopt.removeComments.keep.10  | string      | Spare TYPO3SEARCH-Comments from removal                          | /^TYPO3SEARCH_/usi |
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 | sourceopt.formatHtml              | integer     | Formats the code beautiful and easy readable.                    | 4                  |
 |                                   |             | New lines and tabs are used in the usual way of illustrating the |                    |
@@ -62,7 +64,7 @@ TypoScript Reference for svgstore
 +===================================+=============+==================================================================+====================+
 | svgstore.enabled                  | boolean     | Is the SVG extract & merge enabled for this template             | 1                  |
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
-| svgstore.fileSize                 | boolean     | Maximum file size of a SVG to include (in ``[byte]``)            | 50000              |
+| svgstore.fileSize                 | integer     | Maximum file size of a SVG to include (in ``[byte]``)            | 50000              |
 +-----------------------------------+-------------+------------------------------------------------------------------+--------------------+
 
 TypoScript Reference for replacer
