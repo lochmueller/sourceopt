@@ -1,32 +1,33 @@
 {
 	"name": "lochmueller/sourceopt",
 	"type": "typo3-cms-extension",
-	"description": "Optimization of the final page: reformatting the (x)html output, removal of new-lines, comments and generator-info including search and replace strings after page generation using your regular expressions. In addition combines all SVG selected within content-elements into one <symbol> file and replaces <img> by the corresponding <use>.",
+	"description": "Optimization of the final page: reformatting the (x)HTML output, removal of new-lines, comments and generator-info including search and replace strings using your regular expressions. In addition combines all SVG selected within content-elements into one <symbol> file and replaces <img> by <use>.",
 	"homepage": "https://github.com/lochmueller/sourceopt",
 	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": "^7.4||^8.0",
+		"typo3/cms-core": "^9.5||^10.4||^11.5||^12.4"
+	},
 	"autoload": {
 		"psr-4": {
 			"HTML\\Sourceopt\\": "Classes/"
 		}
 	},
-	"autoload-dev": {
-		"psr-4": {
-			"HTML\\Sourceopt\\Tests\\": "Tests",
-			"TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
-		}
-	},
-	"require": {
-		"php": "^7.4||^8.0",
-		"typo3/cms-core": "^9.5||^10.4||^11.5||^12.4"
-	},
 	"replace": {
 		"maxserv/replacecontent": "*",
+		"typo3-ter/replacecontent": "*",
 		"typo3-ter/sourceopt": "self.version"
 	},
 	"require-dev": {
 		"typo3/testing-framework": "^6.4",
 		"friendsofphp/php-cs-fixer": "^3.3",
 		"phpmd/phpmd": "^2.10"
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"HTML\\Sourceopt\\Tests\\": "Tests",
+			"TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+		}
 	},
 	"config": {
 		"vendor-dir": ".Build/vendor",
