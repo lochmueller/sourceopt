@@ -14,7 +14,6 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
     public function process(string $html): string
     {
         $config = $GLOBALS['TSFE']->config['config']['replacer.'];
-        unset($config['enabled']); // keep!
 
         foreach ($config as $section => &$block) {
             foreach ($block as $key => &$content) {
@@ -28,11 +27,13 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
                     unset($config[$section][$key.'.']); // keep!
                 }
             }
-            ksort($config[$section]);
+            ksort($config[$section]); // only for safety
         }
 
-        if (\count($config['search.']) !== \count($config['replace.'])) {
-            return $html;
+        $arrIntersectKeysCnt = 2 * \count(array_intersect_key($config['search.'], $config['replace.']));
+
+        if ((bool) (\count($config['search.']) + \count($config['replace.']) - $arrIntersectKeysCnt)) {
+            throw new \Exception('search/replace requests have diverged');
         }
 
         return preg_replace($config['search.'], $config['replace.'], $html);
