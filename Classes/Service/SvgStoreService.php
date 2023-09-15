@@ -7,7 +7,7 @@ namespace HTML\Sourceopt\Service;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class SvgStore.
+ * Class SvgStoreService.
  *
  * @author Marcus Förster ; https://github.com/xerc
  */

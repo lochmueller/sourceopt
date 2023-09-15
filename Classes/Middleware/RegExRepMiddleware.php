@@ -11,15 +11,16 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\NullResponse;
 use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
- * CleanHtmlMiddleware.
+ * RegExRepMiddleware.
  */
-class CleanHtmlMiddleware implements MiddlewareInterface
+class RegExRepMiddleware implements MiddlewareInterface
 {
     /**
-     * Clean the HTML output.
+     * RegEx search & replace @ HTML output.
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -27,18 +28,16 @@ class CleanHtmlMiddleware implements MiddlewareInterface
 
         if (!($response instanceof NullResponse)
         && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController
-        && ($GLOBALS['TSFE']->config['config']['sourceopt.']['enabled'] ?? false)
+        && $GLOBALS['TSFE']->cObj instanceof ContentObjectRenderer
+        && \is_array($GLOBALS['TSFE']->config['config']['replacer.']['search.'])
+        && \is_array($GLOBALS['TSFE']->config['config']['replacer.']['replace.'])
         && 'text/html' == substr($response->getHeaderLine('Content-Type'), 0, 9)
         && !empty($response->getBody())
         ) {
-            $processedHtml = GeneralUtility::makeInstance(\HTML\Sourceopt\Service\CleanHtmlService::class)
-                ->clean(
-                    (string) $response->getBody(),
-                    (array) $GLOBALS['TSFE']->config['config']['sourceopt.']
-                )
+            $processedHtml = GeneralUtility::makeInstance(\HTML\Sourceopt\Service\RegExRepService::class)
+                ->process((string) $response->getBody())
             ;
 
-            // Replace old body with $processedHtml
             $responseBody = new Stream('php://temp', 'rw');
             $responseBody->write($processedHtml);
             $response = $response->withBody($responseBody);
