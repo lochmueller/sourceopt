@@ -16,11 +16,14 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
         $config = $GLOBALS['TSFE']->config['config']['replacer.'];
 
         foreach ($config as $section => &$block) {
-            foreach ($block as $key => &$content) {
+            foreach ($block as $key => &$regex) {
+                if ('search.' == $section && '.' !== $key[-1] && !preg_match('/^(.).+\1[a-z]*$/i', $regex)) {
+                    throw new \Exception("Please check your RegEx @ {$key} = {$regex}");
+                }
                 if (isset($config[$section][$key.'.'])) {
-                    $content = $GLOBALS['TSFE']->cObj
+                    $regex = $GLOBALS['TSFE']->cObj
                         ->stdWrap(
-                            $content,
+                            $regex,
                             $config[$section][$key.'.']
                         )
                     ;
