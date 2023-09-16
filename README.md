@@ -33,6 +33,7 @@ Note: The EXT process need server performance, because there are several search 
 | sourceopt.removeComments          | boolean     | Remove HTML-Comments                                             | 1                  |
 | sourceopt.removeComments.keep     | array       | Spare these listed comments: Regular expressions that match comments that should not be removed. Very useful e.g. to keep the TYPO3SEARCH-Comments so indexed_search can work properly | ``.10``            |
 | sourceopt.removeComments.keep.10  | string      | Spare TYPO3SEARCH-Comments from removal                          | /^TYPO3SEARCH_/usi |
+| sourceopt.headerComment           | string      | Your additional (appended) header comment                        | `[empty]`          |
 | sourceopt.formatHtml              | integer     | Formats the code beautiful and easy readable. New lines and tabs are used in the usual way of illustrating the structure of an XML code. [**Options**](https://github.com/lochmueller/sourceopt/blob/master/Classes/Service/CleanHtmlService.php#L152) | 4                  |
 | sourceopt.formatHtml.tabSize      | integer     | Defines the size of the tabs used for formating. If blank one tab is used. If a number is specified the specified number of blank spaces is used instead. This will only work together with `formatHtml` | `[empty]`          |
 | sourceopt.formatHtml.debugComment | boolean     | Includes a comment at the end of the html source code that points the numbers of open html tags. This will only work together with `formatHtml` | `[empty]`
@@ -49,18 +50,27 @@ Note: The EXT process need server performance, because there are several search 
 
 - replace `config.tx_replacer` to `config.replacer`
 
+#### from any other tool
+
+- regex replace `config\.tx_(\w*replace\w*)` to `config.replacer`
+
+- regex replace `= *(.+)` to `= /$1/` (carefully)
+
 #### You set the search and replace patterns via TypoScript
 
 ```
 config.replacer {
   search {
     1 = /(?<="|')\/?(fileadmin|typo3temp|uploads)/
-    2 = /blabla/
+    2 = /apple/
+    3 < tmp.find
+    3.wrap = /|/
   }
   replace {
     1 = //cdn.tld/$1
-    2 < tmp.object
-    2.wrap = <b>|</b>
+    2 = /cherry/
+    3 < tmp.repl
+    3.wrap = <b>|</b>
   }
 }
 ```
