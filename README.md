@@ -4,7 +4,9 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lochmueller/sourceopt/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lochmueller/sourceopt/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/lochmueller/sourceopt/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/lochmueller/sourceopt/?branch=master)
 
-> Optimization of the final page: reformatting the (x)HTML output, removal of new-lines, comments and generator-info including search and replace strings using your regular expressions. In addition combines all SVG selected within content-elements into one \<symbol\> file and replaces \<img\> by \<use\>.
+- [SourceOpt](#sourceopt) : reformatting the (x)HTML output & removal of new-lines, comments and generator-info
+- [RegExRep](#regex-replace) : search and replace strings using your regular expressions
+- [SVGstore](#svgstore) : combines all SVG selected within content-elements into one \<symbol\> file and replaces \<img\> by \<use\>
 
 ## Installation
 
