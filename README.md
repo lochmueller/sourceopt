@@ -50,18 +50,27 @@ Note: The EXT process need server performance, because there are several search 
 
 - replace `config.tx_replacer` to `config.replacer`
 
+#### from any other tool
+
+- regex replace `config\.tx_(\w*replace\w*)` to `config.replacer`
+
+- regex replace `= *(.+)` to `= /$1/` (carefully)
+
 #### You set the search and replace patterns via TypoScript
 
 ```
 config.replacer {
   search {
     1 = /(?<="|')\/?(fileadmin|typo3temp|uploads)/
-    2 = /blabla/
+    2 = /apple/
+    3 < tmp.find
+    3.wrap = /|/
   }
   replace {
     1 = //cdn.tld/$1
-    2 < tmp.object
-    2.wrap = <b>|</b>
+    2 = /cherry/
+    3 < tmp.repl
+    3.wrap = <b>|</b>
   }
 }
 ```
