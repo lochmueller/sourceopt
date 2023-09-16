@@ -1,7 +1,7 @@
 {
 	"name": "lochmueller/sourceopt",
 	"type": "typo3-cms-extension",
-	"description": "Optimization of the final page: reformatting the (x)HTML output, removal of new-lines, comments and generator-info including search and replace strings using your regular expressions. In addition combines all SVG selected within content-elements into one <symbol> file and replaces <img> by <use>.",
+	"description": "Optimization of the final page: reformatting the (x)HTML output & removal of new-lines, comments and generator-info including search and replace strings using your regular expressions. In addition combines all SVG selected within content-elements into one <symbol> file and replaces <img> by <use>.",
 	"homepage": "https://github.com/lochmueller/sourceopt",
 	"license": "GPL-2.0-or-later",
 	"require": {
