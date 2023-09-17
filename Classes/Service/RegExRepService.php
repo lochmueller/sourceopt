@@ -24,12 +24,6 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
 
         foreach ($config as $section => &$block) {
             foreach ($block as $key => &$regex) {
-                if ('search.' == $section
-                && (!\is_string($key) || '.' !== $key[-1])
-                && !preg_match('/^(.).+\1[a-z]*$/i', $regex)
-                ) {
-                    throw new \Exception("Please check your RegEx @ {$key} = {$regex}");
-                }
                 if (isset($config[$section][$key.'.'])) {
                     $regex = $GLOBALS['TSFE']->cObj
                         ->stdWrap(
@@ -38,6 +32,12 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
                         )
                     ;
                     unset($config[$section][$key.'.']); // keep!
+                }
+                if ('search.' == $section
+                && (!\is_string($key) || '.' !== $key[-1])
+                && false === @preg_match($regex, '')
+                ) {
+                    throw new \Exception(preg_last_error_msg()." : please check your RegEx @ {$key} = {$regex}");
                 }
             }
             ksort($config[$section]); // only for safety
