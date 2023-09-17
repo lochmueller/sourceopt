@@ -23,11 +23,11 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
         }
 
         foreach ($config as $section => &$block) {
-            foreach ($block as $key => &$regex) {
+            foreach ($block as $key => &$val) {
                 if (isset($config[$section][$key.'.'])) {
-                    $regex = $GLOBALS['TSFE']->cObj
+                    $val = $GLOBALS['TSFE']->cObj
                         ->stdWrap(
-                            $regex,
+                            $val,
                             $config[$section][$key.'.']
                         )
                     ;
@@ -35,9 +35,9 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
                 }
                 if ('search.' == $section
                 && (!\is_string($key) || '.' !== $key[-1])
-                && false === @preg_match($regex, '')
+                && false === @preg_match($val, '')// HACKy
                 ) {
-                    throw new \Exception(preg_last_error_msg()." : please check your RegEx @ {$key} = {$regex}");
+                    throw new \Exception(preg_last_error_msg()." : please check your regex syntax @ {$key} = {$val}");
                 }
             }
             ksort($config[$section]); // only for safety
