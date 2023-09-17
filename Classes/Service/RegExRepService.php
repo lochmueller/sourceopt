@@ -22,8 +22,10 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
             throw new \Exception('missing entry @ config.replacer.replace');
         }
 
-        foreach ($config as $section => &$block) {
-            foreach ($block as $key => &$val) {
+        foreach ($config as $section => &$entries) {
+            $checkRegEx = ('search.' === $section);
+
+            foreach ($entries as $key => &$val) {
                 if (isset($config[$section][$key.'.'])) {
                     $val = $GLOBALS['TSFE']->cObj
                         ->stdWrap(
@@ -33,20 +35,20 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
                     ;
                     unset($config[$section][$key.'.']); // keep!
                 }
-                if ('search.' == $section
+                if ($checkRegEx
                 && (!\is_string($key) || '.' !== $key[-1])
                 && false === @preg_match($val, '')// HACKy
                 ) {
-                    throw new \Exception(preg_last_error_msg()." : please check your regex syntax @ {$key} = {$val}");
+                    throw new \Exception(preg_last_error_msg().' : please check your regex syntax @ '."{$key} = {$val}");
                 }
             }
-            ksort($config[$section]); // only for safety
+            ksort($config[$section]); // for safety only
         }
 
         $arrIntersectKeysCnt = 2 * \count(array_intersect_key($config['search.'], $config['replace.']));
 
         if ((bool) (\count($config['search.']) + \count($config['replace.']) - $arrIntersectKeysCnt)) {
-            throw new \Exception('search/replace requests have diverged');
+            throw new \Exception('config.replacer requests have diverged');
         }
 
         return preg_replace($config['search.'], $config['replace.'], $html);
