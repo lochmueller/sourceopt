@@ -24,7 +24,10 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
 
         foreach ($config as $section => &$block) {
             foreach ($block as $key => &$regex) {
-                if ('search.' == $section && '.' !== $key[-1] && !preg_match('/^(.).+\1[a-z]*$/i', $regex)) {
+                if ('search.' == $section
+                && (!\is_string($key) || '.' !== $key[-1])
+                && !preg_match('/^(.).+\1[a-z]*$/i', $regex)
+                ) {
                     throw new \Exception("Please check your RegEx @ {$key} = {$regex}");
                 }
                 if (isset($config[$section][$key.'.'])) {
