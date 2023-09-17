@@ -13,7 +13,14 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
 {
     public function process(string $html): string
     {
-        $config = $GLOBALS['TSFE']->config['config']['replacer.'];
+        $config = array_intersect_key($GLOBALS['TSFE']->config['config']['replacer.'], ['search.' => null, 'replace.' => null]);
+
+        if (!isset($config['search.']) || !\is_array($config['search.'])) {
+            throw new \Exception('missing entry @ config.replacer.search');
+        }
+        if (!isset($config['replace.']) || !\is_array($config['replace.'])) {
+            throw new \Exception('missing entry @ config.replacer.replace');
+        }
 
         foreach ($config as $section => &$block) {
             foreach ($block as $key => &$regex) {

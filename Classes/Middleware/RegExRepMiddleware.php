@@ -29,8 +29,7 @@ class RegExRepMiddleware implements MiddlewareInterface
         if (!($response instanceof NullResponse)
         && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController
         && $GLOBALS['TSFE']->cObj instanceof ContentObjectRenderer
-        && \is_array($GLOBALS['TSFE']->config['config']['replacer.']['search.'])
-        && \is_array($GLOBALS['TSFE']->config['config']['replacer.']['replace.'])
+        && isset($GLOBALS['TSFE']->config['config']['replacer.'])
         && 'text/html' == substr($response->getHeaderLine('Content-Type'), 0, 9)
         && !empty($response->getBody())
         ) {
