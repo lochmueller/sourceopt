@@ -13,36 +13,34 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
 {
     public function process(string $html): string
     {
-        $config = array_intersect_key($GLOBALS['TSFE']->config['config']['replacer.'], ['search.' => null, 'replace.' => null]);
+        $config = $GLOBALS['TSFE']->config['config']['replacer.'];
 
-        if (!isset($config['search.']) || !\is_array($config['search.'])) {
-            throw new \Exception('missing entry @ config.replacer.search');
-        }
-        if (!isset($config['replace.']) || !\is_array($config['replace.'])) {
-            throw new \Exception('missing entry @ config.replacer.replace');
-        }
+        foreach (['search.', 'replace.'] as $section) {
+            if (!isset($config[$section]) || !\is_array($config[$section])) {
+                throw new \Exception('missing entry @ config.replacer.'.$section);
+            }
 
-        foreach ($config as $section => &$entries) {
-            $checkRegEx = ('search.' === $section);
-
-            foreach ($entries as $key => &$val) {
-                if (isset($config[$section][$key.'.'])) {
-                    $val = $GLOBALS['TSFE']->cObj
+            if (preg_match_all('/"([\w\-]+)\.";/', serialize($config[$section]), $matches)) {
+                foreach ($matches[1] as $key) {
+                    $config[$section][$key] = $GLOBALS['TSFE']->cObj
                         ->stdWrap(
-                            $val,
+                            $config[$section][$key],
                             $config[$section][$key.'.']
                         )
                     ;
                     unset($config[$section][$key.'.']); // keep!
                 }
-                if ($checkRegEx
-                && (!\is_string($key) || '.' !== $key[-1])
-                && false === @preg_match($val, '')// HACKy
-                ) {
+            }
+
+            ksort($config[$section]); // for safety only
+        }
+
+        if (\TYPO3\CMS\Core\Core\Environment::getContext()->isDevelopment()) {
+            foreach ($config['search.'] as $key => $val) {
+                if (false === @preg_match($val, '')) {
                     throw new \Exception(preg_last_error_msg().' : please check your regex syntax @ '."{$key} = {$val}");
                 }
             }
-            ksort($config[$section]); // for safety only
         }
 
         $arrIntersectKeysCnt = 2 * \count(array_intersect_key($config['search.'], $config['replace.']));
