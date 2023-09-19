@@ -80,6 +80,7 @@ config.replacer {
   }
 }
 ```
+Note: both arrays will be [ksort](https://www.php.net/manual/de/function.ksort.php)'ed in "[natural order](https://www.php.net/manual/en/function.natsort.php#refsect1-function.natsort-examples)"
 
 
 <details><summary>

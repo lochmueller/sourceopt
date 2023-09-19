@@ -32,7 +32,7 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
                 }
             }
 
-            ksort($config[$section]); // for safety only
+            ksort($config[$section], SORT_NATURAL); // for safety only
         }
 
         if (\TYPO3\CMS\Core\Core\Environment::getContext()->isDevelopment()) {
