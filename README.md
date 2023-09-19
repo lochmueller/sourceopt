@@ -6,7 +6,7 @@
 
 - [SourceOpt](#sourceopt) : reformatting the (x)HTML output & removal of new-lines, comments and generator-info
 - [RegExRep](#regex-replace) : search and replace strings using your regular expressions ; [embrace regex](https://www.regular-expressions.info) and [migrate now](#howto-migrate)
-- [SVGstore](#svgstore) : combines all SVG selected within content-elements into one \<symbol\> file and replaces \<img\> by \<use\>
+- [SVGstore](#svgstore) : combines all SVG selected within elements into one \<symbol\> file and replaces \<img\> by \<use\>
 
 ## Installation
 
@@ -47,7 +47,7 @@ Note: The following features are executed in reverse order
 | Property                          | Type        | Description                                                      | Default            |
 |:----------------------------------|:------------|:-----------------------------------------------------------------|:-------------------|
 | sourceopt.enabled                 | boolean     | Is the optimization enabled for this template                    | 1                  |
-| sourceopt.removeGenerator         | boolean     | Remove \<meta name="generator"                                   | 1                  |
+| sourceopt.removeGenerator         | boolean     | Remove \<meta name="generator" content="TYPO3 CMS"\>             | 1                  |
 | sourceopt.removeComments          | boolean     | Remove HTML-Comments                                             | 1                  |
 | sourceopt.removeComments.keep     | array       | Spare these listed comments: Regular expressions that match comments that should not be removed. Very useful e.g. to keep the TYPO3SEARCH-Comments so indexed_search can work properly | ``.10``            |
 | sourceopt.removeComments.keep.10  | string      | Spare TYPO3SEARCH-Comments from removal                          | /^TYPO3SEARCH_/usi |
