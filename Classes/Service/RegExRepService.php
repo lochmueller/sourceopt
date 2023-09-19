@@ -20,7 +20,7 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
                 throw new \Exception('missing entry @ config.replacer.'.$section);
             }
 
-            if (preg_match_all('/"([\w\-]+)\.";/', serialize($config[$section]), $matches)) {
+            if (preg_match_all('/"([\w\-]+)\.";/', serialize(array_keys($config[$section])), $matches)) {
                 foreach ($matches[1] as $key) {
                     $config[$section][$key] = $GLOBALS['TSFE']->cObj
                         ->stdWrap(
@@ -32,7 +32,7 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
                 }
             }
 
-            ksort($config[$section]); // for safety only
+            ksort($config[$section], SORT_NATURAL); // for safety only
         }
 
         if (\TYPO3\CMS\Core\Core\Environment::getContext()->isDevelopment()) {
