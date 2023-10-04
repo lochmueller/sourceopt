@@ -40,7 +40,6 @@
 	"extra": {
 		"typo3/cms": {
 			"extension-key": "sourceopt",
-			"cms-package-dir": "{$vendor-dir}/typo3/cms",
 			"web-dir": ".Build/Web"
 		}
 	},

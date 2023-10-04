@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'frontend' => [
         'html/sourceopt/clean-html' => [
