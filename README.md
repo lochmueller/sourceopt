@@ -137,9 +137,9 @@ composer install jweiland/replacer
 ```bash
 composer install jweiland/replacer
 ```
-& replace `plugin.fereplace.pairs` to `config.tx_replacer` .. ah .. and one
-
-regex replace `(\n\s*)(\d+)(?:{\s+|\.)old\s*=\s*([^\n]+).+?new\s*=\s*([^\n]+)` to `$1search.$2  = $3$1replace.$2 =  $4`
+& replace `plugin.fereplace.pairs` to `config.tx_replacer` .. ah .. and one regex
+- search `(\n\s*)(\d+)(?:{\s+|\.)old\s*=\s*([^\n]+).+?new\s*=\s*([^\n]+)`
+- replace `$1search.$2  = $3\n$1replace.$2 =  $4`
 
 </details>
 <details><summary>

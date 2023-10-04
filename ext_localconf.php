@@ -1,6 +1,4 @@
-<?php
-
-defined('TYPO3_MODE') || defined('TYPO3') || die();
+<?php defined('TYPO3_MODE') || defined('TYPO3') || die();
 
 // SvgStore Cache
 if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['svgstore'])) {
