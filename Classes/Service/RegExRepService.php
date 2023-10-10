@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace HTML\Sourceopt\Service;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
 /**
  * Class RegExRepService.
  *
@@ -21,8 +24,10 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
             }
 
             if (preg_match_all('/"([\w\-]+)\.";/', serialize(array_keys($config[$section])), $matches)) {
+                $cObj = $cObj ?? $GLOBALS['TSFE']->cObj ?? GeneralUtility::makeInstance(ContentObjectRenderer::class);
+
                 foreach ($matches[1] as $key) {
-                    $config[$section][$key] = $GLOBALS['TSFE']->cObj
+                    $config[$section][$key] = $cObj
                         ->stdWrap(
                             $config[$section][$key],
                             $config[$section][$key.'.']
@@ -32,8 +37,9 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
                 }
             }
 
-            ksort($config[$section], \SORT_NATURAL); // for safety only
+            ksort($config[$section], \SORT_NATURAL); // safety
         }
+        unset($cObj, $matches); // save MEM
 
         if (\TYPO3\CMS\Core\Core\Environment::getContext()->isDevelopment()) {
             foreach ($config['search.'] as $key => $val) {
