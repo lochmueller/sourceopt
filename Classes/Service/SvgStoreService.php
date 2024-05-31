@@ -191,10 +191,14 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
     private function populateCache(): bool
     {
-        $storageArr = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\StorageRepository::class)->findAll();
+        $storageArr = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\StorageRepository::class)->findByStorageType('Local');
         foreach ($storageArr as $storage) {
-            if ('relative' == $storage->getConfiguration()['pathType']) {
-                $storageArr[$storage->getUid()] = rtrim($storage->getConfiguration()['basePath'], '/'); // [^/]$
+            $storageConfig = $storage->getConfiguration();
+            if (!is_array($storageConfig) || !isset($storageConfig['pathType'], $storageConfig['basePath'])) {
+              continue;
+            }
+            if ('relative' == $storageConfig['pathType']) {
+                $storageArr[$storage->getUid()] = rtrim($storageConfig['basePath'], '/'); // [^/]$
             }
         }
         unset($storageArr[0]); // keep!
