@@ -6,7 +6,7 @@
 	"license": "GPL-2.0-or-later",
 	"require": {
 		"php": "^7.4||^8.0",
-		"typo3/cms-core": "^9.5||^10.4||^11.5||^12.4"
+		"typo3/cms-core": "^9.5||^10.4||^11.5||^12.4||^13.4"
 	},
 	"autoload": {
 		"psr-4": {
