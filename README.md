@@ -10,7 +10,7 @@
 
 ## Installation
 
-https://github.com/lochmueller/sourceopt/blob/2346673ee51d2b64308e1ddb1433cea2f37eafcb/composer.json#L19-L20
+https://github.com/lochmueller/sourceopt/blob/e310f6344a29b2dcaf7e2642724188b8f5d0059a/composer.json#L8-L9
 
 ```bash
 composer require lochmueller/sourceopt
