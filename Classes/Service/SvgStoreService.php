@@ -88,6 +88,10 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
     public function process(string $html): string
     {
+        if (empty($this->svgFileArr)) {
+            return $html;
+        }
+
         if ($GLOBALS['TSFE']->config['config']['disableAllHeaderCode'] ?? false) {
             $dom = ['head' => '', 'body' => $html];
         } elseif (!preg_match('/(?<head>.+?<\/head>)(?<body>.+)/s', $html, $dom)) {
@@ -159,7 +163,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
         // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#attributes
         $svg = preg_replace_callback('/([^>]*)\s*(?=>)/s', function (array $match) use (&$attr): string {
-            if (false === preg_match_all('/(?!\s)(?<attr>[\w\-]+)="\s*(?<value>[^"]+)\s*"/', $match[1], $matches)) {
+            if (false === preg_match_all('/(?!\s)(?<attr>[a-z\-]+)="\s*(?<value>[^"]+)\s*"/i', $match[1], $matches)) {
                 return $match[0];
             }
             foreach ($matches['attr'] as $index => $attribute) {
@@ -171,8 +175,8 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
                         break;
 
                     case 'viewBox':
-                        if (false !== preg_match('/\S+\s\S+\s\+?(?<width>[\d\.]+)\s\+?(?<height>[\d\.]+)/', $matches['value'][$index], $match)) {
-                            $attr[] = sprintf('%s="0 0 %s %s"', $attribute, $match['width'], $match['height']); // save!
+                        if (false !== preg_match('/(?<minX>[-+]?[\d\.]+)\s(?<minY>[-+]?[\d\.]+)\s\+?(?<width>[\d\.]+)\s\+?(?<height>[\d\.]+)/', $matches['value'][$index], $match)) {
+                            $attr[] = sprintf('%s="%s %s %s %s"', $attribute, $match['minX'], $match['minY'], $match['width'], $match['height']); // save!
                         }
                 }
             }
@@ -195,7 +199,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         foreach ($storageArr as $storage) {
             $storageConfig = $storage->getConfiguration();
             if (!is_array($storageConfig) || !isset($storageConfig['pathType'], $storageConfig['basePath'])) {
-              continue;
+                continue;
             }
             if ('relative' == $storageConfig['pathType']) {
                 $storageArr[$storage->getUid()] = rtrim($storageConfig['basePath'], '/'); // [^/]$
@@ -213,6 +217,10 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             }
         }
         unset($storageArr, $storage, $fileArr, $file); // save MEM
+
+        if (empty($this->svgFileArr)) {
+            return true;
+        }
 
         $svg = preg_replace_callback(
             '/<use(?<pre>.*?)(?:xlink:)?href="(?<href>\/.+?\.svg)(?:#[^"]*?)?"(?<post>.*?)[\s\/]*>(?:<\/use>)?/s',
@@ -240,7 +248,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             $svg = preg_replace('/\s{2,}/', ' ', $svg); // shrink whitespace
         }
 
-        $svg = preg_replace('/<([a-z]+)\s*(\/|>\s*<\/\1)>\s*|\s+(?=\/>)/i', '', $svg); // remove emtpy TAGs & shorten endings
+        $svg = preg_replace('/<([a-z\-]+)\s*(\/|>\s*<\/\1)>\s*|\s+(?=\/>)/i', '', $svg); // remove emtpy TAGs & shorten endings
         $svg = preg_replace('/<((circle|ellipse|line|path|polygon|polyline|rect|stop|use)\s[^>]+?)\s*>\s*<\/\2>/', '<$1/>', $svg); // shorten/minify TAG syntax
 
         if (!is_dir($this->sitePath.$this->outputDir)) {
