@@ -105,7 +105,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             }
             $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap|crossorigin|decoding|fetchpriority|referrerpolicy)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
-            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['src']));
+            return \sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['src']));
         }, $dom['body']);
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object#attributes
@@ -115,7 +115,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             }
             $attr = preg_replace('/\s(?:form|name|type|usemap)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
 
-            return sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['data']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['data']));
+            return \sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['data']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['data']));
         }, $dom['body']);
 
         return $dom['head'].$dom['body'];
@@ -176,7 +176,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
                     case 'viewBox':
                         if (false !== preg_match('/(?<minX>[-+]?[\d\.]+)\s(?<minY>[-+]?[\d\.]+)\s\+?(?<width>[\d\.]+)\s\+?(?<height>[\d\.]+)/', $matches['value'][$index], $match)) {
-                            $attr[] = sprintf('%s="%s %s %s %s"', $attribute, $match['minX'], $match['minY'], $match['width'], $match['height']); // save!
+                            $attr[] = \sprintf('%s="%s %s %s %s"', $attribute, $match['minX'], $match['minY'], $match['width'], $match['height']); // save!
                         }
                 }
             }
@@ -188,7 +188,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             return null;
         }
 
-        $this->svgs[] = sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // prepend ID
+        $this->svgs[] = \sprintf('id="%s" %s', $this->convertFilePath($path), $svg); // prepend ID
 
         return ['attr' => implode(' ', $attr), 'hash' => $hash];
     }
@@ -198,7 +198,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         $storageArr = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\StorageRepository::class)->findByStorageType('Local');
         foreach ($storageArr as $storage) {
             $storageConfig = $storage->getConfiguration();
-            if (!is_array($storageConfig) || !isset($storageConfig['pathType'], $storageConfig['basePath'])) {
+            if (!\is_array($storageConfig) || !isset($storageConfig['pathType'], $storageConfig['basePath'])) {
                 continue;
             }
             if ('relative' == $storageConfig['pathType']) {
@@ -229,7 +229,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
                     return $match[0];
                 }
 
-                return sprintf('<use%s href="#%s"/>', $match['pre'].$match['post'], $this->convertFilePath($match['href']));
+                return \sprintf('<use%s href="#%s"/>', $match['pre'].$match['post'], $this->convertFilePath($match['href']));
             },
             '<svg xmlns="http://www.w3.org/2000/svg">'
             // ."\n<style>\n".implode("\n", $this->styl)."\n</style>"
