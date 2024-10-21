@@ -31,7 +31,7 @@ class RemoveGeneratorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($after, $result);
     }
 
-    public function generatorProvider(): array
+    public static function generatorProvider(): array
     {
         return [
             [
