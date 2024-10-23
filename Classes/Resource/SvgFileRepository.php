@@ -7,11 +7,11 @@ namespace HTML\Sourceopt\Resource;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class SvgFileRepository extends FileRepository.
+ * Class SvgFileRepository.
  *
  * @author Marcus Förster ; https://github.com/xerc
  */
-class SvgFileRepository extends \TYPO3\CMS\Core\Resource\FileRepository
+class SvgFileRepository
 {
     /**
      * Retrieves all used SVGs within given storage-array.
@@ -19,9 +19,9 @@ class SvgFileRepository extends \TYPO3\CMS\Core\Resource\FileRepository
     public function findAllByStorageUids(array $storageUids): array
     {
         return
-            ($queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable($this->table))
+            ($queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('sys_file'))
                 ->select('sys_file.storage', 'sys_file.identifier', 'sys_file.sha1')
-                ->from($this->table)
+                ->from('sys_file')
                 ->innerJoin(
                     'sys_file',
                     'sys_file_reference',
