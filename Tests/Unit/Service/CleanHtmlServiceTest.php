@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace HTML\Sourceopt\Service;
 
+use HTML\Sourceopt\Tests\Unit\AbstractUnitTest;
+
 /**
  * @internal
  *
  * @coversNothing
  */
-class CleanHtmlServiceTest extends \PHPUnit\Framework\TestCase
+class CleanHtmlServiceTest extends AbstractUnitTest
 {
     public function testFormatHtml(): void
     {

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace HTML\Sourceopt\Middleware;
 
+use HTML\Sourceopt\Service\SvgStoreService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use TYPO3\CMS\Core\Http\NullResponse;
-use TYPO3\CMS\Core\Http\Stream;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
-class SvgStoreMiddleware implements MiddlewareInterface
+class SvgStoreMiddleware extends AbstractMiddleware
 {
+    public function __construct(protected SvgStoreService $svgStoreService)
+    {
+    }
+
     /**
      * Search/Extract/Merge SVGs @ HTML output.
      */
@@ -22,19 +22,9 @@ class SvgStoreMiddleware implements MiddlewareInterface
     {
         $response = $handler->handle($request);
 
-        if (!($response instanceof NullResponse)
-        && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController
-        && ($GLOBALS['TSFE']->config['config']['svgstore.']['enabled'] ?? false)
-        && 'text/html' == substr($response->getHeaderLine('Content-Type'), 0, 9)
-        && !empty($response->getBody())
-        ) {
-            $processedHtml = GeneralUtility::makeInstance(\HTML\Sourceopt\Service\SvgStoreService::class)
-                ->process((string) $response->getBody())
-            ;
-
-            $responseBody = new Stream('php://temp', 'rw');
-            $responseBody->write($processedHtml);
-            $response = $response->withBody($responseBody);
+        if ($this->responseIsAlterable($response) && $GLOBALS['TSFE']->config['config']['svgstore.']['enabled'] ?? false) {
+            $processedHtml = $this->svgStoreService->process((string) $response->getBody());
+            $response = $response->withBody($this->getStringStream($processedHtml));
         }
 
         return $response;

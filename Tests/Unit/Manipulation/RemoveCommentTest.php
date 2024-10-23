@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HTML\Sourceopt\Tests\Unit\Service;
 
-use HTML\Sourceopt\Manipulation\RemoveGenerator;
+use HTML\Sourceopt\Manipulation\RemoveComments;
 use HTML\Sourceopt\Tests\Unit\AbstractUnitTest;
 
 /**
@@ -12,14 +12,14 @@ use HTML\Sourceopt\Tests\Unit\AbstractUnitTest;
  *
  * @coversNothing
  */
-class RemoveGeneratorTest extends AbstractUnitTest
+class RemoveCommentTest extends AbstractUnitTest
 {
     /**
      * @dataProvider generatorProvider
      */
-    public function testRemoveGenerator($before, $after): void
+    public function testRemoveComment($before, $after): void
     {
-        $cleanService = new RemoveGenerator();
+        $cleanService = new RemoveComments();
         $result = $cleanService->manipulate($before);
 
         $this->assertEquals($after, $result);
@@ -32,30 +32,26 @@ class RemoveGeneratorTest extends AbstractUnitTest
                 '<head>
 <meta name="Regisseur" content="Peter Jackson">
 <meta name="generator" content="Tester">
+<!-- Ich bin ein Test -->
 </head>',
                 '<head>
 <meta name="Regisseur" content="Peter Jackson">
+<meta name="generator" content="Tester">
 
 </head>',
             ],
             [
                 '<head>
+<!-- Ich bin ein Test -->
 <meta name="Regisseur" content="Peter Jackson">
-<meta name="generator" content="TYPO3 CMS" />
+<meta name="generator" content="Tester">
+<!-- Ich bin ein Test -->
 </head>',
                 '<head>
-<meta name="Regisseur" content="Peter Jackson">
 
-</head>',
-            ],
-            [
-                '<head>
 <meta name="Regisseur" content="Peter Jackson">
-<meta name="other" content="generator" />
-</head>',
-                '<head>
-<meta name="Regisseur" content="Peter Jackson">
-<meta name="other" content="generator" />
+<meta name="generator" content="Tester">
+
 </head>',
             ],
         ];
