@@ -16,11 +16,7 @@
 	<testsuites>
 		<testsuite name="sourceopt tests">
 			<directory>Unit/</directory>
+            <exclude>./Unit/AbstractUnitTest.php</exclude>
 		</testsuite>
 	</testsuites>
-	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">../Classes/</directory>
-		</whitelist>
-	</filter>
 </phpunit>
