@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace HTML\Sourceopt\Service;
 
+use HTML\Sourceopt\Resource\SvgFileRepository;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -15,64 +19,48 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
      * SVG-Sprite relativ storage directory.
-     *
-     * @var string
      */
-    protected $outputDir = '/typo3temp/assets/svg/';
+    protected string $outputDir = '/typo3temp/assets/svg/';
 
     /**
      * TYPO3 absolute path to public web.
-     *
-     * @var string
      */
-    protected $sitePath = '';
+    protected string $sitePath = '';
 
     /**
      * Final TYPO3 Frontend-Cache object.
-     *
-     * @var \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
      */
-    protected $svgCache;
+    protected FrontendInterface $svgCache;
 
     /**
      * Cached SVG-Sprite relativ file path.
-     *
-     * @var string
      */
-    protected $spritePath = '';
+    protected string $spritePath = '';
 
     /**
      * Cached used SVG files (incl. defs).
-     *
-     * @var array
      */
-    protected $svgFileArr = [];
+    protected array $svgFileArr = [];
 
     /**
      * Final SVG-Sprite Vectors.
-     *
-     * @var array
      */
-    protected $svgs = [];
+    protected array $svgs = [];
 
     /**
      * Final SVG-Sprite Styles.
-     *
-     * @var array
      */
-    protected $styl = []; // ToFix ; https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
+    protected array $styl = []; // ToFix ; https://stackoverflow.com/questions/39583880/external-svg-fails-to-apply-internal-css
 
     /**
      * Final SVG-Sprite Objects.
-     *
-     * @var array
      */
-    protected $defs = []; // ToFix ; https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
+    protected array $defs = []; // ToFix ; https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
 
     public function __construct()
     {
         $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
-        $this->svgCache = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class)->getCache('svgstore');
+        $this->svgCache = GeneralUtility::makeInstance(CacheManager::class)->getCache('svgstore');
 
         $this->spritePath = $this->svgCache->get('spritePath') ?: '';
         $this->svgFileArr = $this->svgCache->get('svgFileArr') ?: [];
@@ -195,7 +183,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
     private function populateCache(): bool
     {
-        $storageArr = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\StorageRepository::class)->findByStorageType('Local');
+        $storageArr = GeneralUtility::makeInstance(StorageRepository::class)->findByStorageType('Local');
         foreach ($storageArr as $storage) {
             $storageConfig = $storage->getConfiguration();
             if (!\is_array($storageConfig) || !isset($storageConfig['pathType'], $storageConfig['basePath'])) {
@@ -207,7 +195,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         }
         unset($storageArr[0]); // keep!
 
-        $fileArr = GeneralUtility::makeInstance(\HTML\Sourceopt\Resource\SvgFileRepository::class)->findAllByStorageUids(array_keys($storageArr));
+        $fileArr = GeneralUtility::makeInstance(SvgFileRepository::class)->findAllByStorageUids(array_keys($storageArr));
         foreach ($fileArr as $file) {
             $file['path'] = '/'.$storageArr[$file['storage']].$file['identifier']; // ^[/]
             $file['defs'] = $this->addFileToSpriteArr($file['sha1'], $file['path']);
@@ -216,7 +204,6 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
                 $this->svgFileArr[$file['path']] = $file['defs'];
             }
         }
-        unset($storageArr, $storage, $fileArr, $file); // save MEM
 
         if (empty($this->svgFileArr)) {
             return true;
@@ -237,10 +224,6 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             ."\n<symbol ".implode("</symbol>\n<symbol ", $this->svgs)."</symbol>\n"
             .'</svg>'
         );
-
-        // unset($this->styl); // save MEM
-        // unset($this->defs); // save MEM
-        unset($this->svgs); // save MEM
 
         if ($GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml'] ?? false) {
             $svg = preg_replace('/(?<=>)\s+(?=<)/', '', $svg); // remove emptiness

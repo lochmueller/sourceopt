@@ -19,45 +19,33 @@ class CleanHtmlService implements SingletonInterface
 {
     /**
      * Enable Debug comment in footer.
-     *
-     * @var bool
      */
-    protected $debugComment = false;
+    protected bool $debugComment = false;
 
     /**
      * Format Type.
-     *
-     * @var int
      */
-    protected $formatType = 0;
+    protected int $formatType = 0;
 
     /**
      * Tab character.
-     *
-     * @var string
      */
-    protected $tab = "\t";
+    protected string $tab = "\t";
 
     /**
      * Newline character.
-     *
-     * @var string
      */
-    protected $newline = "\n";
+    protected string $newline = "\n";
 
     /**
      * Configured extra header comment.
-     *
-     * @var string
      */
-    protected $headerComment = '';
+    protected string $headerComment = '';
 
     /**
      * Empty space char.
-     *
-     * @var string
      */
-    protected $emptySpaceChar = ' ';
+    protected string $emptySpaceChar = ' ';
 
     /**
      * Set variables based on given config.
@@ -87,10 +75,8 @@ class CleanHtmlService implements SingletonInterface
 
     /**
      * Clean given HTML with formatter.
-     *
-     * @return string
      */
-    public function clean(string $html, array $config = [])
+    public function clean(string $html, array $config = []): string
     {
         if (!empty($config)) {
             $this->setVariables($config);
@@ -334,12 +320,8 @@ class CleanHtmlService implements SingletonInterface
 
     /**
      * Remove ALL line breaks and multiple white space.
-     *
-     * @param string $html
-     *
-     * @return string
      */
-    protected function killLineBreaks($html)
+    protected function killLineBreaks(string $html): string
     {
         $html = str_replace($this->newline, '', $html);
 

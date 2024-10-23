@@ -1,17 +1,9 @@
 <?php
 
 declare(strict_types=1);
-/**
- * RemoveGenerator.
- *
- * @author  Tim Lochmüller
- */
 
 namespace HTML\Sourceopt\Manipulation;
 
-/**
- * RemoveGenerator.
- */
 class RemoveGenerator implements ManipulationInterface
 {
     /**
@@ -24,6 +16,6 @@ class RemoveGenerator implements ManipulationInterface
     {
         $regex = '<meta name=["\']?generator["\']? [^>]+>';
 
-        return preg_replace('/'.$regex.'/is', '', $html);
+        return (string) preg_replace('/'.$regex.'/is', '', $html);
     }
 }

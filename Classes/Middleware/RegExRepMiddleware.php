@@ -13,9 +13,6 @@ use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
-/**
- * RegExRepMiddleware.
- */
 class RegExRepMiddleware implements MiddlewareInterface
 {
     /**

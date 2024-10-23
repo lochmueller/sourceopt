@@ -1,25 +1,15 @@
 <?php
 
 declare(strict_types=1);
-/**
- * RemoveComments.
- *
- * @author  Tim Lochmüller
- */
 
 namespace HTML\Sourceopt\Manipulation;
 
-/**
- * RemoveComments.
- */
 class RemoveComments implements ManipulationInterface
 {
     /**
      * Patterns for white-listing comments inside content.
-     *
-     * @var array
      */
-    protected $whiteListCommentsPatterns = [];
+    protected array $whiteListCommentsPatterns = [];
 
     /**
      * @param string $html          The original HTML
@@ -51,12 +41,8 @@ class RemoveComments implements ManipulationInterface
 
     /**
      * Check if a comment is defined to be kept in a pattern whiteListOfComments.
-     *
-     * @param string $commentHtml
-     *
-     * @return bool
      */
-    protected function keepComment($commentHtml)
+    protected function keepComment(string $commentHtml): bool
     {
         // if not even a comment, skip this
         if (!preg_match('/^\<\!\-\-(.*?)\-\-\>$/usi', $commentHtml)) {

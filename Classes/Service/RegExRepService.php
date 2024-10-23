@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace HTML\Sourceopt\Service;
 
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
@@ -12,7 +14,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
  *
  * @author Marcus Förster ; https://github.com/xerc
  */
-class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
+class RegExRepService implements SingletonInterface
 {
     public function process(string $html): string
     {
@@ -39,9 +41,8 @@ class RegExRepService implements \TYPO3\CMS\Core\SingletonInterface
 
             ksort($config[$section], \SORT_NATURAL); // safety
         }
-        unset($cObj, $matches); // save MEM
 
-        if (\TYPO3\CMS\Core\Core\Environment::getContext()->isDevelopment()) {
+        if (Environment::getContext()->isDevelopment()) {
             foreach ($config['search.'] as $key => $val) {
                 if (false === @preg_match($val, '')) {
                     throw new \Exception(preg_last_error_msg().' : please check your regex syntax @ '."{$key} = {$val}");

@@ -1,17 +1,9 @@
 <?php
 
 declare(strict_types=1);
-/**
- * Manipulation interface.
- *
- * @author  Tim Lochmüller
- */
 
 namespace HTML\Sourceopt\Manipulation;
 
-/**
- * Manipulation interface.
- */
 interface ManipulationInterface
 {
     /**
