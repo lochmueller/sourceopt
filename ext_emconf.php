@@ -11,8 +11,8 @@ $EM_CONF[$_EXTKEY] = [
     'author_company' => null,
     'constraints' => [
         'depends' => [
-            'typo3' => '9.5.17-13.4.99',
-            'php' => '7.4.0-8.99.99',
+            'typo3' => '12.4.0-13.4.99',
+            'php' => '8.1.0-8.99.99',
         ],
     ],
 ];

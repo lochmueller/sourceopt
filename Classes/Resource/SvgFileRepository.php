@@ -49,7 +49,7 @@ class SvgFileRepository
                 ->orderBy('sys_file.storage')
                 ->addOrderBy('sys_file.identifier')
                 ->execute()
-                ->fetchAll() // TODO; use stdClass
+                ->fetchAllAssociative()
         ;
     }
 }
