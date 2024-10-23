@@ -22,20 +22,20 @@ class RegExRepService implements SingletonInterface
 
         foreach (['search.', 'replace.'] as $section) {
             if (!isset($config[$section]) || !\is_array($config[$section])) {
-                throw new \Exception('missing entry @ config.replacer.'.$section);
+                throw new \Exception('missing entry @ config.replacer.' . $section);
             }
 
             if (preg_match_all('/"([\w\-]+)\.";/', serialize(array_keys($config[$section])), $matches)) {
-                $cObj = $cObj ?? $GLOBALS['TSFE']->cObj ?? GeneralUtility::makeInstance(ContentObjectRenderer::class);
+                $cObj ??= $GLOBALS['TSFE']->cObj ?? GeneralUtility::makeInstance(ContentObjectRenderer::class);
 
                 foreach ($matches[1] as $key) {
                     $config[$section][$key] = $cObj
                         ->stdWrap(
                             $config[$section][$key],
-                            $config[$section][$key.'.']
+                            $config[$section][$key . '.']
                         )
                     ;
-                    unset($config[$section][$key.'.']); // keep!
+                    unset($config[$section][$key . '.']); // keep!
                 }
             }
 
@@ -45,7 +45,7 @@ class RegExRepService implements SingletonInterface
         if (Environment::getContext()->isDevelopment()) {
             foreach ($config['search.'] as $key => $val) {
                 if (false === @preg_match($val, '')) {
-                    throw new \Exception(preg_last_error_msg().' : please check your regex syntax @ '."{$key} = {$val}");
+                    throw new \Exception(preg_last_error_msg() . ' : please check your regex syntax @ ' . "{$key} = {$val}");
                 }
             }
         }

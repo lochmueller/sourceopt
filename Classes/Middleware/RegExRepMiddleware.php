@@ -11,9 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class RegExRepMiddleware extends AbstractMiddleware
 {
-    public function __construct(protected RegExRepService $regExRepService)
-    {
-    }
+    public function __construct(protected RegExRepService $regExRepService) {}
 
     /**
      * RegEx search & replace @ HTML output.

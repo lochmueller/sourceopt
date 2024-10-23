@@ -11,9 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class CleanHtmlMiddleware extends AbstractMiddleware
 {
-    public function __construct(protected CleanHtmlService $cleanHtmlService)
-    {
-    }
+    public function __construct(protected CleanHtmlService $cleanHtmlService) {}
 
     /**
      * Clean the HTML output.

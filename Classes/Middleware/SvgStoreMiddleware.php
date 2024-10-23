@@ -11,9 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class SvgStoreMiddleware extends AbstractMiddleware
 {
-    public function __construct(protected SvgStoreService $svgStoreService)
-    {
-    }
+    public function __construct(protected SvgStoreService $svgStoreService) {}
 
     /**
      * Search/Extract/Merge SVGs @ HTML output.

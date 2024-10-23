@@ -66,11 +66,11 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         $this->svgFileArr = $this->svgCache->get('svgFileArr') ?: [];
 
         if (empty($this->spritePath) && !$this->populateCache()) {
-            throw new \Exception('could not write file: '.$this->sitePath.$this->spritePath);
+            throw new \Exception('could not write file: ' . $this->sitePath . $this->spritePath);
         }
 
-        if (!file_exists($this->sitePath.$this->spritePath)) {
-            throw new \Exception('file does not exists: '.$this->sitePath.$this->spritePath);
+        if (!file_exists($this->sitePath . $this->spritePath)) {
+            throw new \Exception('file does not exists: ' . $this->sitePath . $this->spritePath);
         }
     }
 
@@ -91,7 +91,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             if (!isset($this->svgFileArr[$match['src']])) { // check usage
                 return $match[0];
             }
-            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap|crossorigin|decoding|fetchpriority|referrerpolicy)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
+            $attr = preg_replace('/\s(?:alt|ismap|loading|title|sizes|srcset|usemap|crossorigin|decoding|fetchpriority|referrerpolicy)="[^"]*"/', '', $match['pre'] . $match['post']); // cleanup
 
             return \sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['src']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['src']));
         }, $dom['body']);
@@ -101,12 +101,12 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             if (!isset($this->svgFileArr[$match['data']])) { // check usage
                 return $match[0];
             }
-            $attr = preg_replace('/\s(?:form|name|type|usemap)="[^"]*"/', '', $match['pre'].$match['post']); // cleanup
+            $attr = preg_replace('/\s(?:form|name|type|usemap)="[^"]*"/', '', $match['pre'] . $match['post']); // cleanup
 
             return \sprintf('<svg %s %s><use href="%s#%s"/></svg>', $this->svgFileArr[$match['data']]['attr'], trim($attr), $this->spritePath, $this->convertFilePath($match['data']));
         }, $dom['body']);
 
-        return $dom['head'].$dom['body'];
+        return $dom['head'] . $dom['body'];
     }
 
     private function convertFilePath(string $path): string
@@ -116,11 +116,11 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
     private function addFileToSpriteArr(string $hash, string $path, array $attr = []): ?array
     {
-        if (!file_exists($this->sitePath.$path)) {
+        if (!file_exists($this->sitePath . $path)) {
             return null;
         }
 
-        $svg = file_get_contents($this->sitePath.$path);
+        $svg = file_get_contents($this->sitePath . $path);
 
         if (preg_match('/(?:;base64|i:a?i?pgf)/', $svg)) { // noop!
             return null;
@@ -197,7 +197,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
         $fileArr = GeneralUtility::makeInstance(SvgFileRepository::class)->findAllByStorageUids(array_keys($storageArr));
         foreach ($fileArr as $file) {
-            $file['path'] = '/'.$storageArr[$file['storage']].$file['identifier']; // ^[/]
+            $file['path'] = '/' . $storageArr[$file['storage']] . $file['identifier']; // ^[/]
             $file['defs'] = $this->addFileToSpriteArr($file['sha1'], $file['path']);
 
             if (null !== $file['defs']) {
@@ -216,13 +216,13 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
                     return $match[0];
                 }
 
-                return \sprintf('<use%s href="#%s"/>', $match['pre'].$match['post'], $this->convertFilePath($match['href']));
+                return \sprintf('<use%s href="#%s"/>', $match['pre'] . $match['post'], $this->convertFilePath($match['href']));
             },
             '<svg xmlns="http://www.w3.org/2000/svg">'
             // ."\n<style>\n".implode("\n", $this->styl)."\n</style>"
             // ."\n<defs>\n".implode("\n", $this->defs)."\n</defs>"
-            ."\n<symbol ".implode("</symbol>\n<symbol ", $this->svgs)."</symbol>\n"
-            .'</svg>'
+            . "\n<symbol " . implode("</symbol>\n<symbol ", $this->svgs) . "</symbol>\n"
+            . '</svg>'
         );
 
         if ($GLOBALS['TSFE']->config['config']['sourceopt.']['formatHtml'] ?? false) {
@@ -234,12 +234,12 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
         $svg = preg_replace('/<([a-z\-]+)\s*(\/|>\s*<\/\1)>\s*|\s+(?=\/>)/i', '', $svg); // remove emtpy TAGs & shorten endings
         $svg = preg_replace('/<((circle|ellipse|line|path|polygon|polyline|rect|stop|use)\s[^>]+?)\s*>\s*<\/\2>/', '<$1/>', $svg); // shorten/minify TAG syntax
 
-        if (!is_dir($this->sitePath.$this->outputDir)) {
-            GeneralUtility::mkdir_deep($this->sitePath.$this->outputDir);
+        if (!is_dir($this->sitePath . $this->outputDir)) {
+            GeneralUtility::mkdir_deep($this->sitePath . $this->outputDir);
         }
 
-        $this->spritePath = $this->outputDir.hash('sha1', serialize($this->svgFileArr)).'.svg';
-        if (false === file_put_contents($this->sitePath.$this->spritePath, $svg)) {
+        $this->spritePath = $this->outputDir . hash('sha1', serialize($this->svgFileArr)) . '.svg';
+        if (false === file_put_contents($this->sitePath . $this->spritePath, $svg)) {
             return false;
         }
 

@@ -101,7 +101,7 @@ class CleanHtmlService implements SingletonInterface
 
         foreach ($manipulations as $key => $manipulation) {
             /** @var ManipulationInterface $manipulation */
-            $configuration = isset($config[$key.'.']) && \is_array($config[$key.'.']) ? $config[$key.'.'] : [];
+            $configuration = isset($config[$key . '.']) && \is_array($config[$key . '.']) ? $config[$key . '.'] : [];
             $html = $manipulation->manipulate($html, $configuration);
         }
 
@@ -161,7 +161,7 @@ class CleanHtmlService implements SingletonInterface
         $functionalBoxElements = 'dd|dt|frameset|li|tbody|td|tfoot|th|thead|tr|colgroup';
         $usableBoxElements = 'applet|button|del|iframe|ins|map|object|script';
         $imagineBoxElements = 'html|body|head|meta|title|link|script|base|!--';
-        $allBoxLikeElements = '(?>'.$trueBoxElements.'|'.$functionalBoxElements.'|'.$usableBoxElements.'|'.$imagineBoxElements.')';
+        $allBoxLikeElements = '(?>' . $trueBoxElements . '|' . $functionalBoxElements . '|' . $usableBoxElements . '|' . $imagineBoxElements . ')';
         $esteticBoxLikeElements = '(?>html|head|body|meta name|title|div|table|h1|h2|h3|h4|h5|h6|p|form|pre|center|!--)';
         $structureBoxLikeElements = '(?>html|head|body|div|!--)';
 
@@ -204,52 +204,52 @@ class CleanHtmlService implements SingletonInterface
             } elseif (2 == $this->formatType && ( // minimalistic line break
                 // this element has a line break before itself
                 preg_match(
-                    '/<'.$structureBoxLikeElements.'(.*)>/Usi',
+                    '/<' . $structureBoxLikeElements . '(.*)>/Usi',
                     $htmlArrayCurrent
                 ) || preg_match(
-                    '/<'.$structureBoxLikeElements.'(.*) \/>/Usi',
+                    '/<' . $structureBoxLikeElements . '(.*) \/>/Usi',
                     $htmlArrayCurrent
                 ) // one element before is a element that has a line break after
                 || preg_match(
-                    '/<\/'.$structureBoxLikeElements.'(.*)>/Usi',
+                    '/<\/' . $structureBoxLikeElements . '(.*)>/Usi',
                     $htmlArrayBefore
                 ) || '<!--' == substr(
                     $htmlArrayBefore,
                     0,
                     4
-                ) || preg_match('/<'.$structureBoxLikeElements.'(.*) \/>/Usi', $htmlArrayBefore))
+                ) || preg_match('/<' . $structureBoxLikeElements . '(.*) \/>/Usi', $htmlArrayBefore))
             ) {
                 $newline = true;
             } elseif (3 == $this->formatType && ( // aestetic line break
                 // this element has a line break before itself
                 preg_match(
-                    '/<'.$esteticBoxLikeElements.'(.*)>/Usi',
+                    '/<' . $esteticBoxLikeElements . '(.*)>/Usi',
                     $htmlArrayCurrent
                 ) || preg_match(
-                    '/<'.$esteticBoxLikeElements.'(.*) \/>/Usi',
+                    '/<' . $esteticBoxLikeElements . '(.*) \/>/Usi',
                     $htmlArrayCurrent
                 ) // one element before is a element that has a line break after
-                || preg_match('/<\/'.$esteticBoxLikeElements.'(.*)>/Usi', $htmlArrayBefore) || '<!--' == substr(
+                || preg_match('/<\/' . $esteticBoxLikeElements . '(.*)>/Usi', $htmlArrayBefore) || '<!--' == substr(
                     $htmlArrayBefore,
                     0,
                     4
-                ) || preg_match('/<'.$esteticBoxLikeElements.'(.*) \/>/Usi', $htmlArrayBefore))
+                ) || preg_match('/<' . $esteticBoxLikeElements . '(.*) \/>/Usi', $htmlArrayBefore))
             ) {
                 $newline = true;
             } elseif ($this->formatType >= 4 && ( // logical line break
                 // this element has a line break before itself
                 preg_match(
-                    '/<'.$allBoxLikeElements.'(.*)>/Usi',
+                    '/<' . $allBoxLikeElements . '(.*)>/Usi',
                     $htmlArrayCurrent
                 ) || preg_match(
-                    '/<'.$allBoxLikeElements.'(.*) \/>/Usi',
+                    '/<' . $allBoxLikeElements . '(.*) \/>/Usi',
                     $htmlArrayCurrent
                 ) // one element before is a element that has a line break after
-                || preg_match('/<\/'.$allBoxLikeElements.'(.*)>/Usi', $htmlArrayBefore) || '<!--' == substr(
+                || preg_match('/<\/' . $allBoxLikeElements . '(.*)>/Usi', $htmlArrayBefore) || '<!--' == substr(
                     $htmlArrayBefore,
                     0,
                     4
-                ) || preg_match('/<'.$allBoxLikeElements.'(.*) \/>/Usi', $htmlArrayBefore))
+                ) || preg_match('/<' . $allBoxLikeElements . '(.*) \/>/Usi', $htmlArrayBefore))
             ) {
                 $newline = true;
             }
@@ -385,6 +385,6 @@ class CleanHtmlService implements SingletonInterface
      */
     public function includeHeaderComment(string &$html): void
     {
-        $html = preg_replace('/^(-->)$/m', "\n\t".$this->headerComment."\n$1", $html);
+        $html = preg_replace('/^(-->)$/m', "\n\t" . $this->headerComment . "\n$1", $html);
     }
 }
