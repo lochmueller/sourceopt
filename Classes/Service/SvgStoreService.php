@@ -7,6 +7,7 @@ namespace HTML\Sourceopt\Service;
 use HTML\Sourceopt\Resource\SvgFileRepository;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -59,7 +60,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
 
     public function __construct()
     {
-        $this->sitePath = \TYPO3\CMS\Core\Core\Environment::getPublicPath(); // [^/]$
+        $this->sitePath = Environment::getPublicPath(); // [^/]$
         $this->svgCache = GeneralUtility::makeInstance(CacheManager::class)->getCache('svgstore');
 
         $this->spritePath = $this->svgCache->get('spritePath') ?: '';
