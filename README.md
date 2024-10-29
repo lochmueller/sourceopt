@@ -8,9 +8,15 @@
 - [RegExRep](#regex-replace) : search and replace strings using your regular expressions ; [embrace regex](https://www.regular-expressions.info) and [migrate now](#howto-migrate)
 - [SVGstore](#svgstore) : combines all SVG selected within elements into one \<symbol\> file and replaces \<img\> by \<use\>
 
-## Installation
+## Version
 
-https://github.com/lochmueller/sourceopt/blob/e310f6344a29b2dcaf7e2642724188b8f5d0059a/composer.json#L8-L9
+#### >= 5.2.2
+https://github.com/lochmueller/sourceopt/blob/173f7bd2a44b546844961ced1f0831371badd620/composer.json#L8-L9
+
+#### <= 5.2.0 (legacy)
+https://github.com/lochmueller/sourceopt/blob/6663a8a8512ba280bc7e8b8d38610146495a94ce/composer.json#L8-L9
+
+## Installation
 
 ```bash
 composer require lochmueller/sourceopt
