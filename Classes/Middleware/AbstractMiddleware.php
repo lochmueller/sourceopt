@@ -15,7 +15,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 {
     protected function responseIsAlterable(ResponseInterface $response): bool
     {
-        if (!$response instanceof NullResponse) {
+        if ($response instanceof NullResponse) {
             return false;
         }
 
