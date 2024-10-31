@@ -20,7 +20,7 @@ class RegExRepMiddleware extends AbstractMiddleware
     {
         $response = $handler->handle($request);
 
-        if ($this->responseIsAlterable($response) && $GLOBALS['TSFE']->config['config']['replacer.'] ?? false) {
+        if ($this->responseIsAlterable($response) && ($GLOBALS['TSFE']->config['config']['replacer.'] ?? false)) {
             $processedHtml = $this->regExRepService->process((string) $response->getBody());
             $response = $response->withBody($this->getStringStream($processedHtml));
         }

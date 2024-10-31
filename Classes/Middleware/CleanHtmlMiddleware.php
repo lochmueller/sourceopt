@@ -20,7 +20,7 @@ class CleanHtmlMiddleware extends AbstractMiddleware
     {
         $response = $handler->handle($request);
 
-        if ($this->responseIsAlterable($response) && $GLOBALS['TSFE']->config['config']['sourceopt.']['enabled'] ?? false) {
+        if ($this->responseIsAlterable($response) && ($GLOBALS['TSFE']->config['config']['sourceopt.']['enabled'] ?? false)) {
             $processedHtml = $this->cleanHtmlService->clean(
                 (string) $response->getBody(),
                 (array) $GLOBALS['TSFE']->config['config']['sourceopt.']
