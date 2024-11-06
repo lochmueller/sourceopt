@@ -19,7 +19,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
             return false;
         }
 
-        if (!$GLOBALS['TSFE'] instanceof TypoScriptFrontendController) {  // need for configuration
+        if (!$GLOBALS['TSFE'] instanceof TypoScriptFrontendController) { // need for configuration
             return false;
         }
 

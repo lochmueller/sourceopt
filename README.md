@@ -10,7 +10,7 @@
 
 ## Version
 
-#### >= 5.2.2
+#### >= 5.2.5
 https://github.com/lochmueller/sourceopt/blob/173f7bd2a44b546844961ced1f0831371badd620/composer.json#L8-L9
 
 #### <= 5.2.0 (legacy)
