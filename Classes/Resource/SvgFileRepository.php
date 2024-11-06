@@ -40,7 +40,7 @@ class SvgFileRepository
                 ),
                 $queryBuilder->expr()->lt(
                     'sys_file.size',
-                    $queryBuilder->createNamedParameter((int) $GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'] ?? null, \TYPO3\CMS\Core\Database\Connection::PARAM_INT)
+                    $queryBuilder->createNamedParameter((int) ($GLOBALS['TSFE']->config['config']['svgstore.']['fileSize'] ?? null), \TYPO3\CMS\Core\Database\Connection::PARAM_INT)
                 ),
                 $queryBuilder->expr()->eq(
                     'sys_file.mime_type',

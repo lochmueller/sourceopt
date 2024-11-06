@@ -26,7 +26,7 @@ class RegExRepService implements SingletonInterface
             }
 
             if (preg_match_all('/"([\w\-]+)\.";/', serialize(array_keys($config[$section])), $matches)) {
-                $cObj ??= $GLOBALS['TSFE']->cObj ?? GeneralUtility::makeInstance(ContentObjectRenderer::class);
+                $cObj ??= ($GLOBALS['TSFE']->cObj ?? GeneralUtility::makeInstance(ContentObjectRenderer::class));
 
                 foreach ($matches[1] as $key) {
                     $config[$section][$key] = $cObj
