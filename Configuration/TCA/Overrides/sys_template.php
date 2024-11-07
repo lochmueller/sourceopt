@@ -4,5 +4,5 @@
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
     'sourceopt',
     'Configuration/TypoScript',
-    'Sourceopt'
+    'Source Optimization'
 );
