@@ -1,0 +1,50 @@
+categories:
+  sourceopt: ~
+  sourceopt.cleaner:
+    parent: sourceopt
+  sourceopt.formater:
+    parent: sourceopt
+  sourceopt.svgstore:
+    parent: sourceopt
+
+settings:
+  plugin.sourceopt.enabled:
+    default: 1
+    type: bool
+    category: sourceopt.cleaner
+  plugin.sourceopt.removeGenerator:
+    default: 1
+    type: bool
+    category: sourceopt.cleaner
+  plugin.sourceopt.removeComments:
+    default: 1
+    type: bool
+    category: sourceopt.cleaner
+  plugin.sourceopt.removeComments.keep.10:
+    default: '/^TYPO3SEARCH_/usi'
+    type: string
+    category: sourceopt.cleaner
+  plugin.sourceopt.headerComment:
+    default: ''
+    type: string
+    category: sourceopt.cleaner
+  plugin.sourceopt.formatHtml:
+    default: 4
+    type: options
+    category: sourceopt.formater
+  plugin.sourceopt.formatHtml.tabSize:
+    default: ''
+    type: string
+    category: sourceopt.formater
+  plugin.sourceopt.formatHtml.debugComment:
+    default: ''
+    type: bool
+    category: sourceopt.formater
+  plugin.svgstore.enabled:
+    default: 1
+    type: bool
+    category: sourceopt.svgstore
+  plugin.svgstore.fileSize:
+    default: 50000
+    type: int
+    category: sourceopt.svgstore

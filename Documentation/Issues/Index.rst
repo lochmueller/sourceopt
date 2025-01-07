@@ -13,4 +13,3 @@ If you have any requests you can find the developers at Forge and GitHub below:
 
 * https://forge.typo3.org/projects/extension-sourceopt
 * https://github.com/lochmueller/sourceopt
-
