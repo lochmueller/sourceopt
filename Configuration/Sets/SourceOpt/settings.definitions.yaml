@@ -1,10 +1,14 @@
 categories:
-  sourceopt: ~
+  sourceopt:
+    label: SourceOpt
   sourceopt.cleaner:
+    label: Cleaner
     parent: sourceopt
   sourceopt.formater:
+    label: Formater
     parent: sourceopt
   sourceopt.svgstore:
+    label: SvgStore
     parent: sourceopt
 
 settings:
