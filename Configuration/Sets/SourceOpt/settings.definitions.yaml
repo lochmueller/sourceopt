@@ -13,15 +13,15 @@ categories:
 
 settings:
   plugin.sourceopt.enabled:
-    default: 1
+    default: true
     type: bool
     category: sourceopt.cleaner
   plugin.sourceopt.removeGenerator:
-    default: 1
+    default: true
     type: bool
     category: sourceopt.cleaner
   plugin.sourceopt.removeComments:
-    default: 1
+    default: true
     type: bool
     category: sourceopt.cleaner
   plugin.sourceopt.removeComments.keep.10:
@@ -34,18 +34,24 @@ settings:
     category: sourceopt.cleaner
   plugin.sourceopt.formatHtml:
     default: 4
-    type: options
+    type: string
     category: sourceopt.formater
+    enum:
+      0: Disable
+      1: No line break at all (code in one line)
+      2: Minimalistic line breaks (structure defining box-elements)
+      3: Aesthetic line breaks (important box-elements)
+      4: Logic line breaks (all box-elements)
   plugin.sourceopt.formatHtml.tabSize:
     default: ''
     type: string
     category: sourceopt.formater
   plugin.sourceopt.formatHtml.debugComment:
-    default: ''
+    default: false
     type: bool
     category: sourceopt.formater
   plugin.svgstore.enabled:
-    default: 1
+    default: true
     type: bool
     category: sourceopt.svgstore
   plugin.svgstore.fileSize:
