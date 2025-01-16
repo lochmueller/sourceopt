@@ -19,7 +19,7 @@ class RemoveComments implements ManipulationInterface
      */
     public function manipulate(string $html, array $configuration = []): string
     {
-        if (isset($configuration['keep.'])) {
+        if (isset($configuration['keep.'])) {// DEPRECATED
             $this->whiteListCommentsPatterns = $configuration['keep.'];
         }
 

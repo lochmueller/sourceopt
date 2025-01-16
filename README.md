@@ -58,9 +58,9 @@ Note: The following features are executed in reverse order
 | sourceopt.removeComments.keep     | array       | Spare these listed comments: Regular expressions that match comments that should not be removed. Very useful e.g. to keep the TYPO3SEARCH-Comments so indexed_search can work properly | ``.10``            |
 | sourceopt.removeComments.keep.10  | string      | Spare TYPO3SEARCH-Comments from removal                          | /^TYPO3SEARCH_/usi |
 | sourceopt.headerComment           | string      | Your additional (appended) header comment                        | `[empty]`          |
-| sourceopt.formatHtml              | integer     | Formats the code beautiful and easy readable. New lines and tabs are used in the usual way of illustrating the structure of an XML code. <details><summary>**Options**</summary>https://github.com/lochmueller/sourceopt/blob/2346673ee51d2b64308e1ddb1433cea2f37eafcb/Classes/Service/CleanHtmlService.php#L156-L161</details> | 4                  |
-| sourceopt.formatHtml.tabSize      | integer     | Defines the size of the tabs used for formating. If blank one tab is used. If a number is specified the specified number of blank spaces is used instead. This will only work together with `formatHtml` | `[empty]`          |
-| sourceopt.formatHtml.debugComment | boolean     | Includes a comment at the end of the html source code that points the numbers of open html tags. This will only work together with `formatHtml` | `[empty]`
+| sourceopt.formatHtml.variant      | integer     | Formats the code beautiful and easy readable. New lines and tabs are used in the usual way of illustrating the structure of an XML code. <details><summary>**Options**</summary>https://github.com/lochmueller/sourceopt/blob/2346673ee51d2b64308e1ddb1433cea2f37eafcb/Classes/Service/CleanHtmlService.php#L156-L161</details> | 4                  |
+| sourceopt.formatHtml.tabSize      | integer     | Defines the amount of spaces used for formating. If blank one tab is used. If a number is specified the specified number of blank spaces is used instead. This will only work together with `formatHtml` | 0                  |
+| sourceopt.formatHtml.debugComment | boolean     | Includes a comment at the end of the HTML source code that points the numbers of open html tags. This will only work together with `formatHtml` | 0
 
 
 ### RegEx Replace
