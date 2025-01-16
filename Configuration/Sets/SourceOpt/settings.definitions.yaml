@@ -1,60 +1,70 @@
 categories:
   sourceopt:
-    label: SourceOpt
+    label: 'SourceOpt'
   sourceopt.cleaner:
-    label: Cleaner
+    label: 'Cleaner'
     parent: sourceopt
   sourceopt.formater:
-    label: Formater
+    label: 'Formater'
     parent: sourceopt
   sourceopt.svgstore:
-    label: SvgStore
+    label: 'SvgStore'
     parent: sourceopt
 
 settings:
   plugin.sourceopt.enabled:
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.enabled
     default: true
     type: bool
     category: sourceopt.cleaner
   plugin.sourceopt.removeGenerator:
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeGenerator
     default: true
     type: bool
     category: sourceopt.cleaner
   plugin.sourceopt.removeComments:
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeComments
     default: true
     type: bool
     category: sourceopt.cleaner
   plugin.sourceopt.removeComments.keep.10:
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeCommentsKeep10
     default: '/^TYPO3SEARCH_/usi'
     type: string
     category: sourceopt.cleaner
   plugin.sourceopt.headerComment:
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.headerComment
     default: ''
     type: string
     category: sourceopt.cleaner
   plugin.sourceopt.formatHtml:
-    default: 4
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml
+    default: '4'
     type: string
     category: sourceopt.formater
-    enum:
-      0: Disable
-      1: No line break at all (code in one line)
-      2: Minimalistic line breaks (structure defining box-elements)
-      3: Aesthetic line breaks (important box-elements)
-      4: Logic line breaks (all box-elements)
+  #    enum:
+  #      '0': Disable
+  #      '1': No line break at all (code in one line)
+  #      '2': Minimalistic line breaks (structure defining box-elements)
+  #      '3': Aesthetic line breaks (important box-elements)
+  #      '4': Logic line breaks (all box-elements)
   plugin.sourceopt.formatHtml.tabSize:
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlTabSize
     default: ''
     type: string
     category: sourceopt.formater
   plugin.sourceopt.formatHtml.debugComment:
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlDebugComment
     default: false
     type: bool
     category: sourceopt.formater
   plugin.svgstore.enabled:
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.enabled
     default: true
     type: bool
     category: sourceopt.svgstore
   plugin.svgstore.fileSize:
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.fileSize
     default: 50000
     type: int
     category: sourceopt.svgstore
