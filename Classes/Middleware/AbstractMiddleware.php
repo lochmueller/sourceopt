@@ -10,9 +10,24 @@ use Psr\Http\Server\MiddlewareInterface;
 use TYPO3\CMS\Core\Http\NullResponse;
 use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 abstract class AbstractMiddleware implements MiddlewareInterface
 {
+    /** @var ConfigurationManagerInterface */
+    protected $configurationManager;
+
+    /**
+     * Injects the Configuration Manager and loads the settings
+     *
+     * @param ConfigurationManagerInterface $configurationManager An instance of the Configuration Manager
+     */
+    public function injectConfigurationManager(
+        ConfigurationManagerInterface $configurationManager
+    ): void {
+        $this->configurationManager = $configurationManager;
+    }
+
     protected function responseIsAlterable(ResponseInterface $response): bool
     {
         if ($response instanceof NullResponse) {
