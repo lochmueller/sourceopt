@@ -23,18 +23,16 @@ class RemoveComments implements ManipulationInterface
             $this->whiteListCommentsPatterns = $configuration['keep.'];
         }
 
-        // match all comments, styles and scripts
-        $matches = [];
-        preg_match_all(
-            '/(?s)((<!--.*?-->)|(<[ \n\r]*style[^>]*>.*?<[ \n\r]*\/style[^>]*>)|(<[ \n\r]*script[^>]*>.*?<[ \n\r]*\/script[^>]*>))/im',
-            $html,
-            $matches
+        return preg_replace_callback(
+            '/\s*<!--([\s\S]*?)-->/',
+            function (array $match): string {
+                if ($this->keepComment($match[1])) {
+                    return $match[0];
+                }
+                return '';
+            },
+            $html
         );
-        foreach ($matches[0] as $tag) {
-            if (false === $this->keepComment($tag)) {
-                $html = str_replace($tag, '', $html);
-            }
-        }
 
         return $html;
     }
@@ -42,25 +40,17 @@ class RemoveComments implements ManipulationInterface
     /**
      * Check if a comment is defined to be kept in a pattern whiteListOfComments.
      */
-    protected function keepComment(string $commentHtml): bool
+    protected function keepComment(string $comment): bool
     {
-        // if not even a comment, skip this
-        if (!preg_match('/^\<\!\-\-(.*?)\-\-\>$/usi', $commentHtml)) {
-            return true;
-        }
-
         // if not defined in white list
         if (!empty($this->whiteListCommentsPatterns)) {
-            $commentHtml = str_replace('<!--', '', $commentHtml);
-            $commentHtml = str_replace('-->', '', $commentHtml);
-            $commentHtml = trim($commentHtml);
+            $comment = trim($comment);
             foreach ($this->whiteListCommentsPatterns as $pattern) {
-                if (!empty($pattern) && preg_match($pattern, $commentHtml)) {
+                if (preg_match($pattern, $comment)) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 }

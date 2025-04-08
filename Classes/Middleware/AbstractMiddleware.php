@@ -51,13 +51,15 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 
     protected function getConfiguration(ServerRequestInterface $request): array
     {
-      if(isset($GLOBALS['TSFE']->config['config']['sourceopt.']))// DEPRECATED
-        return $GLOBALS['TSFE']->config['config']['sourceopt.'];
+        if (isset($GLOBALS['TSFE']->config['config']['sourceopt.'])) {// DEPRECATED
+            return $GLOBALS['TSFE']->config['config']['sourceopt.'];
+        }
 
-      if($request->getAttribute('site')->getSettings()->get('sourceopt'))
-        return $request->getAttribute('site')->getSettings()->get('sourceopt');
+        if ($request->getAttribute('site')->getSettings()->get('sourceopt')) {
+            return $request->getAttribute('site')->getSettings()->get('sourceopt');
+        }
 
-      throw new \Exception('SiteConfig:SourceOpt ist missing');
+        throw new \Exception('SiteConfig:SourceOpt ist missing');
     }
 
     protected function getStringStream(string $content): StreamInterface
