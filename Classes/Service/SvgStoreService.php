@@ -232,8 +232,8 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             $svg = preg_replace('/\s{2,}/', ' ', $svg); // shrink whitespace
         }
 
-        $svg = preg_replace('/<([a-z\-]+)\s*(\/|>\s*<\/\1)>\s*|\s+(?=\/>)/i', '', $svg); // remove emtpy TAGs & shorten endings
-        $svg = preg_replace('/<((circle|ellipse|line|path|polygon|polyline|rect|stop|use)\s[^>]+?)\s*>\s*<\/\2>/', '<$1/>', $svg); // shorten/minify TAG syntax
+        $svg = preg_replace('/<([a-z]+)\s*(\/|>\s*<\/\1)>\s*|\s+(?=\/>)/i', '', $svg); // remove emtpy TAGs & shorten endings
+        $svg = preg_replace('/<(([a-z]+)\s[^>]+?)\s*>\s*<\/\2>/i', '<$1/>', $svg); // shorten/minify TAG syntax
 
         if (!is_dir($this->sitePath . $this->outputDir)) {
             GeneralUtility::mkdir_deep($this->sitePath . $this->outputDir);
