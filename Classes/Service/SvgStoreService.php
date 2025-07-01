@@ -56,7 +56,7 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Final SVG-Sprite Objects.
      */
-    protected array $defs = []; // ToFix ; https://bugs.chromium.org/p/chromium/issues/detail?id=751733#c14
+    protected array $defs = []; // Fix'd ? https://github.com/chromium/chromium/commit/4f3ebd119d5c8492fa8564d61d8b600a82e4a041
 
     public function __construct()
     {
