@@ -277,7 +277,7 @@ class CleanHtmlService implements SingletonInterface
             }
 
             // count up a tab
-            if ('<' == substr($htmlArrayCurrent, 0, 1) && '/' != substr($htmlArrayCurrent, 1, 1)) {
+            if ('<' == substr($htmlArrayCurrent, 0, 1) && '/' != substr($htmlArrayCurrent, 1, 1) && '/>' != substr($htmlArrayCurrent, -2)) {
                 if (' ' !== substr($htmlArrayCurrent, 1, 1)
                     && 'img' !== substr($htmlArrayCurrent, 1, 3)
                     && 'source' !== substr($htmlArrayCurrent, 1, 6)
