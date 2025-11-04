@@ -41,30 +41,40 @@ settings:
   sourceopt.formatHtml.enabled:
     category: sourceopt.formater
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml
-    type: string
-    default: '4'
-    enum:
-      '0': 'off'
-      '1': 'no line break at all  (code in one line)'
-      '2': 'minimalistic line breaks (structure defining box-elements)'
-      '3': 'aesthetic line breaks (important box-elements)'
-      '4': 'logic line breaks (all box-elements)'
-      '5': 'max line breaks (all elements)'
+    type: bool
+    default: true
   sourceopt.formatHtml.tabSize:
     category: sourceopt.formater
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlTabSize
     type: int
-    default: 0
+    default: 4
+  sourceopt.formatHtml.indentation:
+    category: sourceopt.formater
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlIndentation
+    type: int
+    default: 2
   sourceopt.formatHtml.debugComment:
     category: sourceopt.formater
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlDebugComment
-    type: bool
     default: false
+    type: bool
   svgstore.enabled:
     category: sourceopt.svgstore
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.enabled
     type: bool
     default: true
+  svgstore.renderMode:
+    category: sourceopt.svgstore
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.renderMode
+    type: select
+    default: symbol
+  items:
+    - label: 'Reference all SVGs (default)'
+      value: symbol
+    - label: 'Inline single-use SVGs (optimize traffic)'
+      value: distinct
+    - label: 'Inline all SVGs at HTML (not recommended)'
+      value: inline
   svgstore.fileSize:
     category: sourceopt.svgstore
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.fileSize

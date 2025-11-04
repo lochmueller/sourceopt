@@ -23,6 +23,7 @@ class SvgFileRepository
 
         return $queryBuilder
             ->select('sys_file.storage', 'sys_file.identifier', 'sys_file.sha1')
+            ->addSelectLiteral('COUNT(*) AS ' . $queryBuilder->quoteIdentifier('count'))
             ->from('sys_file')
             ->innerJoin(
                 'sys_file',

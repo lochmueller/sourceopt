@@ -201,6 +201,8 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             $file['path'] = '/' . $storageArr[$file['storage']] . $file['identifier']; // ^[/]
             $file['defs'] = $this->addFileToSpriteArr($file['sha1'], $file['path']);
 
+// TODO ; if(--$file['count']) INLINE @ <main>
+
             if (null !== $file['defs']) {
                 $this->svgFileArr[$file['path']] = $file['defs'];
             }
