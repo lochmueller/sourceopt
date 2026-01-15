@@ -13,11 +13,6 @@
 			"HTML\\Sourceopt\\": "Classes/"
 		}
 	},
-	"replace": {
-		"maxserv/replacecontent": "*",
-		"typo3-ter/replacecontent": "*",
-		"typo3-ter/sourceopt": "self.version"
-	},
 	"require-dev": {
 		"typo3/testing-framework": "^8.2",
 		"friendsofphp/php-cs-fixer": "^3.3",
@@ -28,6 +23,15 @@
 			"HTML\\Sourceopt\\Tests\\": "Tests",
 			"TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
 		}
+	},
+	"suggest": {
+		"lochmueller/staticfilecache": "Ultra-fast TYPO3 caching via static HTML file delivery",
+		"webcoast/deferred-image-processing": "Faster TYPO3 processing via on-demand image generation"
+	},
+	"replace": {
+		"maxserv/replacecontent": "*",
+		"typo3-ter/replacecontent": "*",
+		"typo3-ter/sourceopt": "self.version"
 	},
 	"config": {
 		"vendor-dir": ".Build/vendor",

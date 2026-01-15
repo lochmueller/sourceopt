@@ -13,6 +13,9 @@ config.sourceopt {
 	removeGenerator = {$sourceopt.removeGenerator}
 	removeComments = {$sourceopt.removeComments}
 	removeComments.keep {
+		# for typo-search
+		10 = /^TYPO3SEARCH_/usi
+
 		# TYPO3 specific comment
 		87 = /This website is powered by TYPO3/usi
 
@@ -32,9 +35,6 @@ config.sourceopt {
 
 		# Google pagespeed
 		104 = /^gps(e|s)/usi
-
-		# for typo-search
-		10 = {$sourceopt.removeComments.keep.10}
 	}
 }
 config.svgstore {

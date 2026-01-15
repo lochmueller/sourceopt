@@ -56,11 +56,14 @@ class CleanHtmlService implements SingletonInterface
             $this->headerComment = $config['headerComment'];
         }
 
-        if (isset($config['formatHtml']) && is_numeric($config['formatHtml'])) {
+        if (isset($config['formatHtml']) && is_numeric($config['formatHtml'])) {// DEPRECATED
             $this->formatType = (int) $config['formatHtml'];
         }
+        if (isset($config['formatHtml.']['enabled']) && is_numeric($config['formatHtml.']['enabled']) && 0 <= $config['formatHtml.']['enabled']) {
+            $this->formatType = (int) $config['formatHtml.']['enabled'];
+        }
 
-        if (isset($config['formatHtml.']['tabSize']) && is_numeric($config['formatHtml.']['tabSize'])) {
+        if (isset($config['formatHtml.']['tabSize']) && is_numeric($config['formatHtml.']['tabSize']) && 0 < $config['formatHtml.']['tabSize']) {
             $this->tab = str_pad('', (int) $config['formatHtml.']['tabSize'], ' ');
         }
 
@@ -68,7 +71,7 @@ class CleanHtmlService implements SingletonInterface
             $this->debugComment = (bool) $config['formatHtml.']['debugComment'];
         }
 
-        if (isset($config['dropEmptySpaceChar']) && (bool) $config['dropEmptySpaceChar']) {
+        if (isset($config['dropEmptySpaceChar']) && (bool) $config['dropEmptySpaceChar']) {// DEPRECATED ?!
             $this->emptySpaceChar = '';
         }
     }
@@ -136,7 +139,7 @@ class CleanHtmlService implements SingletonInterface
             );
         }
 
-        if ($this->formatType > 0) {
+        if ($this->formatType) {
             $html = $this->formatHtml($html);
         }
 
