@@ -77,10 +77,31 @@ class CleanHtmlService implements SingletonInterface
     }
 
     /**
+     * Extract first invalid UTF-8 charater surroundings.
+     */
+    private function getInvalidUTF8Snipped(string $html, int $excerpt = 42): string
+    {
+        mb_internal_encoding('UTF-8');
+        mb_substitute_character(0xFFFD);
+
+        $html   = mb_convert_encoding($html, 'UTF-8');
+        $html   = preg_replace('/\s+/',' ', $html);
+
+        // $count  = preg_match_all('/\x{FFFD}/u', $html);
+        $pos    = mb_strpos($html, mb_chr(0xFFFD, 'UTF-8'));
+
+        return mb_substr($html, max(0, $pos - $excerpt), ($excerpt << 1));
+    }
+
+    /**
      * Clean given HTML with formatter.
      */
     public function clean(string $html, array $config = []): string
     {
+        if (!mb_check_encoding($html, 'UTF-8')) {
+            throw new \Exception('Invalid UTF-8 detected @ ' . $this->getInvalidUTF8Snipped($html));
+        }
+
         if (!empty($config)) {
             $this->setVariables($config);
         }
@@ -280,7 +301,7 @@ class CleanHtmlService implements SingletonInterface
             }
 
             // count up a tab
-            if ('<' == substr($htmlArrayCurrent, 0, 1) && '/' != substr($htmlArrayCurrent, 1, 1)) {
+            if ('<' == substr($htmlArrayCurrent, 0, 1) && '/' != substr($htmlArrayCurrent, 1, 1) && '/>' != substr($htmlArrayCurrent, -2)) {
                 if (' ' !== substr($htmlArrayCurrent, 1, 1)
                     && 'img' !== substr($htmlArrayCurrent, 1, 3)
                     && 'source' !== substr($htmlArrayCurrent, 1, 6)
