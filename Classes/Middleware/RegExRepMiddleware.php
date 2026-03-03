@@ -8,11 +8,10 @@ use HTML\Sourceopt\Service\RegExRepService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RegExRepMiddleware extends AbstractMiddleware
 {
-    public function __construct(protected RegExRepService $regExRepService) {}
-
     /**
      * RegEx search & replace @ HTML output.
      */
@@ -21,7 +20,8 @@ class RegExRepMiddleware extends AbstractMiddleware
         $response = $handler->handle($request);
 
         if ($this->responseIsAlterable($response) && ($GLOBALS['TSFE']->config['config']['replacer.'] ?? false)) {
-            $processedHtml = $this->regExRepService->process((string) $response->getBody());
+            $regExRepService = GeneralUtility::makeInstance(RegExRepService::class);
+            $processedHtml = $regExRepService->process((string) $response->getBody());
             $response = $response->withBody($this->getStringStream($processedHtml));
         }
 

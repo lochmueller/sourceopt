@@ -8,11 +8,10 @@ use HTML\Sourceopt\Service\CleanHtmlService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CleanHtmlMiddleware extends AbstractMiddleware
 {
-    public function __construct(protected CleanHtmlService $cleanHtmlService) {}
-
     /**
      * Clean the HTML output.
      */
@@ -21,7 +20,8 @@ class CleanHtmlMiddleware extends AbstractMiddleware
         $response = $handler->handle($request);
 
         if ($this->responseIsAlterable($response) && ($GLOBALS['TSFE']->config['config']['sourceopt.']['enabled'] ?? false)) {
-            $processedHtml = $this->cleanHtmlService->clean(
+            $cleanHtmlService = GeneralUtility::makeInstance(CleanHtmlService::class);
+            $processedHtml = $cleanHtmlService->clean(
                 (string) $response->getBody(),
                 (array) $GLOBALS['TSFE']->config['config']['sourceopt.']
             );

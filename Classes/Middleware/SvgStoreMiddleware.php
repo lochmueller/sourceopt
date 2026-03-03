@@ -8,11 +8,10 @@ use HTML\Sourceopt\Service\SvgStoreService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class SvgStoreMiddleware extends AbstractMiddleware
 {
-    public function __construct(protected SvgStoreService $svgStoreService) {}
-
     /**
      * Search/Extract/Merge SVGs @ HTML output.
      */
@@ -21,7 +20,8 @@ class SvgStoreMiddleware extends AbstractMiddleware
         $response = $handler->handle($request);
 
         if ($this->responseIsAlterable($response) && ($GLOBALS['TSFE']->config['config']['svgstore.']['enabled'] ?? false)) {
-            $processedHtml = $this->svgStoreService->process((string) $response->getBody());
+            $svgStoreService = GeneralUtility::makeInstance(SvgStoreService::class);
+            $processedHtml = $svgStoreService->process((string)$response->getBody());
             $response = $response->withBody($this->getStringStream($processedHtml));
         }
 
