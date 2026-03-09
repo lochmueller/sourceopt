@@ -21,7 +21,7 @@ class SvgStoreMiddleware extends AbstractMiddleware
 
         if ($this->responseIsAlterable($response) && ($GLOBALS['TSFE']->config['config']['svgstore.']['enabled'] ?? false)) {
             $svgStoreService = GeneralUtility::makeInstance(SvgStoreService::class);
-            $processedHtml = $svgStoreService->process((string)$response->getBody());
+            $processedHtml = $svgStoreService->process((string) $response->getBody());
             $response = $response->withBody($this->getStringStream($processedHtml));
         }
 

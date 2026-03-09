@@ -82,7 +82,7 @@ class CleanHtmlService implements SingletonInterface
         mb_substitute_character(0xFFFD);
 
         $html   = mb_convert_encoding($html, 'UTF-8');
-        $html   = preg_replace('/\s+/',' ', $html);
+        $html   = preg_replace('/\s+/', ' ', $html);
 
         // $count  = preg_match_all('/\x{FFFD}/u', $html);
         $pos    = mb_strpos($html, mb_chr(0xFFFD, 'UTF-8'));
