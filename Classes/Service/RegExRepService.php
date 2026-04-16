@@ -31,7 +31,7 @@ class RegExRepService implements SingletonInterface
                 foreach ($matches[1] as $key) {
                     $config[$section][$key] = $cObj
                         ->stdWrap(
-                            $config[$section][$key],
+                            $config[$section][$key] ?? '',
                             $config[$section][$key . '.']
                         )
                     ;

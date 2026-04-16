@@ -12,32 +12,32 @@ categories:
     parent: sourceopt
 
 settings:
-  plugin.sourceopt.enabled:
+  sourceopt.enabled:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.enabled
     default: true
     type: bool
     category: sourceopt.cleaner
-  plugin.sourceopt.removeGenerator:
+  sourceopt.removeGenerator:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeGenerator
     default: true
     type: bool
     category: sourceopt.cleaner
-  plugin.sourceopt.removeComments:
+  sourceopt.removeComments:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeComments
     default: true
     type: bool
     category: sourceopt.cleaner
-  plugin.sourceopt.removeComments.keep.10:
+  sourceopt.removeComments.keep.10:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeCommentsKeep10
     default: '/^TYPO3SEARCH_/usi'
     type: string
     category: sourceopt.cleaner
-  plugin.sourceopt.headerComment:
+  sourceopt.headerComment:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.headerComment
     default: ''
     type: string
     category: sourceopt.cleaner
-  plugin.sourceopt.formatHtml:
+  sourceopt.formatHtml:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml
     default: '4'
     type: string
@@ -48,22 +48,22 @@ settings:
   #      '2': Minimalistic line breaks (structure defining box-elements)
   #      '3': Aesthetic line breaks (important box-elements)
   #      '4': Logic line breaks (all box-elements)
-  plugin.sourceopt.formatHtml.tabSize:
+  sourceopt.formatHtml.tabSize:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlTabSize
     default: ''
     type: string
     category: sourceopt.formater
-  plugin.sourceopt.formatHtml.debugComment:
+  sourceopt.formatHtml.debugComment:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlDebugComment
     default: false
     type: bool
     category: sourceopt.formater
-  plugin.svgstore.enabled:
+  svgstore.enabled:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.enabled
     default: true
     type: bool
     category: sourceopt.svgstore
-  plugin.svgstore.fileSize:
+  svgstore.fileSize:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.fileSize
     default: 50000
     type: int

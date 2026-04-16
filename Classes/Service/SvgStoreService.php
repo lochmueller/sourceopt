@@ -29,11 +29,6 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
     protected string $sitePath = '';
 
     /**
-     * Final TYPO3 Frontend-Cache object.
-     */
-    protected FrontendInterface $svgCache;
-
-    /**
      * Cached SVG-Sprite relativ file path.
      */
     protected string $spritePath = '';
@@ -58,25 +53,28 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected array $defs = []; // Fix'd ? https://github.com/chromium/chromium/commit/4f3ebd119d5c8492fa8564d61d8b600a82e4a041
 
-    public function __construct()
+    protected function init()
     {
-        $this->sitePath = Environment::getPublicPath(); // [^/]$
-        $this->svgCache = GeneralUtility::makeInstance(CacheManager::class)->getCache('svgstore');
+        static $alreadyLoaded = false;
+        if ($alreadyLoaded) {
+            $this->sitePath = Environment::getPublicPath(); // [^/]$
 
-        $this->spritePath = $this->svgCache->get('spritePath') ?: '';
-        $this->svgFileArr = $this->svgCache->get('svgFileArr') ?: [];
+            $this->spritePath = $this->getCache()->get('spritePath') ?: '';
+            $this->svgFileArr = $this->getCache()->get('svgFileArr') ?: [];
 
-        if (empty($this->spritePath) && !$this->populateCache()) {
-            throw new \Exception('could not write file: ' . $this->sitePath . $this->spritePath);
-        }
+            if (empty($this->spritePath) && !$this->populateCache()) {
+                throw new \Exception('could not write file: ' . $this->sitePath . $this->spritePath);
+            }
 
-        if (!file_exists($this->sitePath . $this->spritePath)) {
-            throw new \Exception('file does not exists: ' . $this->sitePath . $this->spritePath);
+            if (!file_exists($this->sitePath . $this->spritePath)) {
+                throw new \Exception('file does not exists: ' . $this->sitePath . $this->spritePath);
+            }
         }
     }
 
     public function process(string $html): string
     {
+        $this->init();
         if (empty($this->svgFileArr)) {
             return $html;
         }
@@ -244,9 +242,18 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
             return false;
         }
 
-        $this->svgCache->set('spritePath', $this->spritePath);
-        $this->svgCache->set('svgFileArr', $this->svgFileArr);
+        $this->getCache()->set('spritePath', $this->spritePath);
+        $this->getCache()->set('svgFileArr', $this->svgFileArr);
 
         return true;
+    }
+
+    private function getCache(): FrontendInterface
+    {
+        static $cache = null;
+        if ($cache === null) {
+            $cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('svgstore');
+        }
+        return $cache;
     }
 }
