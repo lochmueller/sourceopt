@@ -184,7 +184,3 @@ composer install jweiland/replacer
 |:----------------------------------|:------------|:-----------------------------------------------------------------|:-------------------|
 | svgstore.enabled                  | boolean     | Is the SVG extract & merge enabled for this template             | 1                  |
 | svgstore.fileSize                 | integer     | Maximum file size of a SVG to include (in `[byte]`)              | 50000              |
-
----
-##### ToDo:
-- Try external packages like https://github.com/ArjanSchouten/HtmlMinifier
