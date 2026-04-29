@@ -1,6 +1,6 @@
 categories:
   sourceopt:
-    label: 'SourceOpt'
+    label: 'SourceOpt[imization]'
   sourceopt.cleaner:
     label: 'Cleaner'
     parent: sourceopt
@@ -13,58 +13,70 @@ categories:
 
 settings:
   sourceopt.enabled:
+    category: sourceopt.cleaner
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.enabled
-    default: true
     type: bool
-    category: sourceopt.cleaner
+    default: true
   sourceopt.removeGenerator:
+    category: sourceopt.cleaner
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeGenerator
-    default: true
     type: bool
-    category: sourceopt.cleaner
+    default: true
   sourceopt.removeComments:
+    category: sourceopt.cleaner
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeComments
-    default: true
     type: bool
+    default: true
+  sourceopt.keepComments:
     category: sourceopt.cleaner
-  sourceopt.removeComments.keep.10:
-    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeCommentsKeep10
-    default: '/^TYPO3SEARCH_/usi'
-    type: string
-    category: sourceopt.cleaner
+    label: 'Spare these listed comments [RegEx]'
+    type: stringlist
+    default:
+      - '/^TYPO3SEARCH_/usi'
   sourceopt.headerComment:
-    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.headerComment
-    default: ''
-    type: string
     category: sourceopt.cleaner
-  sourceopt.formatHtml:
-    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml
-    default: '4'
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.headerComment
     type: string
-    category: sourceopt.formater
-  #    enum:
-  #      '0': Disable
-  #      '1': No line break at all (code in one line)
-  #      '2': Minimalistic line breaks (structure defining box-elements)
-  #      '3': Aesthetic line breaks (important box-elements)
-  #      '4': Logic line breaks (all box-elements)
-  sourceopt.formatHtml.tabSize:
-    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlTabSize
     default: ''
-    type: string
+  sourceopt.formatHtml.enabled:
     category: sourceopt.formater
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml
+    type: bool
+    default: true
+  sourceopt.formatHtml.tabSize:
+    category: sourceopt.formater
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlTabSize
+    type: int
+    default: 4
+  sourceopt.formatHtml.indentation:
+    category: sourceopt.formater
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlIndentation
+    type: int
+    default: 2
   sourceopt.formatHtml.debugComment:
+    category: sourceopt.formater
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlDebugComment
     default: false
     type: bool
-    category: sourceopt.formater
   svgstore.enabled:
+    category: sourceopt.svgstore
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.enabled
-    default: true
     type: bool
+    default: true
+  svgstore.renderMode:
     category: sourceopt.svgstore
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.renderMode
+    type: select
+    default: symbol
+  items:
+    - label: 'Reference all SVGs (default)'
+      value: symbol
+    - label: 'Inline single-use SVGs (optimize traffic)'
+      value: distinct
+    - label: 'Inline all SVGs at HTML (not recommended)'
+      value: inline
   svgstore.fileSize:
-    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.fileSize
-    default: 50000
-    type: int
     category: sourceopt.svgstore
+    label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:svgstore.fileSize
+    type: int
+    default: 50000

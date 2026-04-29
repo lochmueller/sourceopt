@@ -25,13 +25,14 @@
 			"TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
 		}
 	},
+	"suggest": {
+		"lochmueller/staticfilecache": "Ultra-fast TYPO3 caching via static HTML file delivery",
+		"webcoast/deferred-image-processing": "Faster TYPO3 processing via on-demand image generation"
+	},
 	"replace": {
 		"maxserv/replacecontent": "*",
 		"typo3-ter/replacecontent": "*",
 		"typo3-ter/sourceopt": "self.version"
-	},
-	"suggest": {
-		"lochmueller/staticfilecache": "A very flexible and very, very, very fast cache to TYPO3"
 	},
 	"config": {
 		"vendor-dir": ".Build/vendor",

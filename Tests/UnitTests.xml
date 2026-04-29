@@ -12,11 +12,11 @@
 		stopOnIncomplete="false"
 		stopOnSkipped="false"
 		verbose="false"
->
+	>
 	<testsuites>
 		<testsuite name="sourceopt tests">
 			<directory>Unit/</directory>
-            <exclude>./Unit/AbstractUnitTest.php</exclude>
+			<exclude>./Unit/AbstractUnitTest.php</exclude>
 		</testsuite>
 	</testsuites>
 </phpunit>

@@ -7,9 +7,6 @@ sourceopt.removeGenerator = 1
 # cat=plugin.sourceopt/enable/50; type=boolean;  label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeComments
 sourceopt.removeComments = 1
 
-# cat=plugin.sourceopt/typo/55; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.removeCommentsKeep10
-sourceopt.removeComments.keep.10 = /^TYPO3SEARCH_/usi
-
 # cat=plugin.sourceopt/typo/70; type=string; label=LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.headerComment
 sourceopt.headerComment =
 
