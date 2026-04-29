@@ -56,20 +56,25 @@ class SvgStoreService implements \TYPO3\CMS\Core\SingletonInterface
     protected function init()
     {
         static $alreadyLoaded = false;
+
         if ($alreadyLoaded) {
-            $this->sitePath = Environment::getPublicPath(); // [^/]$
-
-            $this->spritePath = $this->getCache()->get('spritePath') ?: '';
-            $this->svgFileArr = $this->getCache()->get('svgFileArr') ?: [];
-
-            if (empty($this->spritePath) && !$this->populateCache()) {
-                throw new \Exception('could not write file: ' . $this->sitePath . $this->spritePath);
-            }
-
-            if (!file_exists($this->sitePath . $this->spritePath)) {
-                throw new \Exception('file does not exists: ' . $this->sitePath . $this->spritePath);
-            }
+            return;
         }
+        
+        $this->sitePath = Environment::getPublicPath(); // [^/]$
+
+        $this->spritePath = $this->getCache()->get('spritePath') ?: '';
+        $this->svgFileArr = $this->getCache()->get('svgFileArr') ?: [];
+
+        if (empty($this->spritePath) && !$this->populateCache()) {
+            throw new \Exception('could not write file: ' . $this->sitePath . $this->spritePath);
+        }
+
+        if (!file_exists($this->sitePath . $this->spritePath)) {
+            throw new \Exception('file does not exists: ' . $this->sitePath . $this->spritePath);
+        }
+        
+        $alreadyLoaded = true;
     }
 
     public function process(string $html): string
