@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HTML\Sourceopt\Service;
 
+use Gajus\Dindent\Indenter;
 use HTML\Sourceopt\Manipulation\ManipulationInterface;
 use HTML\Sourceopt\Manipulation\RemoveComments;
 use HTML\Sourceopt\Manipulation\RemoveGenerator;
@@ -23,7 +24,8 @@ class CleanHtmlService implements SingletonInterface
     protected bool $debugComment = false;
 
     /**
-     * Format Type.
+     * Format type: 0 disables formatting, 1 removes all line breaks, anything
+     * above 1 adds line breaks and indentation.
      */
     protected int $formatType = 0;
 
@@ -139,7 +141,10 @@ class CleanHtmlService implements SingletonInterface
         }
 
         if ($this->formatType) {
-            $indenter = new \Gajus\Dindent\Indenter(['indentation_character' => $this->tab]);
+            // 1 puts the whole document on one line, anything above indents it
+            $indenter = new Indenter([
+                'indentation_character' => 1 === $this->formatType ? null : $this->tab,
+            ]);
             $html = $indenter->indent($html);
         }
 

@@ -20,10 +20,7 @@
 				<source>Spare this comments from remove: Regular expressions that match comments that should not be removed. Very useful e.g. to keep the TYPO3SEARCH-Comments so indexed_search can work properly</source>
 			</trans-unit>
 			<trans-unit id="sourceopt.formatHtml" xml:space="preserve">
-				<source>Format HTML: Formats the code beautiful and easy readable. New lines and
-	tabs are used in the usual way of illustrating the structure of an XML code. This is a great help for
-	developing and checking the code as well as compressing the code that it is faster
-	transferred to the user agent.</source>
+				<source>Format HTML: Off, everything on one line, or line breaks plus indentation that illustrate the structure of the document. Indenting helps while developing and checking the code, one line makes the response smaller so it is faster transferred to the user agent. Any value above 1 indents.</source>
 			</trans-unit>
 			<trans-unit id="sourceopt.formatHtml0" xml:space="preserve">
 				<source>Disable</source>
@@ -32,13 +29,7 @@
 				<source>No line break at all (code in one line)</source>
 			</trans-unit>
 			<trans-unit id="sourceopt.formatHtml2" xml:space="preserve">
-				<source>Minimalistic line breaks (structure defining box-elements)</source>
-			</trans-unit>
-			<trans-unit id="sourceopt.formatHtml3" xml:space="preserve">
-				<source>Aesthetic line breaks (important box-elements)</source>
-			</trans-unit>
-			<trans-unit id="sourceopt.formatHtml4" xml:space="preserve">
-				<source>Logic line breaks (all box-elements)</source>
+				<source>Line breaks and indentation</source>
 			</trans-unit>
 			<trans-unit id="sourceopt.formatHtmlTabSize" xml:space="preserve">
 				<source>Formatting Tab-Size: Spezify number of blank-space for formatting. If empty a tab will be used.</source>
