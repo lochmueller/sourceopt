@@ -45,6 +45,31 @@ class CleanHtmlServiceTest extends AbstractUnitTest
     }
 
     /**
+     * formatHtml knows three levels: off, everything on one line, and line
+     * breaks with indentation for anything above 1.
+     */
+    #[DataProvider('formatTypeProvider')]
+    public function testFormatHtmlLevels(int $formatType, string $expected): void
+    {
+        $cleanService = new CleanHtmlService();
+        $html = "<div>\n\t<ul>\n\t\t<li>a</li>\n\t</ul>\n</div>";
+
+        self::assertSame($expected, $cleanService->clean($html, ['formatHtml' => $formatType]));
+    }
+
+    public static function formatTypeProvider(): array
+    {
+        $indented = "<div>\n\t<ul>\n\t\t<li>a</li>\n\t</ul>\n</div>";
+
+        return [
+            '0 leaves the markup alone' => [0, $indented],
+            '1 removes every line break' => [1, '<div><ul><li>a</li></ul></div>'],
+            '2 indents' => [2, $indented],
+            '4 still indents, as it did before' => [4, $indented],
+        ];
+    }
+
+    /**
      * The doctype used to come from $GLOBALS['TSFE'], it is now passed in.
      */
     #[DataProvider('doctypeProvider')]

@@ -39,15 +39,10 @@ settings:
     category: sourceopt.cleaner
   sourceopt.formatHtml:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtml
-    default: '4'
+    description: '0 disables formatting, 1 puts the document on one line, anything above 1 adds line breaks and indentation.'
+    default: '2'
     type: string
     category: sourceopt.formater
-  #    enum:
-  #      '0': Disable
-  #      '1': No line break at all (code in one line)
-  #      '2': Minimalistic line breaks (structure defining box-elements)
-  #      '3': Aesthetic line breaks (important box-elements)
-  #      '4': Logic line breaks (all box-elements)
   sourceopt.formatHtml.tabSize:
     label: LLL:EXT:sourceopt/Resources/Private/Language/locallang.xlf:sourceopt.formatHtmlTabSize
     default: ''
