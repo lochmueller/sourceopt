@@ -28,6 +28,16 @@ class CleanHtmlService implements SingletonInterface, LoggerAwareInterface
     private const LONG_ATTRIBUTE_LENGTH = 1024;
 
     /**
+     * Private use character, marks where an inline element touches its neighbours.
+     */
+    private const INLINE_BOUNDARY_MARKER = "\u{E000}";
+
+    /**
+     * Inline elements as known by dindent.
+     */
+    private const INLINE_ELEMENTS = 'a|abbr|acronym|b|bdi|bdo|big|cite|code|data|dfn|em|i|kbd|mark|q|s|samp|small|span|strong|sub|sup|time|tt|u|var';
+
+    /**
      * Enable Debug comment in footer.
      */
     protected bool $debugComment = false;
@@ -150,6 +160,48 @@ class CleanHtmlService implements SingletonInterface, LoggerAwareInterface
     }
 
     /**
+     * Dindent pads every inline element with spaces on both sides, which
+     * turns "amet<strong>!</strong>" into "amet <strong>!</strong>" and
+     * "</a>, text" into "</a> , text". Mark every boundary where an inline
+     * element touches text or another inline element, so the padding can be
+     * removed again afterwards.
+     *
+     * @see https://github.com/lochmueller/sourceopt/issues/172
+     */
+    private function protectInlineBoundaries(string $html): string
+    {
+        if (str_contains($html, self::INLINE_BOUNDARY_MARKER)) {
+            return $html;
+        }
+
+        $inline = '(?:' . self::INLINE_ELEMENTS . ')';
+
+        // text directly before an opening inline tag
+        $html = $this->replace('/(?<=[^\s>])(?=<' . $inline . '[\s>])/i', self::INLINE_BOUNDARY_MARKER, $html);
+
+        // text or another inline element directly after a closing inline tag
+        return $this->replace('/<\/' . $inline . '>\K(?=[^\s<]|<' . $inline . '[\s>])/i', self::INLINE_BOUNDARY_MARKER, $html);
+    }
+
+    /**
+     * The marker never touches whitespace in the input, so any whitespace
+     * around it was added by dindent and is dropped together with it.
+     */
+    private function restoreInlineBoundaries(string $html): string
+    {
+        if (!str_contains($html, self::INLINE_BOUNDARY_MARKER)) {
+            return $html;
+        }
+
+        $result = preg_replace('/\s*' . self::INLINE_BOUNDARY_MARKER . '\s*/u', '', $html);
+        if (null === $result) {
+            throw new \RuntimeException('Restoring inline boundaries failed: ' . preg_last_error_msg());
+        }
+
+        return $result;
+    }
+
+    /**
      * Clean given HTML with formatter.
      *
      * Invalid UTF-8 or failing regular expressions never break the page,
@@ -211,8 +263,10 @@ class CleanHtmlService implements SingletonInterface, LoggerAwareInterface
             ]);
             try {
                 $attributes = [];
-                $html = $this->protectLongAttributeValues($html, $attributes);
-                $html = strtr($indenter->indent($html), $attributes);
+                $formatted = $this->protectLongAttributeValues($html, $attributes);
+                $formatted = $this->protectInlineBoundaries($formatted);
+                $formatted = strtr($indenter->indent($formatted), $attributes);
+                $html = $this->restoreInlineBoundaries($formatted);
             } catch (\Throwable $exception) {
                 $this->logger?->warning('EXT:sourceopt skipped formatHtml: {message}', [
                     'message' => $exception->getMessage(),

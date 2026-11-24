@@ -72,6 +72,54 @@ class CleanHtmlServiceTest extends AbstractUnitTest
     }
 
     /**
+     * Dindent pads inline elements with spaces, formatHtml must not add
+     * whitespace that was not in the input.
+     *
+     * @see https://github.com/lochmueller/sourceopt/issues/172
+     */
+    #[DataProvider('inlineElementProvider')]
+    public function testFormatHtmlKeepsInlineElementsAttached(int $formatType, string $html, string $expected): void
+    {
+        $cleanService = new CleanHtmlService();
+
+        self::assertSame($expected, $cleanService->clean($html, ['formatHtml' => $formatType]));
+    }
+
+    public static function inlineElementProvider(): array
+    {
+        $cases = [];
+        foreach ([1, 2] as $formatType) {
+            $cases[$formatType . ': text before inline element'] = [
+                $formatType,
+                '<p>Lorem ipsum dolor sit amet<strong class="blue">!</strong></p>',
+                '<p>Lorem ipsum dolor sit amet<strong class="blue">!</strong></p>',
+            ];
+            $cases[$formatType . ': text after inline element'] = [
+                $formatType,
+                '<p>See <a href="/x">Link</a>, text</p>',
+                '<p>See <a href="/x">Link</a>, text</p>',
+            ];
+            $cases[$formatType . ': adjacent inline elements'] = [
+                $formatType,
+                '<p><em>a</em><strong>b</strong>c</p>',
+                '<p><em>a</em><strong>b</strong>c</p>',
+            ];
+            $cases[$formatType . ': existing spaces are kept'] = [
+                $formatType,
+                '<p>foo <b>bar</b> baz</p>',
+                '<p>foo <b>bar</b> baz</p>',
+            ];
+        }
+        $cases['2: nested inline elements'] = [
+            2,
+            '<div><p>x<span><em>y</em></span>z</p></div>',
+            "<div>\n\t<p>\n\t\tx<span><em>y</em></span>z\n\t</p>\n</div>",
+        ];
+
+        return $cases;
+    }
+
+    /**
      * The doctype used to come from $GLOBALS['TSFE'], it is now passed in.
      */
     #[DataProvider('doctypeProvider')]
