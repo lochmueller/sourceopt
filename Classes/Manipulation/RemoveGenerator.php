@@ -16,6 +16,7 @@ class RemoveGenerator implements ManipulationInterface
     {
         $regex = '<meta name=["\']?generator["\']? [^>]+>';
 
-        return (string) preg_replace('/' . $regex . '/is', '', $html);
+        // keep the HTML on PCRE errors, (string) null would empty the whole page
+        return preg_replace('/' . $regex . '/is', '', $html) ?? $html;
     }
 }

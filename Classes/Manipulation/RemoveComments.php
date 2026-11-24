@@ -30,7 +30,7 @@ class RemoveComments implements ManipulationInterface
             $html,
             $matches
         );
-        foreach ($matches[0] as $tag) {
+        foreach ($matches[0] ?? [] as $tag) {
             if (false === $this->keepComment($tag)) {
                 $html = str_replace($tag, '', $html);
             }

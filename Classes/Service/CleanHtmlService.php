@@ -8,6 +8,8 @@ use Gajus\Dindent\Indenter;
 use HTML\Sourceopt\Manipulation\ManipulationInterface;
 use HTML\Sourceopt\Manipulation\RemoveComments;
 use HTML\Sourceopt\Manipulation\RemoveGenerator;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -16,8 +18,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Service: Clean parsed HTML functionality
  * Based on the extension 'sourceopt'.
  */
-class CleanHtmlService implements SingletonInterface
+class CleanHtmlService implements SingletonInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
+    /**
+     * Attribute values from this length on are hidden from dindent.
+     */
+    private const LONG_ATTRIBUTE_LENGTH = 1024;
+
     /**
      * Enable Debug comment in footer.
      */
@@ -76,31 +85,86 @@ class CleanHtmlService implements SingletonInterface
     }
 
     /**
-     * Extract first invalid UTF-8 charater surroundings.
+     * Extract the surroundings of the first invalid UTF-8 character.
      */
-    private function getInvalidUTF8Snipped(string $html, int $excerpt = 42): string
+    private function getInvalidUTF8Snippet(string $html, int $excerpt = 42): string
     {
-        mb_internal_encoding('UTF-8');
+        $substituteCharacter = mb_substitute_character();
         mb_substitute_character(0xFFFD);
+        $html = mb_convert_encoding($html, 'UTF-8', 'UTF-8');
+        mb_substitute_character($substituteCharacter);
 
-        $html   = mb_convert_encoding($html, 'UTF-8');
-        $html   = preg_replace('/\s+/', ' ', $html);
+        $html = (string) preg_replace('/\s+/', ' ', $html);
+        $pos = (int) mb_strpos($html, mb_chr(0xFFFD, 'UTF-8'), 0, 'UTF-8');
 
-        // $count  = preg_match_all('/\x{FFFD}/u', $html);
-        $pos    = mb_strpos($html, mb_chr(0xFFFD, 'UTF-8'));
+        return mb_substr($html, max(0, $pos - $excerpt), $excerpt << 1, 'UTF-8');
+    }
 
-        return mb_substr($html, max(0, $pos - $excerpt), ($excerpt << 1));
+    /**
+     * preg_replace() returns null on PCRE errors (backtrack limit, JIT stack, ...).
+     * Keep the unchanged HTML in that case instead of breaking the whole page.
+     */
+    private function replace(string $pattern, string $replacement, string $html, int $limit = -1): string
+    {
+        $result = preg_replace($pattern, $replacement, $html, $limit);
+        if (null === $result) {
+            $this->logger?->warning('EXT:sourceopt skipped the pattern {pattern}: {error}', [
+                'pattern' => $pattern,
+                'error' => preg_last_error_msg(),
+            ]);
+
+            return $html;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Huge attribute values (SVG path data, base64 images, ...) exhaust the
+     * PCRE backtrack limit in dindent, which scans every tag up to its ">".
+     * Swap them with short placeholders, the caller restores them via strtr().
+     *
+     * @param array<string, string> $attributes placeholder => original value
+     *
+     * @see https://github.com/lochmueller/sourceopt/issues/176
+     */
+    private function protectLongAttributeValues(string $html, array &$attributes): string
+    {
+        $result = preg_replace_callback(
+            '/(?<==)(?:"[^"<]{' . self::LONG_ATTRIBUTE_LENGTH . ',}+"|\'[^\'<]{' . self::LONG_ATTRIBUTE_LENGTH . ',}+\')/',
+            static function (array $match) use (&$attributes): string {
+                $placeholder = 'ᐅᐅᐅ' . \count($attributes) . 'ᐅᐅᐅ';
+                $attributes[$placeholder] = $match[0];
+
+                return $placeholder;
+            },
+            $html
+        );
+        if (null === $result) {
+            $attributes = [];
+
+            return $html;
+        }
+
+        return $result;
     }
 
     /**
      * Clean given HTML with formatter.
+     *
+     * Invalid UTF-8 or failing regular expressions never break the page,
+     * the affected step is skipped and a warning is logged instead.
      *
      * @param string $doctype TypoScript "config.doctype" of the current page
      */
     public function clean(string $html, array $config = [], string $doctype = ''): string
     {
         if (!mb_check_encoding($html, 'UTF-8')) {
-            throw new \Exception('Invalid UTF-8 detected @ ' . $this->getInvalidUTF8Snipped($html));
+            $this->logger?->warning('EXT:sourceopt skipped the cleanup, invalid UTF-8 detected @ {snippet}', [
+                'snippet' => $this->getInvalidUTF8Snippet($html),
+            ]);
+
+            return $html;
         }
 
         if (!empty($config)) {
@@ -108,7 +172,7 @@ class CleanHtmlService implements SingletonInterface
         }
 
         // convert line-breaks to UNIX
-        $html = preg_replace("(\r\n|\r)", $this->newline, $html);
+        $html = $this->replace("(\r\n|\r)", $this->newline, $html);
 
         $manipulations = [];
 
@@ -128,12 +192,12 @@ class CleanHtmlService implements SingletonInterface
 
         // include configured header comment in HTML content block
         if (!empty($this->headerComment)) {
-            $html = preg_replace('/^(-->)$/m', "\n\t" . $this->headerComment . "\n$1", $html, 1);
+            $html = $this->replace('/^(-->)$/m', "\n\t" . $this->headerComment . "\n$1", $html, 1);
         }
 
         // cleanup HTML5 self-closing elements
         if ('x' !== substr($doctype, 0, 1)) {
-            $html = preg_replace(
+            $html = $this->replace(
                 '/<((?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\s[^>]+?)\s*\\\?\/>/',
                 '<$1>',
                 $html
@@ -145,7 +209,16 @@ class CleanHtmlService implements SingletonInterface
             $indenter = new Indenter([
                 'indentation_character' => 1 === $this->formatType ? null : $this->tab,
             ]);
-            $html = $indenter->indent($html);
+            try {
+                $attributes = [];
+                $html = $this->protectLongAttributeValues($html, $attributes);
+                $html = strtr($indenter->indent($html), $attributes);
+            } catch (\Throwable $exception) {
+                $this->logger?->warning('EXT:sourceopt skipped formatHtml: {message}', [
+                    'message' => $exception->getMessage(),
+                    'exception' => $exception,
+                ]);
+            }
         }
 
         // recover line-breaks
@@ -153,6 +226,6 @@ class CleanHtmlService implements SingletonInterface
             $html = str_replace($this->newline, "\r\n", $html);
         }
 
-        return (string) $html;
+        return $html;
     }
 }
