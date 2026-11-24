@@ -17,7 +17,7 @@
 	"require-dev": {
 		"typo3/testing-framework": "^9.0",
 		"friendsofphp/php-cs-fixer": "^3.3",
-		"phpmd/phpmd": "^2.10"
+		"phpmd/phpmd": "^3.0"
 	},
 	"autoload-dev": {
 		"psr-4": {
@@ -61,7 +61,7 @@
 			"php-cs-fixer fix --dry-run --diff --config Resources/Private/Build/PhpCsFixer.php --cache-file=.Build/phpcs.cache"
 		],
 		"code:phpmd": [
-			"phpmd Classes/ text cleancode,codesize,controversial,design,naming --ignore-errors-on-exit --ignore-violations-on-exit"
+			"phpmd analyze --format text --ruleset cleancode --ruleset codesize --ruleset controversial --ruleset design --ruleset naming --ignore-errors-on-exit --ignore-violations-on-exit Classes/"
 		]
 	}
 }
