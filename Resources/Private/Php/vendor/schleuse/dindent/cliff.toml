@@ -1,0 +1,49 @@
+# https://git-cliff.org/docs/configuration
+[changelog]
+header = ""
+body = """
+{% if version %}## {{ version }} — {{ timestamp | date(format="%Y-%m-%d") }}{% else %}## Unreleased{% endif %}
+
+{% if breaking_changes %}
+> [!WARNING]
+> **This release contains breaking changes.**
+{% for commit in breaking_changes %}
+> - {{ commit.message | upper_first }}
+{% endfor %}
+{% endif %}
+{% for group, commits in commits | group_by(attribute="group") %}\
+### {{ group }}
+{% for commit in commits %}\
+- {% if commit.breaking %}⚠️ **breaking** {% endif %}{{ commit.message | upper_first | trim_end_matches(pat=".") }} \
+([`{{ commit.id | truncate(length=7, end="") }}`](https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }}))
+{% endfor %}
+{% endfor %}\
+{% if previous.version %}\
+**Full changelog:** [`{{ previous.version }}...{{ version }}`](https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}/compare/{{ previous.version }}...{{ version }})
+{% endif %}
+"""
+trim = true
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+filter_commits = false
+tag_pattern = "v[0-9].*"
+ignore_tags = ""
+topo_order = false
+sort_commits = "oldest"
+
+commit_parsers = [
+  { message = "^feat", group = "✨ Features" },
+  { message = "^fix", group = "🐛 Bug Fixes" },
+  { message = "^perf", group = "⚡ Performance Improvements" },
+  { message = "^deps", group = "📦 Dependencies" },
+  { message = "^revert", group = "⏪ Reverts" },
+  { message = "^docs", group = "📖 Documentation" },
+  { message = "^style", skip = true },
+  { message = "^chore", skip = true },
+  { message = "^refactor", skip = true },
+  { message = "^test", skip = true },
+  { message = "^build", skip = true },
+  { message = "^ci", skip = true },
+]

@@ -1,0 +1,96 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+name: Main
+on:
+  push:
+  pull_request:
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    name: "Conventional Commits"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v6
+
+  tests_coverage:
+    runs-on: "ubuntu-latest"
+    name: "PHP 8.5 Unit Tests (with coverage)"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "xdebug"
+          php-version: "8.5"
+          tools: composer:v2
+      - name: "Install dependencies"
+        run: |
+          composer require php-coveralls/php-coveralls:^2.2 --dev --no-update
+          COMPOSER_ROOT_VERSION=dev-master composer update --no-progress --prefer-dist
+      - name: "Tests"
+        run: "php vendor/bin/phpunit --coverage-clover build/logs/clover.xml"
+      - name: Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: "php vendor/bin/php-coveralls"
+        if: ${{ success() }}
+  tests:
+    runs-on: "ubuntu-latest"
+    name: "PHP ${{ matrix.php-version }} Unit Tests"
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+          - "8.3"
+          - "8.4"
+          - "8.5"
+      fail-fast: false
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          ini-file: "development"
+          tools: composer:v2
+      - name: "Install dependencies"
+        run: "COMPOSER_ROOT_VERSION=dev-master composer update --no-progress --prefer-dist ${{ matrix.flags }}"
+      - name: "PHPUnit"
+        run: "php vendor/bin/phpunit"
+  phpstan:
+    runs-on: "ubuntu-latest"
+    name: "PHPStan"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "8.5"
+          tools: composer:v2
+      - name: "Install dependencies"
+        run: composer install
+      - name: "PHPStan"
+        run: "php vendor/bin/phpstan"
+  php-cs-fixer:
+    runs-on: "ubuntu-latest"
+    name: "PHP-CS-Fixer"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "8.3"
+          tools: composer:v2
+      - name: "Install dependencies"
+        run: composer install
+      - name: "php-cs-fixer"
+        run: "php vendor/bin/php-cs-fixer fix --dry-run"

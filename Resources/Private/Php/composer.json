@@ -1,0 +1,15 @@
+{
+	"name": "lochmueller/sourceopt-dependencies",
+	"description": "Bundled dependencies of EXT:sourceopt for TYPO3 installations in non-composer mode.",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": "^8.2",
+		"schleuse/dindent": "^3.0"
+	},
+	"config": {
+		"optimize-autoloader": true,
+		"platform": {
+			"php": "8.2.0"
+		}
+	}
+}

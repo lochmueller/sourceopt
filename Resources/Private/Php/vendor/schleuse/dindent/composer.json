@@ -1,0 +1,43 @@
+{
+	"name": "schleuse/dindent",
+	"version": "3.0.0",
+	"description": "Fork of gajus/dindent with various fixes from the community",
+	"keywords": ["HTML", "indent", "format"],
+	"homepage": "https://github.com/schleuse/dindent",
+	"type": "library",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Gajus Kuizinas",
+			"email": "gk@anuary.com"
+		},{
+			"name": "René Schleusner",
+			"email": "r.schleuse@gmail.com"
+		}
+	],
+	"require": {
+		"php": "^8.2",
+		"ext-mbstring": "*"
+	},
+	"replace": {
+		"gajus/dindent": "*",
+		"indorock/dindent": "*"
+	},
+	"scripts": {
+		"test": "phpunit",
+		"phpstan": "phpstan",
+		"format": "php-cs-fixer fix"
+
+	},
+	"require-dev": {
+		"php-coveralls/php-coveralls": "^2.1",
+		"phpunit/phpunit": "^11.0",
+		"phpstan/phpstan": "^2.1",
+		"friendsofphp/php-cs-fixer": "^3.76"
+	},
+	"autoload": {
+		"psr-4": {
+			"Gajus\\Dindent\\": "src/"
+		}
+	}
+}

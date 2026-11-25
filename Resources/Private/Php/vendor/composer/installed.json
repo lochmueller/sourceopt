@@ -1,0 +1,70 @@
+{
+    "packages": [
+        {
+            "name": "schleuse/dindent",
+            "version": "3.0.0",
+            "version_normalized": "3.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Schleuse/dindent.git",
+                "reference": "5859686cde88669ac80a708b21ac2251465658ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Schleuse/dindent/zipball/5859686cde88669ac80a708b21ac2251465658ab",
+                "reference": "5859686cde88669ac80a708b21ac2251465658ab",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^8.2"
+            },
+            "replace": {
+                "gajus/dindent": "*",
+                "indorock/dindent": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.76",
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^11.0"
+            },
+            "time": "2026-03-11T20:58:46+00:00",
+            "published-time": "2026-03-11T20:59:54+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Gajus\\Dindent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Gajus Kuizinas",
+                    "email": "gk@anuary.com"
+                },
+                {
+                    "name": "René Schleusner",
+                    "email": "r.schleuse@gmail.com"
+                }
+            ],
+            "description": "Fork of gajus/dindent with various fixes from the community",
+            "homepage": "https://github.com/schleuse/dindent",
+            "keywords": [
+                "format",
+                "html",
+                "indent"
+            ],
+            "support": {
+                "source": "https://github.com/Schleuse/dindent/tree/v3.0.0"
+            },
+            "install-path": "../schleuse/dindent"
+        }
+    ],
+    "dev": false,
+    "dev-package-names": []
+}
