@@ -109,7 +109,32 @@ class CleanHtmlServiceTest extends AbstractUnitTest
                 '<p>foo <b>bar</b> baz</p>',
                 '<p>foo <b>bar</b> baz</p>',
             ];
+            $cases[$formatType . ': spaces inside inline elements are kept'] = [
+                $formatType,
+                '<p><strong>A </strong><span>B</span><strong> C</strong></p>',
+                '<p><strong>A </strong><span>B</span><strong> C</strong></p>',
+            ];
+            $cases[$formatType . ': spaces inside a link next to text are kept'] = [
+                $formatType,
+                '<p>See<a href="/x"> Link </a>here</p>',
+                '<p>See<a href="/x"> Link </a>here</p>',
+            ];
+            $cases[$formatType . ': only spaces inside inline elements'] = [
+                $formatType,
+                '<p>a <b> b </b> c</p>',
+                '<p>a <b> b </b> c</p>',
+            ];
+            $cases[$formatType . ': whitespace inside pre is untouched'] = [
+                $formatType,
+                "<pre><code>\n  foo\n</code></pre>",
+                "<pre><code>\n  foo\n</code></pre>",
+            ];
         }
+        $cases['2: issue comment example is indented, spaces kept'] = [
+            2,
+            '<div><p><strong>A </strong><span>B</span><strong> C</strong></p></div>',
+            "<div>\n\t<p><strong>A </strong><span>B</span><strong> C</strong></p>\n</div>",
+        ];
         $cases['2: nested inline elements'] = [
             2,
             '<div><p>x<span><em>y</em></span>z</p></div>',

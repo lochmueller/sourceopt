@@ -33,6 +33,11 @@ class CleanHtmlService implements SingletonInterface, LoggerAwareInterface
     private const INLINE_BOUNDARY_MARKER = "\u{E000}";
 
     /**
+     * Private use character, stands for whitespace directly inside an inline element.
+     */
+    private const INLINE_SPACE_MARKER = "\u{E001}";
+
+    /**
      * Inline elements as known by dindent.
      */
     private const INLINE_ELEMENTS = 'a|abbr|acronym|b|bdi|bdo|big|cite|code|data|dfn|em|i|kbd|mark|q|s|samp|small|span|strong|sub|sup|time|tt|u|var';
@@ -170,11 +175,20 @@ class CleanHtmlService implements SingletonInterface, LoggerAwareInterface
      */
     private function protectInlineBoundaries(string $html): string
     {
-        if (str_contains($html, self::INLINE_BOUNDARY_MARKER)) {
+        if (str_contains($html, self::INLINE_BOUNDARY_MARKER) || str_contains($html, self::INLINE_SPACE_MARKER)) {
             return $html;
         }
 
         $inline = '(?:' . self::INLINE_ELEMENTS . ')';
+
+        // whitespace directly inside an inline element, dindent trims it away;
+        // <pre>, <textarea>, <script>, <style> and comments are left alone
+        $html = $this->replace(
+            '/(?:<(pre|textarea|script|style)\b[\s\S]*?<\/\1>|<!--[\s\S]*?-->)(*SKIP)(*FAIL)'
+            . '|\s+(?=<\/' . $inline . '>)|<' . $inline . '(?:\s[^>]*)?>\K\s+/i',
+            self::INLINE_SPACE_MARKER,
+            $html
+        );
 
         // text directly before an opening inline tag
         $html = $this->replace('/(?<=[^\s>])(?=<' . $inline . '[\s>])/i', self::INLINE_BOUNDARY_MARKER, $html);
@@ -189,11 +203,15 @@ class CleanHtmlService implements SingletonInterface, LoggerAwareInterface
      */
     private function restoreInlineBoundaries(string $html): string
     {
-        if (!str_contains($html, self::INLINE_BOUNDARY_MARKER)) {
+        if (!str_contains($html, self::INLINE_BOUNDARY_MARKER) && !str_contains($html, self::INLINE_SPACE_MARKER)) {
             return $html;
         }
 
-        $result = preg_replace('/\s*' . self::INLINE_BOUNDARY_MARKER . '\s*/u', '', $html);
+        $result = preg_replace(
+            ['/\s*' . self::INLINE_BOUNDARY_MARKER . '\s*/u', '/\s*' . self::INLINE_SPACE_MARKER . '\s*/u'],
+            ['', ' '],
+            $html
+        );
         if (null === $result) {
             throw new \RuntimeException('Restoring inline boundaries failed: ' . preg_last_error_msg());
         }
